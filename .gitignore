@@ -1,0 +1,11 @@
+### macOS ###
+# General
+.DS_Store
+.AppleDouble
+.LSOverride
+
+node_modules
+.env
+dist/**/*
+package.json
+public/**/*
