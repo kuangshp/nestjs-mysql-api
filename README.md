@@ -20,7 +20,7 @@
   // jwt加盐
   SECRET = abc;
   // 前缀
-  PREFIX = api/v1;
+  PREFIX = api / v1;
   ```
 
 * 3、创建数据库及创建表
@@ -102,8 +102,8 @@
 
 - 1、有关于`nestjs`的技术问题可以直接加我微信<font color="#f00">备注:nest 开发</font>
 
-  ![wx](./wx.jpg)
+  ![wx](./wx.jpg){:height="200" width="200"}
 
-* 2、如果你觉得本项目对你帮助很大,也可以请我喝杯咖啡
+* 2、如果你觉得本项目对你帮助很大,也可以请我喝杯咖啡,或者给一个赞
 
-  ![](./donate.jpeg)
+  ![](./donate.jpeg){:height="200" width="200"}
