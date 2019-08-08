@@ -6,6 +6,9 @@ import {
   Body,
   Get,
   Req,
+  UseInterceptors,
+  Query,
+  ParseIntPipe,
 } from '@nestjs/common';
 
 import { UserService } from './user.service';
@@ -14,6 +17,7 @@ import { LoginUserDto } from './dto/login.user.dto';
 import { UserRep } from './dto/user.rep.dto';
 import { CurlService } from '../curl/curl.service';
 import { ApiUseTags, ApiBearerAuth } from '@nestjs/swagger';
+import { PaginateInterceptor } from './../../shared/interceptor/paginate.interceptor';
 
 @ApiUseTags('user')
 // @ApiBearerAuth()
@@ -61,11 +65,14 @@ export class UserController {
    * @Date: 2019-07-30 16:21:22
    */
   @Get('user')
-  async showAll(@Req() request: { [propName: string]: any }): Promise<
-    UserRep[]
-  > {
+  @UseInterceptors(PaginateInterceptor)
+  async showAll(
+    @Req() request: { [propName: string]: any },
+    @Query('pageSize', new ParseIntPipe()) pageSize: number,
+    @Query('pageNumber', new ParseIntPipe()) pageNumber: number,
+  ): Promise<UserRep[]> {
     console.log('当前用户', request.user);
-    return await this.userService.showAll();
+    return await this.userService.showAll(pageSize, pageNumber);
   }
 
   /**

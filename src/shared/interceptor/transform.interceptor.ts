@@ -6,20 +6,14 @@ import {
 } from '@nestjs/common';
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
-interface Response<T> {
-  data: T;
-}
+
 @Injectable()
-export class TransformInterceptor<T>
-  implements NestInterceptor<T, Response<T>> {
-  intercept(
-    context: ExecutionContext,
-    next: CallHandler<T>,
-  ): Observable<Response<T>> {
+export class TransformInterceptor<T> implements NestInterceptor {
+  intercept(context: ExecutionContext, next: CallHandler<T>): Observable<any> {
     return next.handle().pipe(
-      map(data => {
+      map((data: any) => {
         return {
-          data,
+          result: Reflect.has(data, 'pageSize') ? { ...data } : { data }, // 如果有分页的就解构出来,没有就直接返回
           code: 0,
           message: '请求成功',
         };

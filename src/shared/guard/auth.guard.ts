@@ -10,17 +10,17 @@ import { Observable } from 'rxjs';
 import * as jwt from 'jsonwebtoken';
 import { InjectConfig, ConfigService } from 'nestjs-config';
 
+import { getUrlQuery } from './../utils';
+
 @Injectable()
 export class AuthGuard implements CanActivate {
   constructor(@InjectConfig() private readonly configService: ConfigService) {}
-  canActivate(
-    context: ExecutionContext,
-  ): boolean | Promise<boolean> | Observable<boolean> {
+  async canActivate(context: ExecutionContext) {
     const request = context.switchToHttp().getRequest();
     const token =
       context.switchToRpc().getData().headers.token ||
       context.switchToHttp().getRequest().body.token ||
-      this.getUrlParam(request.url, 'token');
+      getUrlQuery(request.url, 'token');
     Logger.log(`当前的token: ${token}`, 'AuthGuard');
     // 如果白名单里面有的url就不拦截
     if (this.hasUrl(this.configService.get('project.whiteUrl'), request.url)) {
@@ -28,7 +28,7 @@ export class AuthGuard implements CanActivate {
     }
     if (token) {
       try {
-        const user = this.verifyToken(token, process.env.SECRET);
+        const user = await this.verifyToken(token, process.env.SECRET);
         request.user = user;
         return true;
       } catch (e) {
@@ -58,45 +58,15 @@ export class AuthGuard implements CanActivate {
     return new Promise((resolve, reject) => {
       jwt.verify(token, secret, (error, payload) => {
         if (error) {
+          console.log('-----------error start--------------');
+          console.log(error);
+          console.log('-----------error end--------------');
           reject(error);
         } else {
           resolve(payload);
         }
       });
     });
-  }
-
-  /**
-   * @param {url}
-   * @return:
-   * @Description: 在url中获取query字段
-   * @Author: 水痕
-   * @LastEditors: 水痕
-   * @Date: 2019-07-31 13:07:54
-   */
-  private getUrlParam(
-    url: {
-      replace: (
-        arg0: RegExp,
-        arg1: (_$0: any, $1: string | number, $2: any) => void,
-      ) => void;
-    },
-    key: string,
-  ): string {
-    let result: any;
-    const Oparam: { [propName: string]: any } = {};
-    url.replace(
-      /[\?&]?(\w+)=(\w+)/g,
-      (_$0: any, $1: string | number, $2: any) => {
-        Oparam[$1] === void 0
-          ? (Oparam[$1] = $2)
-          : (Oparam[$1] = [].concat(Oparam[$1], $2));
-      },
-    );
-    key === void 0 || key === ''
-      ? (result = Oparam)
-      : (result = Oparam[key] || '');
-    return result;
   }
 
   /**

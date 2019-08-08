@@ -40,8 +40,15 @@ export class UserService {
     return user.toResponseObject();
   }
 
-  async showAll(): Promise<UserRep[]> {
-    const users = await this.userRepository.find();
-    return users.map(user => user.toResponseObject(false));
+  async showAll(pageSize: number, pageNumber: number): Promise<any> {
+    // const users = await this.userRepository.find();
+    // return users.map(user => user.toResponseObject(false));
+    const [users, total] = await this.userRepository
+      .createQueryBuilder('user')
+      .offset(pageSize) // 从多少条开始
+      .limit(pageNumber) // 查询2条数据
+      .orderBy('id', 'DESC') // 排序
+      .getManyAndCount(); // 查询到数据及个数，返回的是一个数组
+    return [users.map(user => user.toResponseObject(false)), total];
   }
 }
