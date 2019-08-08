@@ -15,7 +15,7 @@ import { getUrlQuery } from './../utils';
 @Injectable()
 export class AuthGuard implements CanActivate {
   constructor(@InjectConfig() private readonly configService: ConfigService) {}
-  async canActivate(context: ExecutionContext) {
+  async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
     const token =
       context.switchToRpc().getData().headers.token ||
