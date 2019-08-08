@@ -8,6 +8,8 @@ import { AuthGuard } from './shared/guard/auth.guard';
 import { CurlModule } from './core/curl/curl.module';
 import { UploadFileModule } from './core/upload-file/upload-file.module';
 import { FileModule } from './file/file.module';
+import { RoleModule } from './core/role/role.module';
+import { ResourceModule } from './core/resource/resource.module';
 import * as path from 'path';
 
 const entitiesPath =
@@ -40,6 +42,8 @@ Logger.log(process.env.NODE_ENV, '当前环境');
     CurlModule,
     UploadFileModule,
     FileModule,
+    RoleModule,
+    ResourceModule,
   ],
   controllers: [],
   providers: [

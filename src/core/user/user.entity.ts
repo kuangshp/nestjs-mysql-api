@@ -18,14 +18,70 @@ export class UserEntity {
     this.nodeAuth = new NodeAuth(8, 10, true);
   }
 
-  @PrimaryGeneratedColumn('uuid', { comment: 'uuid' })
-  id: string;
+  @PrimaryGeneratedColumn({
+    type: 'int',
+    name: 'id',
+    comment: '主键id',
+  })
+  id: number;
 
-  @Column({ type: 'varchar', length: 50, unique: true, comment: '姓名' })
+  @Column('varchar', {
+    nullable: false,
+    unique: true,
+    length: 150,
+    name: 'uuid',
+    generated: 'uuid',
+    comment: 'uuid',
+  })
+  uuid: string;
+
+  @Column('varchar', {
+    nullable: false,
+    unique: true,
+    length: 100,
+    name: 'name',
+    comment: '姓名',
+  })
   name: string;
 
-  @Column({ type: 'varchar', length: 250, comment: '密码' })
+  @Column('varchar', {
+    nullable: false,
+    name: 'password',
+    comment: '密码',
+  })
   password: string;
+
+  @Column('tinyint', {
+    nullable: true,
+    default: () => 1,
+    name: 'is_active',
+    comment: '是否活跃',
+  })
+  isActive: number | null;
+
+  @Column('varchar', {
+    nullable: true,
+    length: 100,
+    name: 'email',
+    comment: 'email',
+  })
+  email: string | null;
+
+  @Column('varchar', {
+    nullable: true,
+    length: 11,
+    name: 'mobile',
+    comment: '手机号码',
+  })
+  mobile: string | null;
+
+  @Column('tinyint', {
+    nullable: true,
+    default: () => 0,
+    comment: '性别',
+    name: 'gender',
+  })
+  gender: number | null;
 
   @CreateDateColumn({
     type: 'datetime',
@@ -63,11 +119,43 @@ export class UserEntity {
    * @Date: 2019-07-30 16:10:06
    */
   toResponseObject(isShowToken: boolean = true): UserRep {
-    const { id, name, token, createAt, updateAt } = this;
+    const {
+      id,
+      uuid,
+      name,
+      email,
+      gender,
+      mobile,
+      isActive,
+      token,
+      createAt,
+      updateAt,
+    } = this;
     if (isShowToken) {
-      return { id, name, token, createAt, updateAt };
+      return {
+        id,
+        uuid,
+        name,
+        token,
+        email,
+        gender,
+        mobile,
+        isActive,
+        createAt,
+        updateAt,
+      };
     }
-    return { id, name, createAt, updateAt };
+    return {
+      id,
+      uuid,
+      name,
+      email,
+      gender,
+      mobile,
+      isActive,
+      createAt,
+      updateAt,
+    };
   }
 
   /**
