@@ -8,6 +8,7 @@ import {
   Req,
   UseInterceptors,
   Query,
+  Request,
   ParseIntPipe,
 } from '@nestjs/common';
 
@@ -67,7 +68,7 @@ export class UserController {
   @Get('user')
   @UseInterceptors(PaginateInterceptor)
   async showAll(
-    @Req() request: { [propName: string]: any },
+    @Request() request: { [propName: string]: any },
     @Query('pageSize', new ParseIntPipe()) pageSize: number,
     @Query('pageNumber', new ParseIntPipe()) pageNumber: number,
   ): Promise<UserRep[]> {

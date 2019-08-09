@@ -6,7 +6,7 @@
  * @Company:
  * @Date: 2019-08-08 15:10:13
  * @LastEditors: 水痕
- * @LastEditTime: 2019-08-08 15:28:13
+ * @LastEditTime: 2019-08-09 09:33:43
  */
 import {
   CallHandler,
@@ -32,13 +32,21 @@ export class PaginateInterceptor implements NestInterceptor {
       // 从url中提取pageSize和pageNumber
       const size = Number.parseInt(getUrlQuery(request.url, 'pageSize'), 10);
       const num = Number.parseInt(getUrlQuery(request.url, 'pageNumber'), 10);
-      pageSize = size ? size : 10;
-      pageNumber = num ? num : 1;
+      if (size) {
+        pageSize = size;
+      }
+      if (num) {
+        pageNumber = num;
+      }
     } else if (request.method === 'POST') {
       const body: any = request.body;
       const { pageSize: size, pageNumber: num } = body;
-      pageSize = size ? size : 10;
-      pageNumber = num ? num : 1;
+      if (size) {
+        pageSize = size;
+      }
+      if (num) {
+        pageNumber = num;
+      }
     }
     return next.handle().pipe(
       map(res => {

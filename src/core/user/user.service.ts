@@ -45,10 +45,18 @@ export class UserService {
     // return users.map(user => user.toResponseObject(false));
     const [users, total] = await this.userRepository
       .createQueryBuilder('user')
-      .offset(pageSize) // 从多少条开始
-      .limit(pageNumber) // 查询2条数据
+      .offset(pageNumber - 1) // 从多少条开始
+      .limit(pageSize) // 查询多少条数据
       .orderBy('id', 'DESC') // 排序
       .getManyAndCount(); // 查询到数据及个数，返回的是一个数组
-    return [users.map(user => user.toResponseObject(false)), total];
+    // return [users.map(user => user.toResponseObject(false)), total];
+    const user1 = await this.userRepository.query(
+      'select * from user limit ?, ?',
+      [pageNumber - 1, pageSize],
+    );
+    const count = await this.userRepository.query(
+      'select count(*) count from user',
+    );
+    return [user1, count[0].count];
   }
 }
