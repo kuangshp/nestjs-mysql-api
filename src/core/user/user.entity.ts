@@ -119,42 +119,15 @@ export class UserEntity {
    * @Date: 2019-07-30 16:10:06
    */
   toResponseObject(isShowToken: boolean = true): UserRep {
-    const {
-      id,
-      uuid,
-      name,
-      email,
-      gender,
-      mobile,
-      isActive,
-      token,
-      createAt,
-      updateAt,
-    } = this;
+    const { password, token, nodeAuth, ...params } = this;
     if (isShowToken) {
       return {
-        id,
-        uuid,
-        name,
         token,
-        email,
-        gender,
-        mobile,
-        isActive,
-        createAt,
-        updateAt,
+        ...params,
       };
     }
     return {
-      id,
-      uuid,
-      name,
-      email,
-      gender,
-      mobile,
-      isActive,
-      createAt,
-      updateAt,
+      ...params,
     };
   }
 
@@ -179,12 +152,11 @@ export class UserEntity {
    * @Date: 2019-07-30 16:06:03
    */
   private get token() {
-    const { id, name } = this;
+    const { password, ...params } = this;
     // 生成签名
     return jwt.sign(
       {
-        id,
-        name,
+        params,
       },
       process.env.SECRET, // 加盐
       {

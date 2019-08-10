@@ -10,18 +10,26 @@ import {
   Query,
   Request,
   ParseIntPipe,
+  Param,
+  Put,
+  ParseUUIDPipe,
+  Logger,
+  Delete,
 } from '@nestjs/common';
+import { ApiUseTags, ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
 
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create.user.dto';
 import { LoginUserDto } from './dto/login.user.dto';
 import { UserRep } from './dto/user.rep.dto';
 import { CurlService } from '../curl/curl.service';
-import { ApiUseTags, ApiBearerAuth } from '@nestjs/swagger';
 import { PaginateInterceptor } from './../../shared/interceptor/paginate.interceptor';
+import { CurrentUser } from './../../shared/decorators/current.user';
+import { ParseOptionalPipe } from 'src/shared/pipe/parse.optional.pipe';
+import { ParseIdAndUuidPipe } from './../../shared/pipe/parse.idanduuid.pipe';
+import { UpdateUserDto } from './dto/update.user.dto';
 
 @ApiUseTags('user')
-// @ApiBearerAuth()
 @Controller()
 export class UserController {
   constructor(
@@ -66,16 +74,53 @@ export class UserController {
    * @Date: 2019-07-30 16:21:22
    */
   @Get('user')
+  @ApiBearerAuth()
   @UseInterceptors(PaginateInterceptor)
   async showAll(
-    @Request() request: { [propName: string]: any },
+    @CurrentUser() user: any,
     @Query('pageSize', new ParseIntPipe()) pageSize: number,
     @Query('pageNumber', new ParseIntPipe()) pageNumber: number,
   ): Promise<UserRep[]> {
-    console.log('当前用户', request.user);
+    Logger.log(user, '当前用户');
     return await this.userService.showAll(pageSize, pageNumber);
   }
 
+  @Get('user/:id')
+  @ApiOperation({
+    title: '根据用户id查询用户信息',
+    description: '可传递id或者uuid',
+  })
+  @ApiBearerAuth()
+  async findById(
+    @Param('id', new ParseIdAndUuidPipe()) id: string | number,
+  ): Promise<UserRep> {
+    return await this.userService.findById(id);
+  }
+
+  @Put('user/:id')
+  @ApiOperation({
+    title: '根据用户id修改用户信息',
+    description: '可传递id或者uuid',
+  })
+  @ApiBearerAuth()
+  async updateById(
+    @Param('id', new ParseIdAndUuidPipe()) id: string | number,
+    @Body() data: UpdateUserDto,
+  ): Promise<UserRep> {
+    return await this.userService.updateById(data, id);
+  }
+
+  @Delete('user/:id')
+  @ApiOperation({
+    title: '根据用户id删除用户',
+    description: '可传递id或者uuid',
+  })
+  @ApiBearerAuth()
+  async destroyById(
+    @Param('id', new ParseIdAndUuidPipe()) id: string | number,
+  ): Promise<string> {
+    return this.userService.destroyById(id);
+  }
   /**
    * @param {type}
    * @return:
