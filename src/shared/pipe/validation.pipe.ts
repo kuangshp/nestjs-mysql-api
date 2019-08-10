@@ -6,13 +6,12 @@
  * @Company:
  * @Date: 2019-07-24 14:26:27
  * @LastEditors: 水痕
- * @LastEditTime: 2019-07-29 14:58:47
+ * @LastEditTime: 2019-08-10 17:42:42
  */
 import {
   ArgumentMetadata,
   Injectable,
   PipeTransform,
-  BadRequestException,
   Logger,
   HttpException,
   HttpStatus,

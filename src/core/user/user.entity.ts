@@ -10,6 +10,7 @@ import {
 import NodeAuth from 'node-auth0';
 import * as jwt from 'jsonwebtoken';
 import { UserRep } from './dto/user.rep.dto';
+import { Exclude, Expose } from 'class-transformer';
 
 @Entity('user')
 export class UserEntity {
@@ -44,6 +45,7 @@ export class UserEntity {
   })
   name: string;
 
+  @Exclude() // 表示排除字段不返回给前端
   @Column('varchar', {
     nullable: false,
     name: 'password',
@@ -97,6 +99,10 @@ export class UserEntity {
   })
   updateAt: Date;
 
+  @Expose() // 表示根据现有的字段生成一个新的字段
+  get gender1(): string {
+    return this.gender ? '男' : '女';
+  }
   /**
    * @Description: 插入数据前钩子函数进行加密
    * @Author: 水痕

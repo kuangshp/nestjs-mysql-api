@@ -121,6 +121,13 @@ export class UserController {
   ): Promise<string> {
     return this.userService.destroyById(id);
   }
+
+  @Post('user/add_user')
+  @ApiOperation({ title: '创建用户' })
+  @ApiBearerAuth()
+  async addUser(@Body() data: CreateUserDto): Promise<UserRep> {
+    return await this.userService.addUser(data);
+  }
   /**
    * @param {type}
    * @return:
