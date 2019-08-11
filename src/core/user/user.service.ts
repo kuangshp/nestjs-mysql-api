@@ -10,6 +10,7 @@ import { UpdateUserDto } from './dto/update.user.dto';
 import { isIntExp, isUuidExp } from './../../shared/utils';
 import { UserExtendEntity } from './user.extend.entity';
 import { NodeAuth } from 'node-auth0';
+import { ChangePasswordDto } from './dto/change.password.dto';
 
 @Injectable()
 export class UserService {
@@ -304,5 +305,30 @@ export class UserService {
       .catch(e => {
         throw new HttpException(e.message, HttpStatus.BAD_REQUEST);
       });
+  }
+
+  /**
+   * @param {type}
+   * @return:
+   * @Description: 根据当前用户id修改密码
+   * @Author: 水痕
+   * @LastEditors: 水痕
+   * @Date: 2019-08-11 16:20:32
+   */
+  async changePassword(id: string, data: ChangePasswordDto): Promise<string> {
+    const { password, newPassword, repPassword } = data;
+    if (!Object.is(newPassword, repPassword)) {
+      throw new HttpException('两次密码不一致', HttpStatus.BAD_REQUEST);
+    }
+    const user = await this.userRepository.findOne({ where: { id } });
+    // 当前用户存在且旧密码校验正确才可以修改
+    if (user && this.nodeAuth.checkPassword(password, user.password)) {
+      await this.userRepository.update(id, {
+        password: this.nodeAuth.makePassword(newPassword),
+      });
+      return '修改成功';
+    } else {
+      throw new HttpException('修改失败', HttpStatus.BAD_REQUEST);
+    }
   }
 }

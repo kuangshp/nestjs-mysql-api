@@ -158,11 +158,15 @@ export class UserEntity {
    * @Date: 2019-07-30 16:06:03
    */
   private get token() {
-    const { password, ...params } = this;
+    const { id, uuid, name, mobile, email } = this;
     // 生成签名
     return jwt.sign(
       {
-        params,
+        id,
+        uuid,
+        name,
+        mobile,
+        email,
       },
       process.env.SECRET, // 加盐
       {

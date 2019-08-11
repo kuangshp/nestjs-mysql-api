@@ -25,9 +25,11 @@ import { UserRep } from './dto/user.rep.dto';
 import { CurlService } from '../curl/curl.service';
 import { PaginateInterceptor } from './../../shared/interceptor/paginate.interceptor';
 import { CurrentUser } from './../../shared/decorators/current.user';
-import { ParseOptionalPipe } from 'src/shared/pipe/parse.optional.pipe';
+import { ParseOptionalPipe } from './../../shared/pipe/parse.optional.pipe';
 import { ParseIdAndUuidPipe } from './../../shared/pipe/parse.idanduuid.pipe';
 import { UpdateUserDto } from './dto/update.user.dto';
+import { TransformClassToPlain } from 'class-transformer';
+import { ChangePasswordDto } from './dto/change.password.dto';
 
 @ApiUseTags('user')
 @Controller()
@@ -103,6 +105,7 @@ export class UserController {
     description: '可传递id或者uuid',
   })
   @ApiBearerAuth()
+  @TransformClassToPlain({ groups: ['user.name', 'user.password'] })
   async updateById(
     @Param('id', new ParseIdAndUuidPipe()) id: string | number,
     @Body() data: UpdateUserDto,
@@ -127,6 +130,16 @@ export class UserController {
   @ApiBearerAuth()
   async addUser(@Body() data: CreateUserDto): Promise<UserRep> {
     return await this.userService.addUser(data);
+  }
+
+  @Post('user/change_password')
+  @ApiOperation({ title: '修改密码' })
+  @ApiBearerAuth()
+  async changePassword(
+    @CurrentUser('id') id: string,
+    @Body() data: ChangePasswordDto,
+  ): Promise<string> {
+    return await this.userService.changePassword(id, data);
   }
   /**
    * @param {type}

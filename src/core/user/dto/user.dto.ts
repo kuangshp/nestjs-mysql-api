@@ -7,9 +7,10 @@ import {
   IsMobilePhone,
 } from 'class-validator';
 import { ApiModelProperty } from '@nestjs/swagger';
-import { Transform } from 'class-transformer';
+import { Transform, Expose, Exclude } from 'class-transformer';
 import { UserExtendDto } from './user.extend.dto';
 
+@Exclude()
 export class UserDto extends UserExtendDto {
   @ApiModelProperty({ required: true, description: '用户名' })
   @IsString({ message: '用户名必须为字符类型' })
