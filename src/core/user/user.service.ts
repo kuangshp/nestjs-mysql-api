@@ -1,15 +1,15 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, getManager, EntityManager } from 'typeorm';
+import { NodeAuth } from 'node-auth0';
 
 import { UserEntity } from './user.entity';
 import { LoginUserDto } from './dto/login.user.dto';
 import { CreateUserDto } from './dto/create.user.dto';
 import { UserRep } from './dto/user.rep.dto';
 import { UpdateUserDto } from './dto/update.user.dto';
-import { isIntExp, isUuidExp, sqlParamsJoin } from './../../shared/utils';
+import { isIntExp, sqlParamsJoin } from './../../shared/utils';
 import { UserExtendEntity } from './user.extend.entity';
-import { NodeAuth } from 'node-auth0';
 import { ChangePasswordDto } from './dto/change.password.dto';
 
 @Injectable()
@@ -18,8 +18,6 @@ export class UserService {
   constructor(
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
-    @InjectRepository(UserExtendEntity)
-    private readonly userExtendRepository: Repository<UserExtendEntity>,
   ) {
     this.nodeAuth = new NodeAuth(8, 10, true);
   }
@@ -74,7 +72,7 @@ export class UserService {
    * @Date: 2019-08-09 17:50:32
    */
   async showAll(pageSize: number, pageNumber: number): Promise<any> {
-    const [users, total] = await this.userRepository
+    const [] = await this.userRepository
       .createQueryBuilder('user')
       .offset(pageNumber - 1) // 从多少条开始
       .limit(pageSize) // 查询多少条数据
@@ -227,7 +225,7 @@ export class UserService {
           // );
         }
       })
-      .then(async res => {
+      .then(async () => {
         let sql =
           // tslint:disable-next-line:max-line-length
           'select u.id,u.uuid,u.name,u.mobile,u.email,u.is_active,u.gender,u.create_at,u.update_at, ue.birthday,ue.company,ue.position,ue.address,ue.avatar from user as u inner join user_extend as ue on u.id=ue.user_id where';
@@ -238,7 +236,7 @@ export class UserService {
         }
         return await getManager().query(sql, [id]);
       })
-      .catch(e => {
+      .catch(() => {
         return '修改数据失败';
       });
   }
@@ -269,10 +267,10 @@ export class UserService {
           user[0].id,
         ]); // 删除用户扩展表
       })
-      .then(res => {
+      .then(() => {
         return '删除成功';
       })
-      .catch(e => {
+      .catch(() => {
         return '删除失败';
       });
   }
@@ -344,7 +342,7 @@ export class UserService {
           address,
         });
       })
-      .then(async res => {
+      .then(async () => {
         const user = await getManager().query(
           // tslint:disable-next-line:max-line-length
           'select user.*,e.company, e.birthday, e.position, e.address, e.avatar from user INNER JOIN user_extend e on user.id = e.user_id WHERE user.name = ?',
