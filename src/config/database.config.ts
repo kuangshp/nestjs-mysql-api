@@ -7,5 +7,5 @@ export default {
   password: process.env.DB_PASSWORD,
   dropSchema: false,
   synchronize: false,
-  logging: process.env.DB_LOGGING,
+  logging: false,
 };

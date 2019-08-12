@@ -7,7 +7,7 @@ import { LoginUserDto } from './dto/login.user.dto';
 import { CreateUserDto } from './dto/create.user.dto';
 import { UserRep } from './dto/user.rep.dto';
 import { UpdateUserDto } from './dto/update.user.dto';
-import { isIntExp, isUuidExp } from './../../shared/utils';
+import { isIntExp, isUuidExp, sqlParamsJoin } from './../../shared/utils';
 import { UserExtendEntity } from './user.extend.entity';
 import { NodeAuth } from 'node-auth0';
 import { ChangePasswordDto } from './dto/change.password.dto';
@@ -18,6 +18,8 @@ export class UserService {
   constructor(
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
+    @InjectRepository(UserExtendEntity)
+    private readonly userExtendRepository: Repository<UserExtendEntity>,
   ) {
     this.nodeAuth = new NodeAuth(8, 10, true);
   }
@@ -104,9 +106,13 @@ export class UserService {
     } else {
       sql += ' uuid = ?';
     }
-    const user = await this.userRepository.query(sql, id);
-    delete user[0].password;
-    return user[0];
+    try {
+      const user = await this.userRepository.query(sql, id);
+      delete user[0].password;
+      return user[0];
+    } catch (e) {
+      throw new HttpException(`你输入的:${id}不存在`, HttpStatus.BAD_REQUEST);
+    }
   }
 
   /**
@@ -131,59 +137,104 @@ export class UserService {
     return getManager()
       .transaction(async (entityManager: EntityManager) => {
         if (isIntExp.test(id)) {
-          await entityManager.update<UserEntity>(
-            UserEntity,
-            { id },
-            {
+          const sql1 =
+            'update user set ' +
+            sqlParamsJoin({
               email,
               mobile,
               gender,
               isActive,
-            },
-          );
-          await entityManager.update<UserExtendEntity>(
-            UserExtendEntity,
-            { user_id: id },
-            {
+            }) +
+            ' where id=?';
+          await entityManager.query(sql1, [id]);
+          const sql2 =
+            'update user_extend set ' +
+            sqlParamsJoin({ company, position, address, avatar }) +
+            ' where user_id=?';
+          await entityManager.query(sql2, [id]);
+          // await entityManager.update<UserEntity>(
+          //   UserEntity,
+          //   { id },
+          //   {
+          //     email,
+          //     mobile,
+          //     gender,
+          //     isActive,
+          //   },
+          // );
+          // const userExtend = await this.userExtendRepository.findOne({
+          //   where: { userId: id },
+          // });
+          // // update只能根据主键更新
+          // await entityManager.update<UserExtendEntity>(
+          //   UserExtendEntity,
+          //   { id: userExtend.id },
+          //   {
+          //     company,
+          //     position,
+          //     address,
+          //     avatar,
+          //   },
+          // );
+        } else {
+          const sql1 =
+            'update user set ' +
+            sqlParamsJoin({
+              email,
+              mobile,
+              gender,
+              isActive,
+            }) +
+            ' where uuid=?';
+          const sql2 =
+            'update user_extend set ' +
+            sqlParamsJoin({
               company,
               position,
               address,
               avatar,
-            },
-          );
-        } else {
-          await entityManager.update<UserEntity>(
-            UserEntity,
-            { uuid: id },
-            {
-              email,
-              mobile,
-              gender,
-              isActive,
-            },
-          );
+            }) +
+            ' where user_id=?';
+          await entityManager.query(sql1, [id]);
           const user = await entityManager.query(
             'select id from user where uuid=?',
             [id],
           ); // 获取到用户id
-          await entityManager.update<UserExtendEntity>(
-            UserExtendEntity,
-            { user_id: user[0].id },
-            {
-              company,
-              position,
-              address,
-              avatar,
-            },
-          );
+          await entityManager.query(sql2, [user[0].id]);
+          // await entityManager.update<UserEntity>(
+          //   UserEntity,
+          //   { uuid: id },
+          //   {
+          //     email,
+          //     mobile,
+          //     gender,
+          //     isActive,
+          //   },
+          // );
+          // const user = await entityManager.query(
+          //   'select id from user where uuid=?',
+          //   [id],
+          // ); // 获取到用户id
+          // await entityManager.update<UserExtendEntity>(
+          //   UserExtendEntity,
+          //   { user_id: user[0].id },
+          //   {
+          //     company,
+          //     position,
+          //     address,
+          //     avatar,
+          //   },
+          // );
         }
       })
       .then(async res => {
-        let sql = 'select * from user inner join user_extend where';
+        let sql =
+          // tslint:disable-next-line:max-line-length
+          'select u.id,u.uuid,u.name,u.mobile,u.email,u.is_active,u.gender,u.create_at,u.update_at, ue.birthday,ue.company,ue.position,ue.address,ue.avatar from user as u inner join user_extend as ue on u.id=ue.user_id where';
         if (isIntExp.test(id)) {
-          sql += ' id=?';
+          sql += ' u.id=?';
         } else {
-          sql += ' uuid=?';
+          sql += ' u.uuid=?';
         }
         return await getManager().query(sql, [id]);
       })
