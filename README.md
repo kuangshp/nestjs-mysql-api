@@ -38,11 +38,23 @@
     create_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     update_at TIMESTAMP ON UPDATE CURRENT_TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间'
   )
+  -- 用户扩展表
+  CREATE TABLE `user_extend`(
+    id int(11) PRIMARY KEY auto_increment COMMENT '主键id',
+    birthday timestamp COMMENT '生日',
+    company VARCHAR(100) COMMENT '公司名称',
+    position VARCHAR(100) COMMENT '职位',
+    address VARCHAR(100) COMMENT '公司地址',
+    avatar VARCHAR(200) COMMENT '头像url',
+    user_id int(11) COMMENT '关联用户的id'
+  )
 
   -- 创建角色表
   CREATE TABLE `role`(
     id int(11) PRIMARY KEY auto_increment comment '主键id',
     name varchar(10) UNIQUE not null comment '角色名称',
+    description varchar(100) DEFAULT NULL COMMENT '描素',
+    is_active tinyint(4) NOT NULL DEFAULT '1' COMMENT '是否可用',
     create_at timestamp default current_timestamp comment '创建时间',
     update_at timestamp on update current_timestamp default current_timestamp comment '更新时间'
   )
