@@ -1,3 +1,4 @@
+import { humpToLine } from './str';
 /**
  * @param {type}
  * @return:
@@ -10,7 +11,7 @@ export const sqlParamsJoin = (data: { [propsName: string]: any }): string => {
   const result = [];
   Object.keys(data).forEach(key => {
     if (data[key]) {
-      result.push(`${key}='${data[key]}'`);
+      result.push(`${humpToLine(key)}='${data[key]}'`);
     }
   });
   return ` ${result.join(',')} `;
@@ -29,7 +30,7 @@ export const sqlInsertJoin = (data: { [propsName: string]: any }): string => {
   const values = [];
   Object.keys(data).forEach(key => {
     if (data[key]) {
-      keys.push(key);
+      keys.push(humpToLine(key));
       values.push(data[key]);
     }
   });
