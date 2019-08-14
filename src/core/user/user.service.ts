@@ -98,7 +98,7 @@ export class UserService {
      * ORDER BY id DESC limit 0, 10;
      */
     const user1 = await this.userRepository.query(
-      'select u.id, u.uuid, u.name, u.mobile, u.email, u.create_at, u.update_at from user as u limit ?, ? order by id desc',
+      'select u.id, u.uuid, u.name, u.mobile, u.email, u.create_at, u.update_at from user as u  order by update_at desc limit ?, ?',
       [pageNumber - 1, pageSize],
     );
     const count = await this.userRepository.query(
