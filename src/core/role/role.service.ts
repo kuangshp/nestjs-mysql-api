@@ -27,6 +27,24 @@ export class RoleService {
   /**
    * @param {type}
    * @return:
+   * @Description:查询全部的角色
+   * @Author: 水痕
+   * @LastEditors: 水痕
+   * @Date: 2019-08-14 16:38:07
+   */
+  async showAll(pageSize: number, pageNumber: number): Promise<any> {
+    const [roles, total] = await this.roleRepository
+      .createQueryBuilder('user')
+      .offset(pageNumber - 1) // 从多少条开始
+      .limit(pageSize) // 查询多少条数据
+      .orderBy('id', 'DESC') // 排序
+      .getManyAndCount(); // 查询到数据及个数，返回的是一个数组
+    return [roles, total];
+  }
+
+  /**
+   * @param {type}
+   * @return:
    * @Description: 根据用户id修改角色
    * @Author: 水痕
    * @LastEditors: 水痕
