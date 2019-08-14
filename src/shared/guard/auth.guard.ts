@@ -6,7 +6,6 @@ import {
   HttpStatus,
   ExecutionContext,
 } from '@nestjs/common';
-import { Observable } from 'rxjs';
 import * as jwt from 'jsonwebtoken';
 import { InjectConfig, ConfigService } from 'nestjs-config';
 

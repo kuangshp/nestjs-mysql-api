@@ -117,6 +117,4 @@
 
   <img src="./wx.jpg" width = "200" height = "220" div />
 
-- 2、如果你觉得本项目对你帮助很大,也可以请我喝杯咖啡,或者给一个赞
-
-  <img src="./donate.jpeg" width = "200" height = "250" div />
+- 2、如果你觉得本项目对你帮助很大,**给一个赞**

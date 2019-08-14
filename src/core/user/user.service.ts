@@ -12,6 +12,7 @@ import { UpdateUserDto } from './dto/update.user.dto';
 import { isIntExp, sqlParamsJoin } from './../../shared/utils';
 import { UserExtendEntity } from './user.extend.entity';
 import { ChangePasswordDto } from './dto/change.password.dto';
+import { RegisterUserDto } from './dto/register.user.dto';
 
 @Injectable()
 export class UserService {
@@ -31,7 +32,7 @@ export class UserService {
    * @LastEditors: 水痕
    * @Date: 2019-08-09 17:51:47
    */
-  async register(createUserDto: Partial<CreateUserDto>): Promise<UserRep> {
+  async register(createUserDto: Partial<RegisterUserDto>): Promise<UserRep> {
     const { name } = createUserDto;
     let user = await this.userRepository.findOne({ where: { name } });
     if (user) {
@@ -81,15 +82,23 @@ export class UserService {
    * @Date: 2019-08-09 17:50:32
    */
   async showAll(pageSize: number, pageNumber: number): Promise<any> {
-    const [] = await this.userRepository
+    // 使用orm查询
+    const [users, total] = await this.userRepository
       .createQueryBuilder('user')
       .offset(pageNumber - 1) // 从多少条开始
       .limit(pageSize) // 查询多少条数据
       .orderBy('id', 'DESC') // 排序
       .getManyAndCount(); // 查询到数据及个数，返回的是一个数组
     // return [users.map(user => user.toResponseObject(false)), total];
+    /**
+     * 关联表的查询
+     * select u.id, u.uuid, u.name, u.mobile, u.email, u.create_at, u.update_at,
+     * ue.address, ue.avatar, ue.birthday, ue.company, ue.position from user as u
+     * left join user_extend as ue on u.id=ue.user_id
+     * ORDER BY id DESC limit 0, 10;
+     */
     const user1 = await this.userRepository.query(
-      'select * from user limit ?, ?',
+      'select u.id, u.uuid, u.name, u.mobile, u.email, u.create_at, u.update_at from user as u limit ?, ? order by id desc',
       [pageNumber - 1, pageSize],
     );
     const count = await this.userRepository.query(

@@ -29,7 +29,7 @@ async function bootstrap() {
     .setDescription('nestjs api接口文档')
     .setBasePath(PREFIX)
     .setVersion('1.0')
-    // .addBearerAuth()
+    .addBearerAuth('token')
     .setVersion('0.0.1')
     .build();
 
