@@ -45,6 +45,18 @@ export class RoleService {
   /**
    * @param {type}
    * @return:
+   * @Description: 根据用户id查询角色
+   * @Author: 水痕
+   * @LastEditors: 水痕
+   * @Date: 2019-08-14 16:57:29
+   */
+  async getById(id: string): Promise<RoleEntity> {
+    return await this.roleRepository.findOne({ where: { id } });
+  }
+
+  /**
+   * @param {type}
+   * @return:
    * @Description: 根据用户id修改角色
    * @Author: 水痕
    * @LastEditors: 水痕

@@ -44,6 +44,15 @@ export class RoleController {
     return await this.roleService.showAll(pageSize, pageNumber);
   }
 
+  @ApiOperation({ title: '根据角色id查询角色' })
+  @Get(':id')
+  @HttpCode(HttpStatus.OK)
+  async getById(
+    @Param('id', new ParseIntPipe()) id: string,
+  ): Promise<RoleEntity> {
+    return await this.roleService.getById(id);
+  }
+
   @ApiOperation({ title: '根据角色id修改角色' })
   @Put(':id')
   async updateById(
