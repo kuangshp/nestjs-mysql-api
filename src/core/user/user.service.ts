@@ -17,11 +17,13 @@ import { RegisterUserDto } from './dto/register.user.dto';
 @Injectable()
 export class UserService {
   private nodeAuth: NodeAuth;
+  private validator: Validator;
   constructor(
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
   ) {
     this.nodeAuth = new NodeAuth(8, 10, true);
+    this.validator = new Validator();
   }
 
   /**
@@ -56,11 +58,11 @@ export class UserService {
    */
   async login(loginUserDto: Partial<LoginUserDto>): Promise<UserRep> {
     const { name, password } = loginUserDto;
-    const validator: Validator = new Validator();
+
     let user: UserEntity;
-    if (validator.isMobilePhone(name, 'zh-CN')) {
+    if (this.validator.isMobilePhone(name, 'zh-CN')) {
       user = await this.userRepository.findOne({ where: { mobile: name } });
-    } else if (validator.isEmail(name)) {
+    } else if (this.validator.isEmail(name)) {
       user = await this.userRepository.findOne({ where: { email: name } });
     } else {
       user = await this.userRepository.findOne({ where: { name } });
@@ -293,6 +295,38 @@ export class UserService {
       });
   }
 
+  /**
+   * @param {type}
+   * @return:
+   * @Description: 根据用户id或者uuid修改用户当前的状态
+   * @Author: 水痕
+   * @LastEditors: 水痕
+   * @Date: 2019-08-14 14:22:35
+   */
+  async changeStatus(id: string): Promise<any> {
+    let sql: string = 'select is_active from user where ';
+    let updateSql: string = 'update user set is_active=? where ';
+    let sql1: string =
+      'select id, uuid, name, mobile, email, is_active, create_at, update_at from user where ';
+    if (this.validator.isUUID(id)) {
+      sql += 'uuid=?';
+      updateSql += 'uuid=?';
+      sql1 += 'uuid=?';
+    } else {
+      sql += 'id=?';
+      updateSql += 'id=?';
+      sql1 += 'id=?';
+    }
+    const user: UserEntity = await getManager().query(sql, [id]);
+    let isActive = user[0].is_active;
+    if (isActive) {
+      isActive = 0;
+    } else {
+      isActive = 1;
+    }
+    await getManager().query(updateSql, [isActive, id]);
+    return await getManager().query(sql1, [id]);
+  }
   /**
    * @param {type}
    * @return:

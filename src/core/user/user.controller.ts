@@ -130,7 +130,20 @@ export class UserController {
   async destroyById(
     @Param('id', new ParseIdAndUuidPipe()) id: string,
   ): Promise<string> {
-    return this.userService.destroyById(id);
+    return await this.userService.destroyById(id);
+  }
+
+  @ApiOperation({
+    title: '根据用户id修改当前用户是否可用',
+    description: '可传递id或者uuid',
+  })
+  @ApiBearerAuth()
+  @Post('change_status/:id')
+  @HttpCode(HttpStatus.OK)
+  async changeStatus(
+    @Param('id', new ParseIdAndUuidPipe()) id: string,
+  ): Promise<UserRep> {
+    return await this.userService.changeStatus(id);
   }
 
   @ApiOperation({ title: '创建用户' })
