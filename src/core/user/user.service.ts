@@ -2,6 +2,7 @@ import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, getManager, EntityManager } from 'typeorm';
 import { NodeAuth } from 'node-auth0';
+import { Validator } from 'class-validator';
 
 import { UserEntity } from './user.entity';
 import { LoginUserDto } from './dto/login.user.dto';
@@ -54,7 +55,15 @@ export class UserService {
    */
   async login(loginUserDto: Partial<LoginUserDto>): Promise<UserRep> {
     const { name, password } = loginUserDto;
-    const user = await this.userRepository.findOne({ where: { name } });
+    const validator: Validator = new Validator();
+    let user: UserEntity;
+    if (validator.isMobilePhone(name, 'zh-CN')) {
+      user = await this.userRepository.findOne({ where: { mobile: name } });
+    } else if (validator.isEmail(name)) {
+      user = await this.userRepository.findOne({ where: { email: name } });
+    } else {
+      user = await this.userRepository.findOne({ where: { name } });
+    }
     // 对用户输入的密码与数据库中的密码进行校验
     if (!user || !(await user.checkPassword(password, user.password))) {
       throw new HttpException('请检查你的用户名与密码', HttpStatus.BAD_REQUEST);

@@ -1,13 +1,13 @@
-import { IsNotEmpty, IsString, IsOptional } from 'class-validator';
+import { IsNotEmpty, IsString } from 'class-validator';
 import { ApiModelProperty } from '@nestjs/swagger';
+import { IsValidationName } from './../../../shared/decorators/name.validation';
 
 export class LoginUserDto {
-  @ApiModelProperty()
-  @IsString({ message: '姓名必须是字符串' })
-  @IsNotEmpty({ message: '姓名不能为空' })
+  @ApiModelProperty({ description: '用户名' })
+  @IsValidationName()
   readonly name: string;
 
-  @ApiModelProperty()
+  @ApiModelProperty({ description: '密码' })
   @IsString({ message: '密码必须是字符串' })
   @IsNotEmpty({ message: '密码不能为空' })
   readonly password: string;
