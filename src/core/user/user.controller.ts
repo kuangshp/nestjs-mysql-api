@@ -7,7 +7,6 @@ import {
   Get,
   UseInterceptors,
   Query,
-  Request,
   ParseIntPipe,
   Param,
   Put,
