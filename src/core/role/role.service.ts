@@ -34,7 +34,7 @@ export class RoleService {
    */
   async showAll(pageSize: number, pageNumber: number): Promise<any> {
     const [roles, total] = await this.roleRepository
-      .createQueryBuilder('user')
+      .createQueryBuilder('role')
       .offset(pageNumber - 1) // 从多少条开始
       .limit(pageSize) // 查询多少条数据
       .orderBy('id', 'DESC') // 排序
