@@ -44,7 +44,9 @@ async function bootstrap() {
     }),
   );
   // 静态文件目录
-  app.useStaticAssets(path.join(__dirname, '..', 'public'));
+  app.useStaticAssets(path.join(__dirname, '..', 'public'), {
+    prefix: '/static/'
+  });
   // 跨站点请求伪造（称为CSRF或XSRF）
   // app.use(csurf());
   // Web漏洞的

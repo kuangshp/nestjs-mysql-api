@@ -14,13 +14,14 @@ import { ApiUseTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 @ApiBearerAuth()
 @Controller('file')
 export class FileController {
-  constructor(private readonly uploadFileService: UploadFileService) {}
+  constructor (private readonly uploadFileService: UploadFileService) { }
 
   @ApiOperation({ title: '上传文件' })
   @Post()
   @HttpCode(HttpStatus.OK)
   @UseInterceptors(FileInterceptor('files'))
   uploadFile(@UploadedFile() files) {
+    console.log(files);
     return this.uploadFileService.uploadFile({
       files,
       typeList: ['.png', '.pdf'],

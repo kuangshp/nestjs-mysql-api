@@ -32,12 +32,33 @@ export class UploadFileService {
     const uplaodBasePath = 'public/uploads';
     // 根据格式生成文件夹
     const dirname = moment(Date.now()).format('YYYY/MM/DD');
+    const filePath = path.join(uplaodBasePath, category, dirname)
     // 递归创建文件夹
-    this.mkdirsSync(path.join(uplaodBasePath, category, dirname));
+    this.mkdirsSync(filePath);
     // 如果上传是单个文件
     if (isObject(files)) {
+      return this.singleFile(filePath, files, typeList);
+    } else if (Array.isArray(Array.from(files))) {
+      return this.manyFile(filePath, files, typeList);
+    } else {
+      throw new HttpException('上传文件失败', HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  /**
+   * 多个文件上传
+   * @param filePath 基础路径
+   * @param files  上传文件
+   * @param typeList  支持上传的类别
+   */
+  private manyFile(filePath: string, files: any, typeList: string[]): { url: string; fileName: string } | Array<{ url: string; fileName: string }> {
+    if (files.length === 0) {
+      return { url: '', fileName: '' };
+    }
+    const filenameList: Array<{ url: string; fileName: string }> = [];
+    for (const file of files) {
       // 生成文件名
-      const extname = path.extname(files.originalname).toLocaleLowerCase();
+      const extname = path.extname(file.originalname).toLocaleLowerCase();
       // tslint:disable-next-line:radix
       const filename: string = `${Date.now()}${Number.parseInt(
         String(Math.random() * 1000),
@@ -48,47 +69,45 @@ export class UploadFileService {
         !typeList.map(item => item.toLocaleLowerCase()).includes(extname)
       ) {
         throw new HttpException(
-          `上传图片格式限制为:[${typeList}]其中一种,你上传的图片格式为:${extname}`,
+          `上传图片格式限制为:[${typeList}]其中一种,你上传的图片格式里包含了:${extname}`,
           HttpStatus.NOT_ACCEPTABLE,
         );
       }
-      const target = path.join(uplaodBasePath, category, dirname, filename);
+      const target = path.join(filePath, filename);
+      filenameList.push({ url: target.replace('public', '/static'), fileName: file.originalname });
       const writeImage = createWriteStream(target);
-      writeImage.write(files.buffer);
-      return { url: target, fileName: files.originalname };
-    } else if (Array.isArray(Array.from(files))) {
-      if (files.length === 0) {
-        return { url: '', fileName: '' };
-      }
-      const filenameList: Array<{ url: string; fileName: string }> = [];
-      for (const file of files) {
-        // 生成文件名
-        const extname = path.extname(file.originalname).toLocaleLowerCase();
-        // tslint:disable-next-line:radix
-        const filename: string = `${Date.now()}${Number.parseInt(
-          String(Math.random() * 1000),
-        )}${extname}`;
-        // 如果有文件格式约束就判断上传文件
-        if (
-          typeList.length &&
-          !typeList.map(item => item.toLocaleLowerCase()).includes(extname)
-        ) {
-          throw new HttpException(
-            `上传图片格式限制为:[${typeList}]其中一种,你上传的图片格式里包含了:${extname}`,
-            HttpStatus.NOT_ACCEPTABLE,
-          );
-        }
-        const target = path.join(uplaodBasePath, category, dirname, filename);
-        filenameList.push({ url: target, fileName: file.originalname });
-        const writeImage = createWriteStream(target);
-        writeImage.write(file.buffer);
-      }
-      return filenameList;
-    } else {
-      throw new HttpException('上传文件失败', HttpStatus.BAD_REQUEST);
+      writeImage.write(file.buffer);
     }
+    return filenameList;
   }
-
+  /**
+   * 单个文件上传
+   * @param filePath 基础路径
+   * @param files  上传文件
+   * @param typeList  支持上传的类别
+   */
+  private singleFile(filePath: string, files: any, typeList: string[]): { url: string; fileName: string } {
+    // 生成文件名
+    const extname = path.extname(files.originalname).toLocaleLowerCase();
+    // tslint:disable-next-line:radix
+    const filename: string = `${Date.now()}${Number.parseInt(
+      String(Math.random() * 1000),
+    )}${extname}`;
+    // 如果有文件格式约束就判断上传文件
+    if (
+      typeList.length &&
+      !typeList.map(item => item.toLocaleLowerCase()).includes(extname)
+    ) {
+      throw new HttpException(
+        `上传图片格式限制为:[${typeList}]其中一种,你上传的图片格式为:${extname}`,
+        HttpStatus.NOT_ACCEPTABLE,
+      );
+    }
+    const target = path.join(filePath, filename);
+    const writeImage = createWriteStream(target);
+    writeImage.write(files.buffer);
+    return { url: target.replace('public', '/static'), fileName: files.originalname };
+  }
   /**
    * @param {type}
    * @return:
