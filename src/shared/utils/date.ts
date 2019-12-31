@@ -1,5 +1,4 @@
-// tslint:disable-next-line: no-var-requires
-const moment = require('moment');
+import * as moment from 'moment';
 /**
  * @param dateNum 时间
  * @param isDue 是否显示时分秒
