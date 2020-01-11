@@ -11,6 +11,7 @@ import { isObject } from './../utils';
 @Injectable()
 export class TransformInterceptor<T> implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler<T>): Observable<any> {
+    // return call$.pipe(map(data => classToPlain(data)));
     return next.handle().pipe(
       map((data: any) => {
         return {
