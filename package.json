@@ -1,16 +1,16 @@
 {
   "name": "nest-mysql-api",
   "version": "0.0.1",
-  "description": "",
-  "author": "",
+  "description": "nest-mysql-api提供api稳定",
+  "author": "水痕",
   "license": "MIT",
   "scripts": {
-    "build": "tsc -p tsconfig.build.json",
-    "format": "prettier --write \"src/**/*.ts\"",
-    "start": "ts-node -r tsconfig-paths/register src/main.ts",
+    "prebuild": "rimraf dist",
+    "build": "nest build",
+    "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
+    "start": "nest start",
     "start:dev": "cross-env NODE_ENV=development nodemon",
-    "start:debug": "nodemon --config nodemon-debug.json",
-    "prestart:prod": "rimraf dist && npm run build",
+    "start:debug": "nest start --debug --watch",
     "start:prod": "cross-env NODE_ENV=production node dist/main.js",
     "lint": "tslint -p tsconfig.json -c tslint.json",
     "test": "jest",
@@ -18,9 +18,7 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "db": "typeormCli init",
-    "start1": "cross-env NODE_ENV=development nodemon dist/server",
-    "webpack": "webpack --config webpack.config.js"
+    "db": "typeormCli init"
   },
   "dependencies": {
     "@nestjs/common": "^6.7.2",
