@@ -3,13 +3,13 @@
 
   * 用户中心
   
-  ![image-20200210094124374](./images/user.png)
+  ![image-20200210094124374](./user.png)
   * 角色管理
 
-  ![image-20200210094341500](./images/role.png)
+  ![image-20200210094341500](./role.png)
   * 资源管理
   
-  ![image-20200210094452098](./images/access.png)
+  ![image-20200210094452098](./access.png)
   
 * 2、下载原代码及安装依赖包
 
@@ -70,6 +70,6 @@
 
 - 1、有关于`nestjs`的技术问题可以直接加我微信<font color="#f00">备注:nest 开发</font>
 
-  <img src="./images/wx.jpg" width = "200" height = "220" div />
+  <img src="./wx.jpg" width = "200" height = "220" div />
 
 - 2、如果你觉得本项目对你帮助很大,**给一个赞**
