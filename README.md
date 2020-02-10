@@ -3,13 +3,13 @@
 
   * 用户中心
   
-  ![image-20200210094124374](images/user.png)
+  ![image-20200210094124374](./images/user.png)
   * 角色管理
 
-  ![image-20200210094341500](images/role.png)
+  ![image-20200210094341500](./images/role.png)
   * 资源管理
   
-  ![image-20200210094452098](images/access.png)
+  ![image-20200210094452098](./images/access.png)
   
 * 2、下载原代码及安装依赖包
 
