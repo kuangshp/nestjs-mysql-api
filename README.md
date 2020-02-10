@@ -1,12 +1,24 @@
 ## 一、项目初始化
+* 1、权限系统前端页面展示
 
-- 1、下载原代码及安装依赖包
-- 2、根目录下创建一个`.env`的文件
+  * 用户中心
+  
+  ![image-20200210094124374](images/user.png)
+  * 角色管理
+
+  ![image-20200210094341500](images/role.png)
+  * 资源管理
+  
+  ![image-20200210094452098](images/access.png)
+  
+* 2、下载原代码及安装依赖包
+
+* 3、根目录下创建一个`.env`的文件
 
   ```js
   // 端口号
   PORT = 4000;
-
+  
   // mysql数据库配置
   DB_TYPE = mysql;
   DB_HOST = localhost;
@@ -16,75 +28,16 @@
   DB_PORT = 3306;
   DB_SYNCHRONIZE = false;
   DB_LOGGING = true;
-
+  
   // jwt加盐
   SECRET = abc;
   // 前缀
-  PREFIX = api / v1;
+  PREFIX = api/v1;
   ```
 
-* 3、创建数据库及创建表
+* 、创建数据库及创建表(直接使用项目中的`sql`文件)
 
-  ```sql
-  -- 创建用户表
-  CREATE TABLE `user`(
-    id int(11) PRIMARY KEY auto_increment COMMENT '主键id',
-    uuid VARCHAR(150) UNIQUE NOT NULL COMMENT 'uuid主键',
-    name VARCHAR(100) UNIQUE NOT NULL COMMENT '姓名',
-    password VARCHAR(255) NOT NULL COMMENT '密码',
-    email VARCHAR(100) COMMENT '邮箱',
-    mobile VARCHAR(11) COMMENT '手机号码',
-    gender TINYINT DEFAULT 0 COMMENT '性别',
-    create_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-    update_at TIMESTAMP ON UPDATE CURRENT_TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间'
-  )
-  -- 用户扩展表
-  CREATE TABLE `user_extend`(
-    id int(11) PRIMARY KEY auto_increment COMMENT '主键id',
-    birthday timestamp COMMENT '生日',
-    company VARCHAR(100) COMMENT '公司名称',
-    position VARCHAR(100) COMMENT '职位',
-    address VARCHAR(100) COMMENT '公司地址',
-    avatar VARCHAR(200) COMMENT '头像url',
-    user_id int(11) COMMENT '关联用户的id'
-  )
-
-  -- 创建角色表
-  CREATE TABLE `role`(
-    id int(11) PRIMARY KEY auto_increment comment '主键id',
-    name varchar(10) UNIQUE not null comment '角色名称',
-    description varchar(100) DEFAULT NULL COMMENT '描素',
-    is_active tinyint(4) NOT NULL DEFAULT '1' COMMENT '是否可用',
-    create_at timestamp default current_timestamp comment '创建时间',
-    update_at timestamp on update current_timestamp default current_timestamp comment '更新时间'
-  )
-
-  -- 创建用户与角色的关联表
-  create table `role_user`(
-    role_id int(11) comment '角色id',
-    user_id int(11) comment '用户id',
-    PRIMARY key(role_id, user_id)
-  )
-
-  -- 创建资源表
-  create table `resource`(
-    id int(11) primary key auto_increment comment '主键id',
-    uuid VARCHAR(150) UNIQUE NOT NULL COMMENT 'uuid主键',
-    name VARCHAR(100) UNIQUE NOT NULL COMMENT '资源名称',
-    parent_id int(11) not null default 0 comment '父资源id',
-    create_at timestamp default current_timestamp comment '创建时间',
-    update_at timestamp on update current_timestamp default current_timestamp comment '更新时间'
-  )
-
-  -- 创建资源和角色的关联表
-  create table `role_resource`(
-    role_id int(11) comment '角色id',
-    resource_id int(11) comment '资源id',
-    primary key(role_id, resource_id)
-  )
-  ```
-
-* 4、运行代码
+* 5、运行代码
 
   ```shell
   npm run start:dev
@@ -108,6 +61,8 @@
 - [x] `src/core`中添加上传附近模块[官网地址](https://docs.nestjs.com/techniques/file-upload)
 - [x] 使用`webpack`热更新[官方文档](https://docs.nestjs.com/techniques/hot-reload)
 - [x] 新增分页拦截器(`src/shared/interceptor/paginate.interceptor.ts`和`src/core/user/user.service.ts`)
+- [x] 权限系统主要的功能
+  * 采用`RBAC`的方式，实现用户关联角色(一对多关系)，角色关联资源(一对多的关系)
 
 ## 三、技术解答
 
@@ -115,6 +70,6 @@
 
 - 1、有关于`nestjs`的技术问题可以直接加我微信<font color="#f00">备注:nest 开发</font>
 
-  <img src="./wx.jpg" width = "200" height = "220" div />
+  <img src="./images/wx.jpg" width = "200" height = "220" div />
 
 - 2、如果你觉得本项目对你帮助很大,**给一个赞**

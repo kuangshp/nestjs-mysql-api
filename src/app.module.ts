@@ -1,22 +1,20 @@
-import { APP_INTERCEPTOR, APP_GUARD } from '@nestjs/core';
+import * as path from 'path';
 import { Module, Logger } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from 'nestjs-config';
-import { UserModule } from './core/user/user.module';
-import { LoggingInterceptor } from './shared/interceptor/logging.interceptor';
-import { AuthGuard } from './shared/guard/auth.guard';
-import { CurlModule } from './core/curl/curl.module';
-import { UploadFileModule } from './core/upload-file/upload-file.module';
-import { FileModule } from './file/file.module';
-import { RoleModule } from './core/role/role.module';
-import { ResourceModule } from './core/resource/resource.module';
-import * as path from 'path';
+
+import { AdminModule } from './controllers/admin/admin.module';
+import { LoggingInterceptor } from './interceptors/logging/logging.interceptor';
+import { APP_INTERCEPTOR } from '@nestjs/core';
+import { FrontModule } from './controllers/front/front.module';
+import { CartGateway } from './gateway/cart/cart.gateway';
 
 const entitiesPath =
   process.env.NODE_ENV === 'production'
     ? path.resolve('./**/*.entity.js')
     : path.resolve('./**/*.entity.ts');
 Logger.log(process.env.NODE_ENV, '当前环境');
+
 
 @Module({
   imports: [
@@ -37,13 +35,9 @@ Logger.log(process.env.NODE_ENV, '当前环境');
       }),
       inject: [ConfigService],
     }),
-    UserModule,
     ConfigModule,
-    CurlModule,
-    UploadFileModule,
-    FileModule,
-    RoleModule,
-    ResourceModule,
+    FrontModule,
+    AdminModule,
   ],
   controllers: [],
   providers: [
@@ -51,10 +45,7 @@ Logger.log(process.env.NODE_ENV, '当前环境');
       provide: APP_INTERCEPTOR,
       useClass: LoggingInterceptor,
     },
-    {
-      provide: APP_GUARD,
-      useClass: AuthGuard,
-    },
+    CartGateway,
   ],
 })
-export class AppModule {}
+export class AppModule { }
