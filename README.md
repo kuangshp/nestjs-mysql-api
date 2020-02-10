@@ -3,17 +3,20 @@
 
   * 用户中心
   
-  ![image-20200210094124374](./images/user.png)
+  ![image-20200210094124374](./user.png)
   * 角色管理
 
-  ![image-20200210094341500](./images/role.png)
+  ![image-20200210094341500](./role.png)
   * 资源管理
   
-  ![image-20200210094452098](./images/access.png)
+  ![image-20200210094452098](./access.png)
   
-* 2、下载原代码及安装依赖包
+* 2、主要提供的`API`
+  ![](./Swagger.png)
+  
+* 3、下载原代码及安装依赖包
 
-* 3、根目录下创建一个`.env`的文件
+* 4、根目录下创建一个`.env`的文件
 
   ```js
   // 端口号
@@ -35,9 +38,9 @@
   PREFIX = api/v1;
   ```
 
-* 、创建数据库及创建表(直接使用项目中的`sql`文件)
+* 5、创建数据库及创建表(直接使用项目中的`sql`文件)
 
-* 5、运行代码
+* 6、运行代码
 
   ```shell
   npm run start:dev
@@ -70,6 +73,6 @@
 
 - 1、有关于`nestjs`的技术问题可以直接加我微信<font color="#f00">备注:nest 开发</font>
 
-  <img src="./images/wx.jpg" width = "200" height = "220" div />
+  <img src="./wx.jpg" width = "200" height = "220" div />
 
 - 2、如果你觉得本项目对你帮助很大,**给一个赞**
