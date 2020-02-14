@@ -63,7 +63,6 @@
 - [x] [安全方面](https://docs.nestjs.com/techniques/security)
 - [x] `src/core`中添加上传附近模块[官网地址](https://docs.nestjs.com/techniques/file-upload)
 - [x] 使用`webpack`热更新[官方文档](https://docs.nestjs.com/techniques/hot-reload)
-- [x] 新增分页拦截器(`src/shared/interceptor/paginate.interceptor.ts`和`src/core/user/user.service.ts`)
 - [x] 权限系统主要的功能
   * 采用`RBAC`的方式，实现用户关联角色(一对多关系)，角色关联资源(一对多的关系)
 
