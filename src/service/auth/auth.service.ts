@@ -1,19 +1,20 @@
 import { Injectable } from '@nestjs/common';
-import { InjectConfig, ConfigService } from 'nestjs-config';
 import { ObjectType } from '@src/types';
 import { InjectRepository } from '@nestjs/typeorm';
+import { AccessEntity } from '@src/entities/access.entity';
 import { RoleAccessEntity } from '@src/entities/role_access.entity';
 import { Repository } from 'typeorm';
-import { AccessEntity } from '@src/entities/access.entity';
+import { UserRoleEntity } from '@src/entities/user_role.entity';
 
 @Injectable()
 export class AuthService {
   constructor (
-    @InjectConfig() private readonly configService: ConfigService,
     @InjectRepository(RoleAccessEntity)
     private readonly roleAccessRepository: Repository<RoleAccessEntity>,
     @InjectRepository(AccessEntity)
     private readonly accessRepository: Repository<AccessEntity>,
+    @InjectRepository(UserRoleEntity)
+    private readonly userRoleRepository: Repository<UserRoleEntity>
   ) { }
   /**
    * @Author: 水痕
@@ -28,26 +29,31 @@ export class AuthService {
    * 3.获取当前的url对应的权限id
    * 4.判断当前访问的url对应的权限id,是否在权限列表的id里面
    */
-  async checkAuth(userinfo: ObjectType, req: any): Promise<boolean> {
-    // 1.获取当前访问的角色id及是否为超级用户
-    const { roleId, isSuper } = userinfo;
+  async checkAuth(userInfo: ObjectType, req: any): Promise<boolean> {
+    // 1.获取当前访问的用户id及是否为超级用户
+    const { id, isSuper } = userInfo;
     // 1.1如果的超级管理员或者是登录或者退出的接口不进行权限校验
     if (isSuper) {
       return true;
     }
-    // 2.根据当前角色id查询到role_access表中的全部权限
-    let roleAccessResult: any = await this.roleAccessRepository.find({ roleId })
+    // 2.根据用户id去查询user_role表获取全部的角色id
+    const roleList = await this.userRoleRepository.find({ where: { userId: id } });
+    // 3.根据当前角色id查询到role_access表中的全部权限
+    const roleAccessResult: ObjectType[] = [];
+    for (const item of roleList) {
+      const result = await this.roleAccessRepository.find({ roleId: item.roleId });
+      roleAccessResult.push(result);
+    }
     // 全部的权限id(包括模块、菜单、操作)
-    let accessIds = roleAccessResult.map((item: { access_id: number }) => item.access_id)
+    const accessIds = roleAccessResult.map((item: { access_id: number }) => item.access_id)
     // 如果是菜单的就直接返回true
     const { url, method } = req;
     const pathname = url.replace('/api/v1/admin/', '');
     if (pathname == 'access/menus') {
       return true;
     }
-    // 3.用当前用户请求的url去access查询是否有该url的权限 
-    let accessUrlResult = await this.accessRepository
-      .createQueryBuilder('ac')
+    // 4.用当前用户请求的url去access查询是否有该url的权限 
+    const accessUrlResult = await this.accessRepository.createQueryBuilder('ac')
       .andWhere('(ac.url LIKE :pathname AND ac.method= :method)', { pathname: `%${pathname}%`, method: method.toUpperCase() })
       .select('ac.id')
       .printSql()
