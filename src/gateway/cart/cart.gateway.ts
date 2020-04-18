@@ -5,14 +5,14 @@
  * @Email: 332904234@qq.com
  * @Company: 
  * @Date: 2020-02-04 14:25:02
- * @LastEditors  : 水痕
- * @LastEditTime : 2020-02-04 16:09:56
+ * @LastEditors: 水痕
+ * @LastEditTime: 2020-04-13 08:21:24
  * @FilePath: /order-mysql-api/src/gateway/cart/cart.gateway.ts
  */
 import { SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
 import { Socket, Server } from 'socket.io';
 
-@WebSocketGateway()
+@WebSocketGateway({ namespace: 'api/v1/cart' })
 export class CartGateway {
   @WebSocketServer() wss: Server;
 

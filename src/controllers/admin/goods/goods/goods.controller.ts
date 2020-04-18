@@ -30,10 +30,11 @@ export class GoodsController {
     const supportImgTypes = this.configService.get('admin.supportImgTypes');
     const result = await this.uploadFileService.uploadFile({
       files: file,
-      category: 'goods',
+      category: 'order_goods',
       typeList: supportImgTypes,
+      isOSS: true,
     })
-    return { link: `http://localhost:3000${result.url}`, isUploaded: true };
+    return { link: result, isUploaded: true };
   }
 
 

@@ -46,7 +46,12 @@ export class AuthService {
       return true;
     }
     // 3.用当前用户请求的url去access查询是否有该url的权限 
-    let accessUrlResult = await this.accessRepository.createQueryBuilder('ac').andWhere('(ac.url LIKE :pathname AND ac.method= :method)', { pathname: `%${pathname}%`, method: method.toUpperCase() }).select('ac.id').printSql().getOne();
+    let accessUrlResult = await this.accessRepository
+      .createQueryBuilder('ac')
+      .andWhere('(ac.url LIKE :pathname AND ac.method= :method)', { pathname: `%${pathname}%`, method: method.toUpperCase() })
+      .select('ac.id')
+      .printSql()
+      .getOne();
     // let accessUrlResult = await this.accessRepository.query(`select * from access where url like '%${pathname}%' and method='${method.toUpperCase()}';`);
     if (accessUrlResult) {
       // 4.判断当前的url获取的权限是否在accessIds中

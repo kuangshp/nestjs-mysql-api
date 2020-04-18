@@ -2,28 +2,43 @@ import { createWriteStream } from 'fs';
 import * as path from 'path';
 import * as fs from 'fs';
 
-import { Injectable, HttpException, HttpStatus, Optional } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus, Optional, Logger } from '@nestjs/common';
 import { InjectConfig, ConfigService } from 'nestjs-config';
+
 
 import * as moment from 'moment';
 import * as Jimp from 'jimp';
+// import OSS = require('ali-oss');
+import * as OSS from 'ali-oss';
+import * as co from 'co';
 
 // 定义上传文件参数类型
+// eslint-disable-next-line @typescript-eslint/class-name-casing
 interface uploadFileType {
-  files: any,
-  category?: string,
-  typeList?: string[],
-  isCut?: boolean
+  files: any, // 文件名
+  category?: string, // 分类
+  typeList?: string[], // 约束类型
+  isCut?: boolean, // 是否切割
+  isOSS?: boolean, // 是否存储到阿里云OSS存储
 }
 // 定义返回类型
+// eslint-disable-next-line @typescript-eslint/class-name-casing
 interface uploadResultType {
   url: string,
   fileName: string
 }
 
+const client = new OSS({
+  accessKeyId: process.env.ALI_OSS_ACCESS_KEY_ID,
+  accessKeySecret: process.env.ALI_OSS_ACCESS_KEY_SECRET,
+  region: process.env.ALI_OSS_REGION,
+});
+
 @Injectable()
 export class UploadFileService {
-  constructor (@InjectConfig() private readonly configService: ConfigService, ) { }
+  constructor (
+    @InjectConfig() private readonly configService: ConfigService,
+  ) { }
 
   /**
    * @Author: 水痕
@@ -35,8 +50,8 @@ export class UploadFileService {
    * @param typeList {String[]} 上传文件限制的图片格式
    * @return: { url: string; fileName: string }
    */
-  public uploadFile(@Optional() options: uploadFileType): uploadResultType {
-    return this.process(options);
+  public async uploadFile(@Optional() options: uploadFileType): Promise<any> {
+    return await this.process(options);
   }
 
 	/**
@@ -49,11 +64,11 @@ export class UploadFileService {
    * @param typeList {String[]} 上传文件限制的图片格式
    * @return: Array<{ url: string; fileName: string }>
    */
-  public uploadFiles(@Optional() options: uploadFileType): Array<uploadResultType> {
+  public async uploadFiles(@Optional() options: uploadFileType): Promise<any> {
     const filenameList: Array<uploadResultType> = [];
-    const { files, category, typeList, isCut } = options;
+    const { files, category, typeList, isCut, isOSS } = options;
     for (const file of files) {
-      const result = this.process({ files: file, category, typeList, isCut });
+      const result = await this.process({ files: file, category, typeList, isCut, isOSS });
       filenameList.push(result);
     }
     return filenameList;
@@ -67,27 +82,46 @@ export class UploadFileService {
    * @param {type} 
    * @return: 
    */
-  private process(@Optional() options: uploadFileType): uploadResultType {
-    const { files, category, typeList, isCut } = options;
-    const filePath: string = this.fileDirname(category);
+  private async process(@Optional() options: uploadFileType): Promise<any> {
+    const { files, category, typeList, isCut, isOSS } = options;
 
-    // 生成文件名
+    // 文件的扩展名
     const extname = path.extname(files.originalname).toLocaleLowerCase();
-    const filename: string = `${Date.now()}${Number.parseInt(String(Math.random() * 1000), 10)}${extname}`;
+    // 文件名
+    const filename = `${Date.now()}${Number.parseInt(String(Math.random() * 1000), 10)}${extname}`;
     // 如果有文件格式约束就判断上传文件
     if (typeList && typeList.length && !typeList.map(item => item.toLocaleLowerCase()).includes(extname)) {
       throw new HttpException(`上传图片格式限制为:[${typeList}]其中一种,你上传的图片格式里包含了:${extname}`, HttpStatus.NOT_ACCEPTABLE);
     }
-    const target = path.join(filePath, filename);
-    const writeImage = createWriteStream(target);
-    writeImage.write(files.buffer);
-    // 判断是否使用图片缩小及加水印的方法
-    if (isCut) {
-      this.jimpImg(target, extname);
+
+    // 判断是否进行阿里oss存储
+    if (isOSS) {
+      // 根据格式生成文件夹
+      const dirname = moment(Date.now()).format('YYYY/MM/DD');
+      const filePath = path.join(category, dirname);
+      const target = path.join(filePath, filename);
+      return await co(function* () {
+        client.useBucket(process.env.ALI_OSS_BUCKET); //自定义项
+        const result = yield client.put(target, files.buffer);
+        Logger.log(result.url, 'UploadImgService.process')
+        return { url: result.url, fileName: files.originalname };
+      }).catch((err: any) => {
+        Logger.error(err, 'UploadImgService.process');
+        throw new HttpException(err, HttpStatus.OK);
+      });
+    } else {
+      const filePath: string = this.fileDirname(category);
+      const target = path.join(filePath, filename);
+      const writeImage = createWriteStream(target);
+      writeImage.write(files.buffer);
+      // 判断是否使用图片缩小及加水印的方法
+      if (isCut) {
+        this.jimpImg(target, extname);
+      }
+      const staticPrefixPath = this.configService.get('admin.staticPrefixPath');
+      const urlPath = staticPrefixPath ? target.replace('public', `/${staticPrefixPath}`) : '';
+      return { url: target.replace('public', urlPath), fileName: files.originalname };
     }
-    const staticPrefixPath = this.configService.get('admin.staticPrefixPath');
-    const urlPath = staticPrefixPath ? target.replace('public', `/${staticPrefixPath}`) : '';
-    return { url: target.replace('public', urlPath), fileName: files.originalname };
   }
 
   /**

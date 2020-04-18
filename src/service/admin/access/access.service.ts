@@ -165,7 +165,10 @@ export class AccessService extends BaseService {
      */
     const { isSuper, roleId } = userInfo;
     // 1.获取全部的菜单并且格式化
-    const resultList = await this.accessRepository.createQueryBuilder('access').where('status=1 and type=1 or type=2').getMany();
+    const resultList = await this.accessRepository
+      .createQueryBuilder('access')
+      .where('status=1 and type=1 or type=2')
+      .getMany();
     const formatMenus = resultList.map(item => {
       const { id, moduleName, actionName, moduleId, url, sort, icon } = item;
       return {

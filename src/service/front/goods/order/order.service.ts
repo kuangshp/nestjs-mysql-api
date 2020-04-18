@@ -60,13 +60,15 @@ export class OrderService extends BaseService {
         const orderNo: string = `${Date.now()}${Number.parseInt(String(Math.random() * 1000), 10)}`;
         if (!goodsType) {
           const isExistOrder = await this.orderRepository.findOne({ where: { tableId, status: 1 } });
+          console.log(goodsList);
+          console.log(isExistOrder);
           if (isExistOrder) {
             for (let item of goodsList) {
-              await entityManager.save(OrderListEntity, Object.assign(createOrder, item, { goodsType: 0, orderNo }));
+              await entityManager.save(OrderListEntity, Object.assign(item, { goodsType: 0, orderNo, personNum, remark, tableId }));
             }
           } else {
             for (let item of goodsList) {
-              await entityManager.save(OrderListEntity, Object.assign(createOrder, item, { goodsType: 1, orderNo }));
+              const result = await entityManager.save(OrderListEntity, Object.assign(item, { goodsType: 1, orderNo, personNum, remark, tableId }));
             }
           }
         } else {
@@ -77,7 +79,7 @@ export class OrderService extends BaseService {
             throw new HttpException('退单失败', HttpStatus.OK);
           } else {
             for (let item of goodsList) {
-              await entityManager.save(OrderListEntity, Object.assign(createOrder, item, { goodsType: 2, orderNo }))
+              await entityManager.save(OrderListEntity, Object.assign(item, { goodsType: 2, orderNo, personNum, remark, tableId }));
             }
           }
         }

@@ -21,8 +21,13 @@ export class UserRoleService extends BaseService {
    * @Date: 2020-02-05 12:15:39
    * @LastEditors: 水痕
    * @Description: 获取角色树
+<<<<<<< HEAD
+   * @param {type} 
+   * @return: 
+=======
    * @param {type}
    * @return:
+>>>>>>> menus
    */
   async roleTree(userId: number): Promise<any> {
     // 获取已经设置的角色

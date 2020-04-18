@@ -39,12 +39,12 @@ async function bootstrap() {
   SwaggerModule.setup(`${PREFIX}/docs`, app, document);
 
   // 访问频率限制
-  app.use(
-    rateLimit({
-      windowMs: 15 * 60 * 1000, // 15分钟
-      max: 100, // 限制15分钟内最多只能访问100次
-    }),
-  );
+  // app.use(
+  //   rateLimit({
+  //     windowMs: 15 * 60 * 1000, // 15分钟
+  //     max: 100, // 限制15分钟内最多只能访问100次
+  //   }),
+  // );
 
   //配置静态资源目录
   app.useStaticAssets(path.join(__dirname, '..', 'public'), {

@@ -29,6 +29,7 @@
     "@nestjs/typeorm": "^6.2.0",
     "@nestjs/websockets": "^6.11.5",
     "@types/lodash": "^4.14.149",
+    "ali-oss": "^6.7.0",
     "alipay-sdk": "^3.0.8",
     "class-transformer": "^0.2.3",
     "class-validator": "^0.11.0",
