@@ -42,7 +42,7 @@ export class AuthService {
     const roleAccessResult: ObjectType[] = [];
     for (const item of roleList) {
       const result = await this.roleAccessRepository.find({ roleId: item.roleId });
-      roleAccessResult.push(result);
+      roleAccessResult.push(...result);
     }
     // 全部的权限id(包括模块、菜单、操作)
     const accessIds = roleAccessResult.map((item: { access_id: number }) => item.access_id)
