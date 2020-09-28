@@ -47,13 +47,13 @@
   * 先创建用户
   * 创建账号的时候关联对应的用户
 
-  ![](./access.png)
+  ![](https://shuiping.oss-cn-shenzhen.aliyuncs.com/nest-mysql-api/access.png)
 
 - [x] 采用创建账号的时候可以选择该账号对应的角色
-  ![](./account.png)
+  ![](https://shuiping.oss-cn-shenzhen.aliyuncs.com/nest-mysql-api/account.png)
 
 - [x] 创建角色的时候权限列表采用树机构展示出来,可以选择对应的权限
-  ![](./role.png)
+  ![](https://shuiping.oss-cn-shenzhen.aliyuncs.com/nest-mysql-api/role.png)
 
 - [x] 字典管理主要是用于项目中配置下拉框使用的
 
@@ -84,6 +84,6 @@
 
 - 1、有关于`nestjs`的技术问题可以直接加我微信(微信号:332904234)<font color="#f00">备注:nest 开发</font>
 
-  <img src="./wx.jpg" width="200" height="220" style="margin-left:0" />
+  <img src="https://shuiping.oss-cn-shenzhen.aliyuncs.com/nest-mysql-api/wx.jpg" width="200" height="220" style="margin-left:0" />
 
 - 2、如果你觉得本项目对你帮助很大,**给一个赞**
