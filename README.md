@@ -74,6 +74,13 @@
 
 - [x] 字典管理主要是用于项目中配置下拉框使用的
 
+- [x] 集成`swagger`文档
+
+  ```shell
+  localhost:7000/api/v1/docs
+  # 端口号根据.env文件的PORT=7000	来写
+  ```
+
 - [x] 在`module`中统一封装了几个模块
   * `code`是验证码模块
   * `file`是文件模块
