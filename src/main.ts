@@ -20,7 +20,7 @@ const bodyParser = require('body-parser');
 require('body-parser-xml')(bodyParser);
 
 const PORT = process.env.PORT || 8080;
-const PREFIX = process.env.PREFIX || '/';
+const PREFIX = process.env.PREFIX || '';
 declare const module: any;
 
 async function bootstrap() {
