@@ -15,6 +15,23 @@
   npm run generate
   npm run db
   ```
+  <font color="#f00">备注</font>
+  如果你是`window`系统的时候可能会报错,解决方案
+  
+  * 1、在`package.json`文件中删除`rm -rf src/migration && `
+  
+  * 2、如果上面还不行,改为最简单的方式同步数据
+  
+    ```typescript
+    // app.module.ts文件中
+    TypeOrmModule.forRootAsync({
+      useFactory: async (config: ConfigService) => ({
+        ...
+        synchronize: true,
+      }),
+      inject: [ConfigService],
+    }),
+    ```
 * 5、启动项目
 
   ```shell
