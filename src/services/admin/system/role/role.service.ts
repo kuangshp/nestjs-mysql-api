@@ -98,11 +98,11 @@ export class RoleService {
         .transaction(async (entityManager: EntityManager) => {
           // 修改账号信息
           await entityManager.update(RoleEntity, id, { title, description });
+          const accessList = accessIdsList.split(',');
+          // 删除之前的(根据角色id删除)
+          await entityManager.delete(RoleAccessEntity, { roleId: id });
           // 如果权限有就添加权限
           if (accessIdsList) {
-            const accessList = accessIdsList.split(',');
-            // 删除之前的(根据角色id删除)
-            await entityManager.delete(RoleAccessEntity, { roleId: id });
             // 新增现在的
             for (const item of accessList) {
               await entityManager.save(RoleAccessEntity, { roleId: id, accessId: Number(item) });

@@ -153,10 +153,10 @@ export class AccountService {
           const { roles, ...oths } = data;
           await entityManager.update(AccountEntity, id, oths);
           // 如果角色有就添加角色
+          const rolesList = roles.split(',');
+          // 删除之前的
+          await entityManager.delete(AccountRoleEntity, { accountId: id });
           if (roles) {
-            const rolesList = roles.split(',');
-            // 删除之前的
-            await entityManager.delete(AccountRoleEntity, { accountId: id });
             // 新增现在的
             for (const item of rolesList) {
               await entityManager.save(AccountRoleEntity, { accountId: id, roleId: Number(item) });

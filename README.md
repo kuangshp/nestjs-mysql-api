@@ -9,37 +9,14 @@
 * 1、本项目仅仅是实现了`rbac`的权限系统,对于其他的功能需要自己基于这个基础上去扩展
 * 2、先在本地创建数据库
 * 3、在项目的根目录的`.env`文件修改为你自己的数据库基本配置(地址、用户名、密码、数据库)
-* 4、运行命令,将实体类映射到数据库中,生成数据表
-
-  ```shell
-  npm run generate
-  npm run db
-  ```
-  <font color="#f00">备注</font>
-  如果你是`window`系统的时候可能会报错,解决方案
-  
-  * 1、在`package.json`文件中删除`rm -rf src/migration && `
-  
-  * 2、如果上面还不行,改为最简单的方式同步数据
-  
-    ```typescript
-    // app.module.ts文件中
-    TypeOrmModule.forRootAsync({
-      useFactory: async (config: ConfigService) => ({
-        ...
-        synchronize: true,
-      }),
-      inject: [ConfigService],
-    }),
-    ```
-* 5、启动项目
+* 4、启动项目
 
   ```shell
   npm run start:dev
   ```
 
-* 6、运行第五步的时候会默认初始化菜单数据和用户数据(账号:`admin`,密码:123456)
-* 7、如果你想初始化别的数据,可以在`src/services/init-db`中写上你要初始化的数据
+* 5、运行第五步的时候会默认初始化菜单数据和用户数据(账号:`admin`,密码:123456)
+* 6、如果你想初始化别的数据,可以在`src/services/init-db`中写上你要初始化的数据
 
 ## 二、主要实现功能
 

@@ -26,6 +26,7 @@ import { ControllersModule } from './controllers/controllers.module';
         database: config.get('database.database'),
         entities: [__dirname + '/**/*.entity{.ts,.js}'],
         logging: config.get('database.logging'),
+        synchronize: true,
         timezone: '+08:00', // 东八区
       }),
       inject: [ConfigService],
