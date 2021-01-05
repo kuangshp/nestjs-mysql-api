@@ -34,7 +34,7 @@
     "@nestjs/typeorm": "^7.0.0",
     "ali-oss": "^6.8.0",
     "alipay-sdk": "^3.0.8",
-    "axios": "^0.20.0",
+    "axios": "^0.21.1",
     "body-parser-xml": "^2.0.0",
     "class-transformer": "^0.2.3",
     "class-validator": "^0.12.2",
