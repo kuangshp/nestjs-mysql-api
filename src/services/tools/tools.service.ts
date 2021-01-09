@@ -1,14 +1,14 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
-import NodeAuth from 'node-auth0';
+import SimpNodeAuth from 'simp-node-auth';
 
 import * as uuidv4 from 'uuid';
 import { isUUID, isEmail, isInt, isMobilePhone } from 'class-validator';
 
 @Injectable()
 export class ToolsService {
-  private nodeAuth: NodeAuth;
+  private simpNodeAuth: SimpNodeAuth;
   constructor () {
-    this.nodeAuth = new NodeAuth();
+    this.simpNodeAuth = new SimpNodeAuth();
   }
   /**
    * @Author: 水痕
@@ -31,7 +31,7 @@ export class ToolsService {
    * @return: 
    */
   makePassword(password: string): string {
-    return this.nodeAuth.makePassword(password);
+    return this.simpNodeAuth.makePassword(password);
   }
 
   /**
@@ -43,7 +43,7 @@ export class ToolsService {
    * @return: 
    */
   checkPassword(password: string, sqlPassword: string): boolean {
-    return this.nodeAuth.checkPassword(password, sqlPassword);
+    return this.simpNodeAuth.checkPassword(password, sqlPassword);
   }
 
 

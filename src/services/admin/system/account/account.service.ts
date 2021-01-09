@@ -237,7 +237,7 @@ export class AccountService {
     return {
       data: data.map((item: ObjectType) => {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { password, mobile, email, username, nodeAuth, ...others } = item;
+        const { password, mobile, email, username, simpNodeAuth, ...others } = item;
         return Object.assign(others, {
           mobile: this.toolsService.isUUID(mobile) ? '' : mobile,
           email: this.toolsService.isUUID(email) ? '' : email,

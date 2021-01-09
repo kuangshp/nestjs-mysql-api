@@ -1,17 +1,17 @@
 import { Column, Entity, BeforeInsert } from 'typeorm';
 import { Exclude, Expose } from 'class-transformer';
 import * as jwt from 'jsonwebtoken';
-import NodeAuth from 'node-auth0';
+import SimpNodeAuth from 'simp-node-auth';
 import { ObjectType } from '@src/types';
 import { PublicEntity } from '../public.entity';
 
 @Entity('account')
 export class AccountEntity extends PublicEntity {
 	@Exclude()
-	private nodeAuth: NodeAuth;
+	private simpNodeAuth: SimpNodeAuth;
 	constructor () {
 		super()
-		this.nodeAuth = new NodeAuth();
+		this.simpNodeAuth = new SimpNodeAuth();
 	}
 
 	@Column('varchar', {
@@ -56,7 +56,7 @@ export class AccountEntity extends PublicEntity {
    */
 	@BeforeInsert()
 	makePassword() {
-		this.password = this.nodeAuth.makePassword(this.password);
+		this.password = this.simpNodeAuth.makePassword(this.password);
 	}
 
   /**
@@ -68,7 +68,7 @@ export class AccountEntity extends PublicEntity {
    * @return: 
    */
 	checkPassword(password: string, sqlPassword: string) {
-		return this.nodeAuth.checkPassword(password, sqlPassword);
+		return this.simpNodeAuth.checkPassword(password, sqlPassword);
 	}
 	/**
 		 * @Author: 水痕
@@ -105,7 +105,7 @@ export class AccountEntity extends PublicEntity {
    */
 	public toResponseObject(isShowToken = true): object {
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
-		const { nodeAuth, password, token, ...params } = this;
+		const { simpNodeAuth, password, token, ...params } = this;
 		const responseData: ObjectType = {
 			...params,
 		}
