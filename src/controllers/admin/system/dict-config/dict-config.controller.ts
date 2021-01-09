@@ -1,5 +1,5 @@
 import { Controller, UseGuards, Body, Post, HttpCode, HttpStatus, Delete, Param, ParseIntPipe, Patch, Get, Query } from '@nestjs/common';
-import { ApiTags, ApiBearerAuth, ApiOperation, ApiOkResponse, } from '@nestjs/swagger';
+import { ApiTags, ApiBearerAuth, ApiOperation, } from '@nestjs/swagger';
 import { AuthGuard } from '@src/guard/auth.guard';
 import adminConfig from '@src/config/admin.config';
 import { DictConfigService } from '@src/services/admin/system/dict-config/dict-config.service';

@@ -1,4 +1,4 @@
-import { ValidationOptions, registerDecorator, ValidationArguments, IsEmpty, IsMobilePhone } from 'class-validator'
+import { ValidationOptions, registerDecorator, ValidationArguments } from 'class-validator'
 
 export const IsEmptyStringOrMobile = (validationOptions: ValidationOptions = {}) => {
   validationOptions = Object.assign(validationOptions, { message: '手机号码格式错误' });

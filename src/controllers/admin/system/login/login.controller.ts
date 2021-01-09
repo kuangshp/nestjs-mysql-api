@@ -3,7 +3,6 @@ import { ApiTags, ApiOperation, ApiCreatedResponse } from '@nestjs/swagger';
 import adminConfig from '@src/config/admin.config';
 import { LoginService } from '@src/services/admin/login/login.service';
 import { LoginDto } from './dto/login.dto';
-import { IpAddress } from '@src/decorators/ip.address';
 
 @ApiTags('用户登录')
 @Controller(`${adminConfig.adminPath}/login`)
