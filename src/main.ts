@@ -75,7 +75,8 @@ async function bootstrap() {
   }));
 
   await app.listen(PORT, () => {
-    Logger.log(`服务已经启动,请访问:http://wwww.localhost:${PORT}/${PREFIX}`);
+    Logger.log(`服务已经启动,API接口地址请访问:http://wwww.localhost:${PORT}/${PREFIX}`);
+    Logger.log(`服务已经启动,API文档地址请访问:http://wwww.localhost:${PORT}/${PREFIX}/docs`);
   });
   // 热更新
   if (module.hot) {
