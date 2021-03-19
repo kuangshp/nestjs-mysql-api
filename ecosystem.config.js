@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/camelcase */
 module.exports = {
   apps: [{
-    name: 'dancebox-server', // 项目名字,启动后的名字
+    name: 'yst-shop', // 项目名字,启动后的名字
     script: './dist/main.js', // 执行的文件
     cwd: './', // 根目录
     args: '', // 传递给脚本的参数
