@@ -2073,6 +2073,11 @@ cross-spawn@^7.0.0, cross-spawn@^7.0.2:
     shebang-command "^2.0.0"
     which "^2.0.1"
 
+crypto@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.npm.taobao.org/crypto/download/crypto-1.0.1.tgz#2af1b7cad8175d24c8a1b0778255794a21803037"
+  integrity sha1-KvG3ytgXXSTIobB3glV5SiGAMDc=
+
 cssom@^0.4.4:
   version "0.4.4"
   resolved "https://registry.npm.taobao.org/cssom/download/cssom-0.4.4.tgz"
@@ -5319,6 +5324,13 @@ signal-exit@^3.0.0, signal-exit@^3.0.2:
   version "3.0.3"
   resolved "https://registry.npm.taobao.org/signal-exit/download/signal-exit-3.0.3.tgz"
   integrity sha1-oUEMLt2PB3sItOJTyOrPyvBXRhw=
+
+simp-node-auth@^0.0.1:
+  version "0.0.1"
+  resolved "https://registry.npm.taobao.org/simp-node-auth/download/simp-node-auth-0.0.1.tgz#33ce6672eef61859e9b2c2e882c00e43a0b3231c"
+  integrity sha1-M85mcu72GFnpssLogsAOQ6CzIxw=
+  dependencies:
+    crypto "^1.0.1"
 
 sisteransi@^1.0.5:
   version "1.0.5"
