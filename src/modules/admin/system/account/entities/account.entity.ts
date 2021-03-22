@@ -72,7 +72,7 @@ export class AccountEntity extends PublicEntity {
     type: 'tinyint', 
     nullable: true,
     name: 'platform',
-    default: () => 1,
+    default: () => -1,
     comment: '平台:0:表示超级管理员，1表示为运营管理,2表示入住商家'
   })
   platform: number;
