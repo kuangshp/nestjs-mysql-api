@@ -29,6 +29,7 @@
     "@nestjs/platform-express": "^7.6.13",
     "class-validator": "^0.13.1",
     "dotenv": "^8.2.0",
+    "moment": "^2.29.1",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "^6.6.6"
