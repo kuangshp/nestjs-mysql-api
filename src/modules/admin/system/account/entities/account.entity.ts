@@ -1,8 +1,12 @@
 import { Entity, Column, Unique, Index, BeforeInsert, BeforeUpdate } from 'typeorm';
-import { Exclude } from 'class-transformer';
+import { Exclude, Expose } from 'class-transformer';
 import NodeAuth from 'simp-node-auth';
+import * as jwt from 'jsonwebtoken';
+import { isUUID } from 'class-validator';
 
 import { PublicEntity } from '@src/modules/shared/entities/public.entity';
+import { ObjectType } from '@src/types';
+const SECRET: string = process.env.SECRET as string;
 
 @Entity('account')
 @Unique('username_mobile_email_unique', ['username', 'mobile', 'email'])
@@ -81,29 +85,47 @@ export class AccountEntity extends PublicEntity {
   })
   isSuper: number;
 
-  @Column({
-    type: 'varchar', 
-    nullable: true,
-    length: 60,
-    name: 'last_login_ip',
-    comment: '最后登录id'
-  })
-  lastLoginIp: string | null;
-
-  @Column( {
-    type: 'timestamp',
-    nullable: false,
-    default: () => 'CURRENT_TIMESTAMP',
-    name: 'last_login_time',
-    comment: '最后登录时间'
-  })
-  lastLoginTime: Date;
-
   @BeforeInsert()
   @BeforeUpdate()
   makePassword() {
     if (this.password) {
       this.password = this.nodeAuth.makePassword(this.password);
+    }
+  }
+
+  @Expose()
+  private get token() {
+    const { id, username, mobile, email, platform, isSuper } = this;
+    // 生成签名
+    return jwt.sign(
+      {
+        id,
+        username,
+        mobile,
+        email,
+        isSuper,
+        platform,
+      },
+      SECRET, // 加盐
+      {
+        expiresIn: '7d', // 过期时间
+      },
+    );
+  }
+  
+  public toResponseObject(isShowToken = false): ObjectType {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { nodeAuth, password, token, mobile, email, username, ...params } = this;
+    const responseData: ObjectType = {
+      mobile: isUUID(mobile) ? '' : mobile,
+      email: isUUID(email) ? '' : email,
+      username: isUUID(username) ? '' : username,
+      ...params,
+    };
+    if (isShowToken) {
+      return { ...responseData, token };
+    } else {
+      return responseData;
     }
   }
 }

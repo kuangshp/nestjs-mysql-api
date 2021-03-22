@@ -8,11 +8,13 @@ import { AccessService } from './access/services/access/access.service';
 import { RoleService } from './role/services/role/role.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AccountEntity } from './account/entities/account.entity';
+import { AccountLastLoginEntity } from './account/entities/account.last.login.entity';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
       AccountEntity,
+      AccountLastLoginEntity,
     ])
   ],
   controllers: [

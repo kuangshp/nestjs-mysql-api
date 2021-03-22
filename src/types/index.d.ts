@@ -1,1 +1,2 @@
-declare module 'dotenv/config';
+// declare module 'dotenv/config';
+export * from './obj-type';
