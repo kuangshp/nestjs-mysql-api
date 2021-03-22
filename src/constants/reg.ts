@@ -3,3 +3,5 @@ export const dateStringReg = /(((\d{4})-(0[13578]|1[02])-(0[1-9]|[12]\d|3[01]))|
 // 最小金额为100元的
 // export const minMoneyReg = /^[1-9]\d{2}(\.\d{2,2})?$/;
 export const minMoneyReg = /^[1-9](\d+)?(\.\d{2,2})?$/;
+// 用户名
+export const usernameReg = /^[a-zA-Z.0-9]{4,20}$/;
