@@ -6,6 +6,7 @@ import { isUUID } from 'class-validator';
 
 import { PublicEntity } from '@src/modules/shared/entities/public.entity';
 import { ObjectType } from '@src/types/obj-type';
+
 const SECRET: string = process.env.SECRET as string;
 
 @Entity('account')
@@ -68,11 +69,11 @@ export class AccountEntity extends PublicEntity {
   status: number | null;
 
   @Column({
-    type: 'int', 
+    type: 'tinyint', 
     nullable: true,
     name: 'platform',
     default: () => 1,
-    comment: '平台:1为主办方,2为运营管理'
+    comment: '平台:0:表示超级管理员，1表示为运营管理,2表示入住商家'
   })
   platform: number;
 
@@ -99,7 +100,7 @@ export class AccountEntity extends PublicEntity {
    * @LastEditors: 水痕
    * @Description: 生成一个token
    * @param {*}
-   * @return {*}
+   * @return {String}
    */
   @Expose()
   private get token(): string {

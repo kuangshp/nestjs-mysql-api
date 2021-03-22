@@ -9,6 +9,8 @@ import { RoleService } from './role/services/role/role.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AccountEntity } from './account/entities/account.entity';
 import { AccountLastLoginEntity } from './account/entities/account.last.login.entity';
+import { LoginController } from './account/controllers/login/login.controller';
+import { LoginService } from './account/services/login/login.service';
 
 @Module({
   imports: [
@@ -20,12 +22,14 @@ import { AccountLastLoginEntity } from './account/entities/account.last.login.en
   controllers: [
     AccountController, 
     RoleController, 
-    AccessController
+    AccessController, 
+    LoginController
   ],
   providers: [
     AccountService, 
     AccessService, 
-    RoleService
+    RoleService, 
+    LoginService
   ],
 })
 export class SystemModule {}
