@@ -5,7 +5,7 @@ import * as jwt from 'jsonwebtoken';
 import { isUUID } from 'class-validator';
 
 import { PublicEntity } from '@src/modules/shared/entities/public.entity';
-import { ObjectType } from '@src/types';
+import { ObjectType } from '@src/types/obj-type';
 const SECRET: string = process.env.SECRET as string;
 
 @Entity('account')
