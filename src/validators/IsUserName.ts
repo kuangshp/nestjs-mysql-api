@@ -7,9 +7,7 @@ export const isUserName = (value: unknown): boolean => {
   return typeof value === 'string' && (usernameReg.test(value) || isMobilePhone(value, 'zh-CN') || isEmail(value));
 };
 
-export function IsUserName(
-  validationOptions?: ValidationOptions
-): PropertyDecorator {
+export function IsUserName(validationOptions?: ValidationOptions): PropertyDecorator {
   return ValidateBy(
     {
       name: IS_USER_NAME,
