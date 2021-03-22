@@ -93,8 +93,16 @@ export class AccountEntity extends PublicEntity {
     }
   }
 
+  /**
+   * @Author: 水痕
+   * @Date: 2021-03-22 10:46:56
+   * @LastEditors: 水痕
+   * @Description: 生成一个token
+   * @param {*}
+   * @return {*}
+   */
   @Expose()
-  private get token() {
+  private get token(): string {
     const { id, username, mobile, email, platform, isSuper } = this;
     // 生成签名
     return jwt.sign(
@@ -113,7 +121,15 @@ export class AccountEntity extends PublicEntity {
     );
   }
   
-  public toResponseObject(isShowToken = false): ObjectType {
+  /**
+   * @Author: 水痕
+   * @Date: 2021-03-22 10:47:12
+   * @LastEditors: 水痕
+   * @Description: 处理返回参数
+   * @param {*} isShowToken 是否返回token
+   * @return {*}
+   */
+  public toResponseObject(isShowToken: boolean = false): ObjectType {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { nodeAuth, password, token, mobile, email, username, ...params } = this;
     const responseData: ObjectType = {
