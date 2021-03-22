@@ -1,11 +1,12 @@
 import 'dotenv/config';
 import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import { Logger } from '@nestjs/common';
 
 import { AppModule } from './app.module';
 import { HttpExceptionFilter } from './filters/http-exception.filter';
 import { TransformInterceptor } from './interceptors/transform/transform.interceptor';
-import { Logger } from '@nestjs/common';
+
 
 console.log('当前环境', process.env.npm_lifecycle_event);
 console.log('数据库连接', process.env.DATABASE_MYSQL_HOST)
