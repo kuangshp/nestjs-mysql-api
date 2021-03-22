@@ -2,8 +2,8 @@ import { Module } from '@nestjs/common';
 // import { MODULE_PATH } from '@nestjs/common/constants'
 import { AccountController } from './account/controllers/account/account.controller';
 import { AccountService } from './account/services/account/account.service';
-import { RoleController } from './role/contorlles/role/role.controller';
-import { AccessController } from './access/contorlles/access/access.controller';
+import { RoleController } from './role/controllers/role/role.controller';
+import { AccessController } from './access/controllers/access/access.controller';
 import { AccessService } from './access/services/access/access.service';
 import { RoleService } from './role/services/role/role.service';
 

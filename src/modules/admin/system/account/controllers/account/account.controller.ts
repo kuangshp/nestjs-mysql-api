@@ -1,6 +1,7 @@
 import { Controller, Get } from '@nestjs/common';
+import adminConfig from '@src/config/admin.config';
 
-@Controller('account')
+@Controller(`${adminConfig.adminPath}/account`)
 export class AccountController {
   @Get()
   test1() {
