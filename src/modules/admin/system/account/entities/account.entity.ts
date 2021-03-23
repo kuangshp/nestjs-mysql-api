@@ -1,11 +1,9 @@
 import { Entity, Column, Unique, Index, BeforeInsert, BeforeUpdate, AfterLoad } from 'typeorm';
-import { Exclude, Expose } from 'class-transformer';
+import { Exclude } from 'class-transformer';
 import NodeAuth from 'simp-node-auth';
-import * as jwt from 'jsonwebtoken';
 import { isMobilePhone, isEmail } from 'class-validator';
 
 import { PublicEntity } from '@src/modules/shared/entities/public.entity';
-import { ObjectType } from '@src/types/obj-type';
 import { usernameReg } from '@src/constants';
 
 @Entity('account')

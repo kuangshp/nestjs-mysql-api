@@ -11,12 +11,14 @@ import { AccountEntity } from './account/entities/account.entity';
 import { AccountLastLoginEntity } from './account/entities/account.last.login.entity';
 import { LoginController } from './account/controllers/login/login.controller';
 import { LoginService } from './account/services/login/login.service';
+import { RoleEntity } from './role/entities/role.entity';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
       AccountEntity,
       AccountLastLoginEntity,
+      RoleEntity,
     ])
   ],
   controllers: [
