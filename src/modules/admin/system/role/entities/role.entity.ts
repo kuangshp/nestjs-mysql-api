@@ -1,10 +1,11 @@
-import { Column, Entity, Unique } from 'typeorm';
+import { Column, Entity, Unique, Index } from 'typeorm';
 import { PublicEntity } from '@src/modules/shared/entities/public.entity';
 
 
 @Entity('role')
 @Unique('name_deleted', ['name', 'deletedAt'])
 export class RoleEntity extends PublicEntity {
+  @Index()
   @Column( {
     type: 'varchar',
     nullable: false,
