@@ -12,4 +12,10 @@ export class QueryListResDto<T> {
 
   @ApiProperty({ description: '当前页' })
   pageNumber: number;
+  
+  constructor (pageSize: number, pageNumber: number, data: T[]) {
+    this.pageSize = pageSize;
+    this.pageNumber = pageNumber;
+    this.data = data;
+  }
 }

@@ -10,6 +10,7 @@ import { usernameReg } from '@src/constants';
 import { UpdateAccountDto } from '../../controllers/account/dto/update.account.dto';
 import { ModifyPasswordDto } from '../../controllers/account/dto/modify.password.dto';
 import { ToolsService } from '@src/modules/shared/services/tools/tools.service';
+import { AccountResDto } from '../../controllers/account/dto/account.res.dto';
 
 @Injectable()
 export class AccountService {
@@ -71,7 +72,7 @@ export class AccountService {
    * @return {*}
    */
   async destroyById(id: number): Promise<string> {
-    const { raw: { affectedRows } } = await this.accountRepository.delete(id);
+    const { raw: { affectedRows } } = await this.accountRepository.softDelete(id);
     if (affectedRows) {
       return '删除成功';
     } else {
@@ -121,5 +122,21 @@ export class AccountService {
     const result = await this.accountRepository.findOne(id);
     await this.accountRepository.save(Object.assign(result, { username, email, mobile, status, platform }));
     return '修改成功';
+  }
+
+  /**
+   * @Author: 水痕
+   * @Date: 2021-03-23 11:56:52
+   * @LastEditors: 水痕
+   * @Description: 根据账号id查询账号信息
+   * @param {number} id
+   * @return {*}
+   */
+  async accountById(id: number):Promise<AccountResDto | undefined> {
+    return await this.accountRepository.findOne(id);
+  }
+
+  async accountList(): Promise<any> {
+    return {}
   }
 }

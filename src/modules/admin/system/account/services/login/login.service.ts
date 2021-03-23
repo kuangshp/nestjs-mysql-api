@@ -57,10 +57,10 @@ export class LoginService {
         sqlPassword = findResult!.password;
         findAccount = await this.accountRepository.findOne({ where: {  username } });
       }
-      if (sqlPassword && this.toolsService.checkPassword(password, sqlPassword)) {
+      if (sqlPassword && this.toolsService.checkPassword(password, sqlPassword) && findAccount) {
         const lastLogin = this.accountLastLoginRepository.create({ accountId: findAccount!.id, lastLoginIp:ipAddress});
         await this.accountLastLoginRepository.save(lastLogin);
-        return findAccount!.toResponseObject(true);
+        return Object.assign(findAccount, { token: this.toolsService.generateToken(findAccount)});
       } else {
         throw new HttpException('用户名或密码错误', HttpStatus.OK);
       }

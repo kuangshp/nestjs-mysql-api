@@ -1,4 +1,4 @@
-import { Entity, Column, Unique, Index, BeforeInsert, BeforeUpdate } from 'typeorm';
+import { Entity, Column, Unique, Index, BeforeInsert, BeforeUpdate, AfterLoad } from 'typeorm';
 import { Exclude, Expose } from 'class-transformer';
 import NodeAuth from 'simp-node-auth';
 import * as jwt from 'jsonwebtoken';
@@ -10,6 +10,9 @@ import { usernameReg } from '@src/constants';
 
 @Entity('account')
 @Unique('username_mobile_email_unique', ['username', 'mobile', 'email'])
+@Unique('username_deleted', ['username', 'deletedAt'])
+@Unique('email_deleted', ['email', 'deletedAt'])
+@Unique('mobile_deleted', ['mobile', 'deletedAt'])
 export class AccountEntity extends PublicEntity {
   @Exclude()
   private nodeAuth: NodeAuth;
@@ -18,8 +21,7 @@ export class AccountEntity extends PublicEntity {
     this.nodeAuth = new NodeAuth();
   }
 
-  // 唯一索引
-  @Index({ unique: true })
+  @Index()
   @Column({
     type: 'varchar',
     length: 50,
@@ -38,7 +40,7 @@ export class AccountEntity extends PublicEntity {
   })
   password: string;
 
-  @Index({ unique: true })
+  @Index()
   @Column( {
     type: 'varchar',
     nullable: true,
@@ -48,7 +50,7 @@ export class AccountEntity extends PublicEntity {
   })
   mobile: string;
 
-  @Index({ unique: true })
+  @Index()
   @Column( {
     type: 'varchar',
     nullable: true,
@@ -108,59 +110,11 @@ export class AccountEntity extends PublicEntity {
     }
   }
 
-  /**
-   * @Author: 水痕
-   * @Date: 2021-03-22 10:46:56
-   * @LastEditors: 水痕
-   * @Description: 生成一个token
-   * @param {*}
-   * @return {String}
-   */
-  @Expose()
-  private get token(): string {
-    const { id, username, mobile, email, platform, isSuper } = this;
-    const SECRET: string = process.env.SECRET as string;
-    // 生成签名
-    return jwt.sign(
-      {
-        id,
-        username,
-        mobile,
-        email,
-        isSuper,
-        platform,
-      },
-      SECRET, // 加盐
-      {
-        expiresIn: '7d', // 过期时间
-      },
-    );
+  @AfterLoad()
+  formatResponseData() {
+    this.mobile = isMobilePhone(this.mobile, 'zh-CN') ? this.mobile : '';
+    this.email = isEmail(this.email) ? this.email : '';
+    this.username = usernameReg.test(this.username) ? this.username: '';
   }
   
-  /**
-   * @Author: 水痕
-   * @Date: 2021-03-22 10:47:12
-   * @LastEditors: 水痕
-   * @Description: 处理返回参数
-   * @param {*} isShowToken 是否返回token
-   * @return {*}
-   */
-  public toResponseObject(isShowToken: boolean = false): ObjectType {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { token, mobile, email, username, id, status, isSuper, platform } = this;
-    const responseData: ObjectType = {
-      mobile: isMobilePhone(mobile, 'zh-CN') ? '' : mobile,
-      email: isEmail(email) ? '' : email,
-      username: usernameReg.test(username) ? '' : username,
-      id, 
-      status, 
-      isSuper,
-      platform,
-    };
-    if (isShowToken) {
-      return { ...responseData, token };
-    } else {
-      return responseData;
-    }
-  }
 }

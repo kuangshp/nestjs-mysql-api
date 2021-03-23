@@ -3,6 +3,14 @@ import NodeAuth from 'simp-node-auth';
 import * as jwt from 'jsonwebtoken';
 import { isInt } from 'class-validator';
 
+interface ITokenParams {
+  id: number, 
+  username?: string, 
+  mobile?: string, 
+  email?: string, 
+  platform?:number, 
+}
+
 @Injectable()
 export class ToolsService {
   private nodeAuth: NodeAuth;
@@ -51,12 +59,26 @@ export class ToolsService {
     }
   }
 
-  public generateToken(id: number): string {
+
+  /**
+   * @Author: 水痕
+   * @Date: 2021-03-23 12:31:53
+   * @LastEditors: 水痕
+   * @Description: 生成token的方法
+   * @param {ITokenParams} params
+   * @return {*}
+   */
+  public generateToken(params: ITokenParams): string {
+    const { id, username, mobile, email, platform } = params;
     const SECRET: string = process.env.SECRET as string;
     // 生成签名
     return jwt.sign(
       {
         id,
+        username,
+        mobile,
+        email,
+        platform,
       },
       SECRET, // 加盐
       {

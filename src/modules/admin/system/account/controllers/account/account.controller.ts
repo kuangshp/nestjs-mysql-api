@@ -6,6 +6,7 @@ import { AccountService } from '../../services/account/account.service';
 import { UpdateAccountDto } from './dto/update.account.dto';
 import { ModifyPasswordDto } from './dto/modify.password.dto';
 import { AuthGuard } from '@src/guard/auth/auth.guard';
+import { AccountResDto, AccountListResDtoDto } from './dto/account.res.dto';
 
 @ApiTags('后台管理系统-账号管理')
 @ApiBearerAuth()
@@ -55,5 +56,19 @@ export class AccountController {
     @Body() updateAccountDto: UpdateAccountDto,
   ): Promise<string> {
     return await this.accountService.modifyById(id, updateAccountDto);
+  }
+
+  @ApiOperation({ summary: '查询账号信息', description: '根据账号id查询账号信息' })
+  @Get(':id')
+  async accountById(
+    @Param('id', new ParseIntPipe()) id: number,
+  ): Promise<AccountResDto | undefined> {
+    return await this.accountService.accountById(id);
+  }
+
+  @ApiOperation({summary: '查询账号列表', description: '根据条件查询账号列表'})
+  @Get()
+  async accountList(): Promise<AccountListResDtoDto> {
+    return await this.accountService.accountList();
   }
 }
