@@ -79,6 +79,7 @@ export class AccountEntity extends PublicEntity {
   @Column({
     type: 'tinyint', 
     nullable: false,
+    select: false,
     default: () => 0,
     name: 'is_super',
     comment: '是否为超级管理员1表示是,0表示不是'
@@ -90,6 +91,16 @@ export class AccountEntity extends PublicEntity {
   makePassword() {
     if (this.password) {
       this.password = this.nodeAuth.makePassword(this.password);
+    }
+    if (this.username) {
+      this.mobile = this.mobile && isMobilePhone(this.mobile, 'zh-CN') ? this.mobile : `_${this.username}`;
+      this.email = this.email && isEmail(this.email) ? this.email : `_${this.username}`;
+    } else if (this.mobile) {
+      this.username = this.username && usernameReg.test(this.username) ? this.username : `_${this.mobile}`;
+      this.email = this.email && isEmail(this.email) ? this.email : `_${this.mobile}`;
+    }else if (this.email) {
+      this.username = this.username && usernameReg.test(this.username) ? this.username : `_${this.email}`;
+      this.mobile = this.mobile && isMobilePhone(this.mobile, 'zh-CN') ? this.mobile : `_${this.email}`;
     }
   }
 

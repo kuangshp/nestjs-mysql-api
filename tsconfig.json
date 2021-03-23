@@ -15,9 +15,9 @@
     "strictNullChecks": true,
     "strictFunctionTypes": true,
     "noImplicitThis": true,
-    "noUnusedLocals": true, /*定义未使用的时候会有提示*/
-    "noUnusedParameters": true, /*检查函数中是否有未使用的变量*/
-    "noImplicitReturns": true, /*检查函数否有返回值*/
+    // "noUnusedLocals": true, /*定义未使用的时候会有提示*/
+    // "noUnusedParameters": true, /*检查函数中是否有未使用的变量*/
+    // "noImplicitReturns": true, /*检查函数否有返回值*/
     "noFallthroughCasesInSwitch": true,
     "allowSyntheticDefaultImports": true,
     "paths": { /*定义别名*/
