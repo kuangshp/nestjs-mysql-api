@@ -12,12 +12,16 @@ import { AccountLastLoginEntity } from './account/entities/account.last.login.en
 import { LoginController } from './account/controllers/login/login.controller';
 import { LoginService } from './account/services/login/login.service';
 import { RoleEntity } from './role/entities/role.entity';
+import { AccountRoleController } from './account/controllers/account-role/account-role.controller';
+import { AccountRoleService } from './account/services/account-role/account-role.service';
+import { AccountRoleEntity } from './account/entities/account.role.entity';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
       AccountEntity,
       AccountLastLoginEntity,
+      AccountRoleEntity,
       RoleEntity,
     ])
   ],
@@ -25,13 +29,15 @@ import { RoleEntity } from './role/entities/role.entity';
     AccountController, 
     RoleController, 
     AccessController, 
-    LoginController
+    LoginController, 
+    AccountRoleController
   ],
   providers: [
     AccountService, 
     AccessService, 
     RoleService, 
-    LoginService
+    LoginService, 
+    AccountRoleService
   ],
 })
 export class SystemModule {}
