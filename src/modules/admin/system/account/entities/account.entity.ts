@@ -2,12 +2,11 @@ import { Entity, Column, Unique, Index, BeforeInsert, BeforeUpdate } from 'typeo
 import { Exclude, Expose } from 'class-transformer';
 import NodeAuth from 'simp-node-auth';
 import * as jwt from 'jsonwebtoken';
-import { isUUID } from 'class-validator';
+import { isMobilePhone, isEmail } from 'class-validator';
 
 import { PublicEntity } from '@src/modules/shared/entities/public.entity';
 import { ObjectType } from '@src/types/obj-type';
-
-const SECRET: string = process.env.SECRET as string;
+import { usernameReg } from '@src/constants';
 
 @Entity('account')
 @Unique('username_mobile_email_unique', ['username', 'mobile', 'email'])
@@ -47,7 +46,7 @@ export class AccountEntity extends PublicEntity {
     name: 'mobile',
     comment: '手机号码'
   })
-  mobile: string | null;
+  mobile: string;
 
   @Index({ unique: true })
   @Column( {
@@ -57,7 +56,7 @@ export class AccountEntity extends PublicEntity {
     name: 'email',
     comment: '邮箱'
   })
-  email: string | null;
+  email: string;
 
   @Column({
     type: 'tinyint', 
@@ -66,14 +65,14 @@ export class AccountEntity extends PublicEntity {
     name: 'status',
     comment: '状态,0表示禁止,1表示正常'
   })
-  status: number | null;
+  status: number;
 
   @Column({
     type: 'tinyint', 
     nullable: true,
     name: 'platform',
-    default: () => -1,
-    comment: '平台:0:表示超级管理员，1表示为运营管理,2表示入住商家'
+    default: () => 0,
+    comment: '平台:0表示普通用户(没权限),1表示为运营管理,2表示入住商家'
   })
   platform: number;
 
@@ -105,6 +104,7 @@ export class AccountEntity extends PublicEntity {
   @Expose()
   private get token(): string {
     const { id, username, mobile, email, platform, isSuper } = this;
+    const SECRET: string = process.env.SECRET as string;
     // 生成签名
     return jwt.sign(
       {
@@ -132,12 +132,15 @@ export class AccountEntity extends PublicEntity {
    */
   public toResponseObject(isShowToken: boolean = false): ObjectType {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { nodeAuth, password, token, mobile, email, username, ...params } = this;
+    const { token, mobile, email, username, id, status, isSuper, platform } = this;
     const responseData: ObjectType = {
-      mobile: isUUID(mobile) ? '' : mobile,
-      email: isUUID(email) ? '' : email,
-      username: isUUID(username) ? '' : username,
-      ...params,
+      mobile: isMobilePhone(mobile, 'zh-CN') ? '' : mobile,
+      email: isEmail(email) ? '' : email,
+      username: usernameReg.test(username) ? '' : username,
+      id, 
+      status, 
+      isSuper,
+      platform,
     };
     if (isShowToken) {
       return { ...responseData, token };

@@ -5,12 +5,16 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, getConnection } from 'typeorm';
 import { ToolsService } from '@src/modules/shared/services/tools/tools.service';
 import { isMobilePhone, isEmail } from 'class-validator';
+import { AccountLastLoginEntity } from '../../entities/account.last.login.entity';
+import { LoginResDto } from '../../controllers/login/dto/login.res.dto';
 
 @Injectable()
 export class LoginService {
   constructor(
     @InjectRepository(AccountEntity)
     private readonly accountRepository: Repository<AccountEntity>,
+    @InjectRepository(AccountLastLoginEntity)
+    private readonly accountLastLoginRepository: Repository<AccountLastLoginEntity>,
     private readonly toolsService: ToolsService,
   ) {}
 
@@ -23,14 +27,13 @@ export class LoginService {
    * @param {string} ipAddress
    * @return {*}
    */
-  async adminLogin(loginDto: LoginDto, ipAddress:string):Promise<any> {
+  async adminLogin(loginDto: LoginDto, ipAddress: string): Promise<LoginResDto> {
     try {
-      console.log(this.accountRepository, loginDto, ipAddress, this.toolsService)
       const { username, password } = loginDto;
       let sqlPassword: string = '';
       let findAccount: AccountEntity | undefined;
       if (isMobilePhone(username, 'zh-CN')) {
-        const findResult = await getConnection().createQueryBuilder(AccountEntity, 'account')
+        const findResult:AccountEntity | undefined = await getConnection().createQueryBuilder(AccountEntity, 'account')
           .select([])
           .addSelect('account.password', 'password')
           .where('(account.mobile = :mobile)', {mobile: username})
@@ -55,7 +58,9 @@ export class LoginService {
         findAccount = await this.accountRepository.findOne({ where: {  username } });
       }
       if (sqlPassword && this.toolsService.checkPassword(password, sqlPassword)) {
-        return findAccount?.toResponseObject(true);
+        const lastLogin = this.accountLastLoginRepository.create({ accountId: findAccount!.id, lastLoginIp:ipAddress});
+        await this.accountLastLoginRepository.save(lastLogin);
+        return findAccount!.toResponseObject(true);
       } else {
         throw new HttpException('用户名或密码错误', HttpStatus.OK);
       }

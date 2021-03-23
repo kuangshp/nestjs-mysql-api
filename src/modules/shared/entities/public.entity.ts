@@ -29,6 +29,7 @@ export class PublicEntity extends BaseEntity {
     type: 'timestamp',
     nullable: false,
     name: 'deleted_at',
+    select: false,
     comment: '软删除时间',
   })
   deletedAt: Date

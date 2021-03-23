@@ -5,6 +5,7 @@ import { ApiTags, ApiOperation, ApiCreatedResponse } from '@nestjs/swagger';
 import { LoginService } from '../../services/login/login.service';
 import { LoginDto } from './dto/login.dto';
 import { IpAddress } from '@src/decorators/ip.address';
+import { LoginResDto } from './dto/login.res.dto';
 
 @ApiTags('后台管理系统-用户登录')
 @Controller(`${adminConfig.adminPath}/login`)
@@ -25,7 +26,7 @@ export class LoginController {
   async adminLogin(
     @Body() loginDto: LoginDto,
     @IpAddress() ipAddress: string,
-  ): Promise<any> {
+  ): Promise<LoginResDto> {
     return this.loginService.adminLogin(loginDto, ipAddress);
   }
 }

@@ -1,7 +1,7 @@
 /** 平台枚举类型 */
 export enum PlatformEnum {
-  /** 超级管理员 */
-  SUPER_ADMIN = 0,
+  /** 普通人员(没任何权限) */
+  NO_AUTH = 0,
   /** 运营人员平台 */
   ADMIN_PLATFORM = 1,
   /** 入住商家平台 */
@@ -11,7 +11,7 @@ export enum PlatformEnum {
 
 /** 平台文字描素 */
 export const PlatformMessage = {
-  0: '超级管理员',
+  0: '普通人员',
   1: '运营管理平台',
   2: '入住商家平台',
 };
