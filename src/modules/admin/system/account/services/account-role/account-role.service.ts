@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { AccountRoleEntity } from '../../entities/account.role.entity';
 import { Repository } from 'typeorm';
 import { AccountRoleListResDto } from '../../controllers/account-role/dto/account.role.res.dto';
+import { DistributionRoleDto } from '../../controllers/account-role/dto/distribution.role.dto';
 
 @Injectable()
 export class AccountRoleService {
@@ -21,5 +22,9 @@ export class AccountRoleService {
    */
   async accountRoleListByAccountId(accountId: number): Promise<AccountRoleListResDto[] | undefined> {
     return await this.accountRoleRepository.find({ where: { accountId }, select: ['id', 'roleId'] });
+  }
+
+  async distributionRole(distributionRoleDto: DistributionRoleDto):Promise<any> {
+    console.log(distributionRoleDto);
   }
 }

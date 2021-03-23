@@ -1,9 +1,10 @@
-import { Controller, UseGuards, Get, HttpCode, HttpStatus, Param, ParseIntPipe } from '@nestjs/common';
+import { Controller, UseGuards, Get, HttpCode, HttpStatus, Param, ParseIntPipe, Post, Body } from '@nestjs/common';
 import { ApiTags, ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
 import { AuthGuard } from '@src/guard/auth/auth.guard';
 import adminConfig from '@src/config/admin.config';
 import { AccountRoleService } from '../../services/account-role/account-role.service';
 import { AccountRoleListResDto } from './dto/account.role.res.dto';
+import { DistributionRoleDto } from './dto/distribution.role.dto';
 
 @ApiTags('后台管理系统-账号角色管理')
 @ApiBearerAuth()
@@ -21,5 +22,14 @@ export class AccountRoleController {
     @Param('accountId', new ParseIntPipe()) accountId: number
   ): Promise<AccountRoleListResDto[] | undefined> {
     return this.accountRoleService.accountRoleListByAccountId(accountId);
+  }
+
+  @ApiOperation({ summary: '给账号分配角色', description: '给当前账号分配角色' })
+  @Post()
+  @HttpCode(HttpStatus.OK)
+  async distributionRole(
+    @Body() distributionRoleDto: DistributionRoleDto
+  ): Promise<any> {
+    return await this.accountRoleService.distributionRole(distributionRoleDto);
   }
 }
