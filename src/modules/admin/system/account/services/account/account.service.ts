@@ -10,7 +10,9 @@ import { usernameReg } from '@src/constants';
 import { UpdateAccountDto } from '../../controllers/account/dto/update.account.dto';
 import { ModifyPasswordDto } from '../../controllers/account/dto/modify.password.dto';
 import { ToolsService } from '@src/modules/shared/services/tools/tools.service';
-import { AccountResDto } from '../../controllers/account/dto/account.res.dto';
+import { AccountResDto, AccountListResDtoDto } from '../../controllers/account/dto/account.res.dto';
+import { AccountReqDto } from '../../controllers/account/dto/account.req.dto';
+import { PageEnum, StatueEnum } from '@src/enums';
 
 @Injectable()
 export class AccountService {
@@ -136,7 +138,44 @@ export class AccountService {
     return await this.accountRepository.findOne(id);
   }
 
-  async accountList(): Promise<any> {
-    return {}
+  /**
+   * @Author: 水痕
+   * @Date: 2021-03-23 13:02:35
+   * @LastEditors: 水痕
+   * @Description: 根据条件查询账号列表
+   * @param {AccountReqDto} accountReqDto
+   * @return {*}
+   */
+  async accountList(accountReqDto: AccountReqDto): Promise<AccountListResDtoDto> {
+    const { pageNumber = PageEnum.PAGE_NUMBER, pageSize = PageEnum.PAGE_SIZE, email, username, mobile, status, platform } = accountReqDto;
+    const queryConditionList = [];
+    if (username) {
+      queryConditionList.push('account.username LIKE :username');
+    }
+    if (email) {
+      queryConditionList.push('account.email = :email');
+    }
+    if (mobile) {
+      queryConditionList.push('account.mobile = :mobile');
+    }
+    if (/^\d$/.test(String(status))) {
+      queryConditionList.push('account.status = :status');
+    }
+    if (/^\d$/.test(String(platform))) {
+      queryConditionList.push('account.platform = :platform');
+    }
+    const queryCondition = queryConditionList.join(' AND ');
+    const [data, total] = await getConnection().createQueryBuilder(AccountEntity, 'account')
+      .where(queryCondition, { username,email,  mobile, status, platform})
+      .skip((pageNumber - 1) * pageSize)
+      .take(pageSize)
+      .printSql()
+      .getManyAndCount();
+    return {
+      data,
+      total,
+      pageSize,
+      pageNumber,
+    }
   }
 }

@@ -1,4 +1,4 @@
-import { Controller, Get, Body, Delete, Param, ParseIntPipe, Post, Patch, UseGuards } from '@nestjs/common';
+import { Controller, Get, Body, Delete, Param, ParseIntPipe, Post, Patch, UseGuards, Query } from '@nestjs/common';
 import adminConfig from '@src/config/admin.config';
 import { ApiOperation, ApiCreatedResponse, ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import { CreateAccountDto } from './dto/create.account.dto';
@@ -7,6 +7,7 @@ import { UpdateAccountDto } from './dto/update.account.dto';
 import { ModifyPasswordDto } from './dto/modify.password.dto';
 import { AuthGuard } from '@src/guard/auth/auth.guard';
 import { AccountResDto, AccountListResDtoDto } from './dto/account.res.dto';
+import { AccountReqDto } from './dto/account.req.dto';
 
 @ApiTags('后台管理系统-账号管理')
 @ApiBearerAuth()
@@ -66,9 +67,17 @@ export class AccountController {
     return await this.accountService.accountById(id);
   }
 
-  @ApiOperation({summary: '查询账号列表', description: '根据条件查询账号列表'})
+  @ApiOperation({ 
+    summary: '查询账号列表', 
+    description: '根据条件查询账号列表',
+    externalDocs: {
+      url: 'xx?pageSize=10&pageNumber=1&username=xx&email=xx&mobile=xx&status=0&platform=1'
+    }
+   })
   @Get()
-  async accountList(): Promise<AccountListResDtoDto> {
-    return await this.accountService.accountList();
+  async accountList(
+    @Query() accountReqDto: AccountReqDto,
+  ): Promise<AccountListResDtoDto> {
+    return await this.accountService.accountList(accountReqDto);
   }
 }
