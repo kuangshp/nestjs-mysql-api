@@ -1,7 +1,7 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { RoleEntity } from '../../entities/role.entity';
-import { Repository, getConnection, Like } from 'typeorm';
+import { Repository, getConnection } from 'typeorm';
 import { CreateRoleDto } from '../../controllers/role/dto/create.role.dto';
 import { UpdateRoleDto } from '../../controllers/role/dto/update.role.dto';
 import { RoleResDto, RoleListResDtoDto } from '../../controllers/role/dto/role.res.dto';
