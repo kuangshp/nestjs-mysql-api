@@ -10,13 +10,13 @@ import { LoginResDto } from '../../controllers/login/dto/login.res.dto';
 
 @Injectable()
 export class LoginService {
-  constructor(
+  constructor (
     @InjectRepository(AccountEntity)
     private readonly accountRepository: Repository<AccountEntity>,
     @InjectRepository(AccountLastLoginEntity)
     private readonly accountLastLoginRepository: Repository<AccountLastLoginEntity>,
     private readonly toolsService: ToolsService,
-  ) {}
+  ) { }
 
   /**
    * @Author: 水痕
@@ -30,23 +30,25 @@ export class LoginService {
   async adminLogin(loginDto: LoginDto, ipAddress: string): Promise<LoginResDto> {
     try {
       const { username, password } = loginDto;
-      let sqlPassword: string = '';
+      let sqlPassword = '';
       let findAccount: AccountEntity | undefined;
       if (isMobilePhone(username, 'zh-CN')) {
-        const findResult:AccountEntity | undefined = await getConnection().createQueryBuilder(AccountEntity, 'account')
+        const findResult: AccountEntity | undefined = await getConnection().createQueryBuilder(AccountEntity, 'account')
           .select([])
           .addSelect('account.password', 'password')
-          .where('(account.mobile = :mobile)', {mobile: username})
+          .where('(account.mobile = :mobile)', { mobile: username })
           .getRawOne();
-        sqlPassword = findResult!.password;
-        findAccount = await this.accountRepository.findOne({where: {mobile: username}});
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        sqlPassword = findResult ? findResult!.password : '';
+        findAccount = await this.accountRepository.findOne({ where: { mobile: username } });
       } else if (isEmail(username)) {
         const findResult: AccountEntity | undefined = await getConnection().createQueryBuilder(AccountEntity, 'account')
           .select([])
           .addSelect('account.password', 'password')
           .where('(account.email = :email)', { email: username })
           .getRawOne();
-        sqlPassword = findResult!.password;
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        sqlPassword = findResult ? findResult!.password : '';
         findAccount = await this.accountRepository.findOne({ where: { email: username } });
       } else {
         const findResult: AccountEntity | undefined = await getConnection().createQueryBuilder(AccountEntity, 'account')
@@ -54,17 +56,19 @@ export class LoginService {
           .addSelect('account.password', 'password')
           .where('(account.username = :username)', { username })
           .getRawOne();
-        sqlPassword = findResult!.password;
-        findAccount = await this.accountRepository.findOne({ where: {  username } });
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        sqlPassword = findResult ? findResult!.password : '';
+        findAccount = await this.accountRepository.findOne({ where: { username } });
       }
       if (sqlPassword && this.toolsService.checkPassword(password, sqlPassword) && findAccount) {
-        const lastLogin = this.accountLastLoginRepository.create({ accountId: findAccount!.id, lastLoginIp:ipAddress});
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        const lastLogin = this.accountLastLoginRepository.create({ accountId: findAccount!.id, lastLoginIp: ipAddress });
         await this.accountLastLoginRepository.save(lastLogin);
-        return Object.assign(findAccount, { token: this.toolsService.generateToken(findAccount)});
+        return Object.assign(findAccount, { token: this.toolsService.generateToken(findAccount) });
       } else {
         throw new HttpException('用户名或密码错误', HttpStatus.OK);
       }
-    } catch(e) {
+    } catch (e) {
       throw new HttpException('用户名或密码错误', HttpStatus.OK);
     }
   }

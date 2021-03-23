@@ -12,7 +12,7 @@ import { ModifyPasswordDto } from '../../controllers/account/dto/modify.password
 import { ToolsService } from '@src/modules/shared/services/tools/tools.service';
 import { AccountResDto, AccountListResDtoDto } from '../../controllers/account/dto/account.res.dto';
 import { AccountReqDto } from '../../controllers/account/dto/account.req.dto';
-import { PageEnum, StatueEnum } from '@src/enums';
+import { PageEnum } from '@src/enums';
 
 @Injectable()
 export class AccountService {
@@ -176,6 +176,6 @@ export class AccountService {
       total,
       pageSize,
       pageNumber,
-    }
+    };
   }
 }

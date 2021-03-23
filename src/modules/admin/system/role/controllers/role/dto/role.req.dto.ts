@@ -1,7 +1,7 @@
 import { QueryOptionsDto } from '@src/dto/query.options.dto';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { ValidateIf, IsOptional, IsEnum } from 'class-validator';
-import { Transform, Type } from 'class-transformer';
+import { Type } from 'class-transformer';
 
 export class RoleReqDto extends QueryOptionsDto {
   @ApiPropertyOptional({ required: false, description: '角色名称' })

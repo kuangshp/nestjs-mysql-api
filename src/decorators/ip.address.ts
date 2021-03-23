@@ -14,6 +14,7 @@ export const IpAddress = createParamDecorator((_data: string, ctx: ExecutionCont
   const rawIp: string | undefined = req.header('x-forwarded-for') ||
     req.connection.remoteAddress ||
     req.socket.remoteAddress;
-  const ipAddress = rawIp ?? rawIp!.split(',')[0];
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const ipAddress = rawIp ? rawIp!.split(',')[0] : '';
   return ipAddress;
 });

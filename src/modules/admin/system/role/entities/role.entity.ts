@@ -1,4 +1,4 @@
-import { Column, Entity, Index, Unique } from 'typeorm';
+import { Column, Entity, Unique } from 'typeorm';
 import { PublicEntity } from '@src/modules/shared/entities/public.entity';
 
 
