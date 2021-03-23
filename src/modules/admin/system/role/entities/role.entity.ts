@@ -21,7 +21,7 @@ export class RoleEntity extends PublicEntity {
     name: 'description',
     comment: '角色描素'
   })
-  description: string | null;
+  description: string;
 
 
   @Column({
@@ -31,14 +31,14 @@ export class RoleEntity extends PublicEntity {
     name: 'status',
     comment: '状态1表示正常,0表示不正常'
   })
-  status: number | null;
+  status: number;
 
   @Column({
     type: 'tinyint',
     nullable: true,
     default: () => 0,
     name: 'is_default',
-    comment: '针对后期提供注册用,默认开通的角色,1表示开通,0表示不开通'
+    comment: '针对后期提供注册用,1表示默认角色,0表示非默认角色'
   })
-  isDefault: number | null;
+  isDefault: number;
 }
