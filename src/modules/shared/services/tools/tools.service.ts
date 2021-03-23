@@ -10,6 +10,14 @@ export class ToolsService {
     this.nodeAuth = new NodeAuth();
   }
 
+  /**
+   * @Author: 水痕
+   * @Date: 2021-03-23 11:41:47
+   * @LastEditors: 水痕
+   * @Description: 密码加密的方法
+   * @param {string} password
+   * @return {*}
+   */
   makePassword(password: string): string {
     return this.nodeAuth.makePassword(password);
   }

@@ -1,12 +1,15 @@
-import { Controller, Get, Body, Delete, Param, ParseIntPipe, Post, Patch } from '@nestjs/common';
+import { Controller, Get, Body, Delete, Param, ParseIntPipe, Post, Patch, UseGuards } from '@nestjs/common';
 import adminConfig from '@src/config/admin.config';
-import { ApiOperation, ApiCreatedResponse, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiCreatedResponse, ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import { CreateAccountDto } from './dto/create.account.dto';
 import { AccountService } from '../../services/account/account.service';
 import { UpdateAccountDto } from './dto/update.account.dto';
 import { ModifyPasswordDto } from './dto/modify.password.dto';
+import { AuthGuard } from '@src/guard/auth/auth.guard';
 
 @ApiTags('后台管理系统-账号管理')
+@ApiBearerAuth()
+@UseGuards(AuthGuard)
 @Controller(`${adminConfig.adminPath}/account`)
 export class AccountController {
   constructor (

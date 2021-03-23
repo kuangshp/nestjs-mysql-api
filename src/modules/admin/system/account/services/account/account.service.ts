@@ -92,14 +92,18 @@ export class AccountService {
     const { password, newPassword } = modifyPasswordDto;
     const findResult = await getConnection().createQueryBuilder(AccountEntity, 'account')
       .select([])
-      .addSelect('account.password', 'word')
+      .addSelect('account.password', 'password')
       .where('(account.id = :id)', { id })
       .getRawOne();
-    if (this.toolsService.checkPassword(password, findResult?.password)) {
-      await this.accountRepository.save(Object.assign(findResult, {password: newPassword}));
-      return '修改成功';
+    if (findResult?.password && this.toolsService.checkPassword(password, findResult?.password)) {
+      const { raw: { affectedRows } } = await this.accountRepository.update(id, {password: this.toolsService.makePassword(newPassword)});
+      if (affectedRows) {
+        return '修改成功';
+      } else {
+        return '修改失败';
+      }
     } else {
-      throw new HttpException('你输入的旧密码错误', HttpStatus.OK);
+      throw new HttpException('你输入的旧密码错误或输入的账号id不存在', HttpStatus.OK);
     }
   }
 
