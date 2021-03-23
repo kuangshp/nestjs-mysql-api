@@ -1,11 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsInt, IsNotEmpty, IsArray, ValidateIf, ArrayMinSize } from 'class-validator';
+import { IsInt, IsNotEmpty, IsArray, ArrayMinSize } from 'class-validator';
 
 export class DistributionRoleDto {
   @ApiProperty({ required: true, description: '账号ID' })
   @IsInt({ message: '账号ID必须为整数' })
   @IsNotEmpty({ message: '账号ID不能为空' })
-  readonly userId: number;
+  readonly accountId: number;
 
   @ApiProperty({ required: true, description: '角色ID列表' })
   @IsArray({ message: '角色ID列表不能为空' })

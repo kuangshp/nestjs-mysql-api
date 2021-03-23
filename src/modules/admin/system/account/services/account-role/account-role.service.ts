@@ -1,7 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AccountRoleEntity } from '../../entities/account.role.entity';
-import { Repository } from 'typeorm';
+import { Repository, getManager, EntityManager } from 'typeorm';
 import { AccountRoleListResDto } from '../../controllers/account-role/dto/account.role.res.dto';
 import { DistributionRoleDto } from '../../controllers/account-role/dto/distribution.role.dto';
 
@@ -24,7 +24,27 @@ export class AccountRoleService {
     return await this.accountRoleRepository.find({ where: { accountId }, select: ['id', 'roleId'] });
   }
 
-  async distributionRole(distributionRoleDto: DistributionRoleDto):Promise<any> {
+  /**
+   * @Author: 水痕
+   * @Date: 2021-03-23 18:01:44
+   * @LastEditors: 水痕
+   * @Description: 给账号分配角色
+   * @param {DistributionRoleDto} distributionRoleDto
+   * @return {*}
+   */
+  async distributionRole(distributionRoleDto: DistributionRoleDto):Promise<string> {
     console.log(distributionRoleDto);
+    const {accountId, roleList } = distributionRoleDto;
+    return getManager().transaction(async (entityManager:EntityManager) => {
+      await entityManager.softDelete(AccountRoleEntity, { accountId });
+      for (const item of roleList) {
+        const result = entityManager.create<AccountRoleEntity>(AccountRoleEntity, {accountId, roleId: item});
+        await entityManager.save(result);
+      }
+    }).then(() => {
+      return '分配角色成功';
+    }).catch((e:HttpException) => {
+      throw new HttpException(`给账号分配角色失败:${e}`, HttpStatus.OK);
+    })
   }
 }

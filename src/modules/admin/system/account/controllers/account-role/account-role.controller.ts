@@ -29,7 +29,7 @@ export class AccountRoleController {
   @HttpCode(HttpStatus.OK)
   async distributionRole(
     @Body() distributionRoleDto: DistributionRoleDto
-  ): Promise<any> {
+  ): Promise<string> {
     return await this.accountRoleService.distributionRole(distributionRoleDto);
   }
 }
