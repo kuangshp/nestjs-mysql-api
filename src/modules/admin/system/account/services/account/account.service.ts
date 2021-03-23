@@ -1,11 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { AccountEntity } from '../../entities/account.entity';
+import { isMobilePhone, isEmail } from 'class-validator';
 import { Repository, getConnection } from 'typeorm';
+
+import { AccountEntity } from '../../entities/account.entity';
 import { CreateAccountDto } from '../../controllers/account/dto/create.account.dto';
 import adminConfig from '@src/config/admin.config';
 import { usernameReg } from '@src/constants';
-import { isMobilePhone, isEmail } from 'class-validator';
 
 @Injectable()
 export class AccountService {
@@ -55,7 +56,6 @@ export class AccountService {
       await this.accountRepository.save(account);
       return '创建成功';
     }
-    
   }
 
   /**
