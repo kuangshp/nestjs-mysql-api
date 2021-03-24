@@ -99,7 +99,7 @@ export class AccountService {
       .where('(account.id = :id)', { id })
       .getRawOne();
     if (findResult?.password && this.toolsService.checkPassword(password, findResult?.password)) {
-      const { raw: { affectedRows } } = await this.accountRepository.update(id, {password: this.toolsService.makePassword(newPassword)});
+      const { raw: { affectedRows } } = await this.accountRepository.update(id, { password: this.toolsService.makePassword(newPassword) });
       if (affectedRows) {
         return '修改成功';
       } else {
@@ -134,7 +134,7 @@ export class AccountService {
    * @param {number} id
    * @return {*}
    */
-  async accountById(id: number):Promise<AccountResDto | undefined> {
+  async accountById(id: number): Promise<AccountResDto | undefined> {
     return await this.accountRepository.findOne(id);
   }
 
@@ -166,7 +166,7 @@ export class AccountService {
     }
     const queryCondition = queryConditionList.join(' AND ');
     const [data, total] = await getConnection().createQueryBuilder(AccountEntity, 'account')
-      .where(queryCondition, { username,email,  mobile, status, platform})
+      .where(queryCondition, { username, email, mobile, status, platform })
       .skip((pageNumber - 1) * pageSize)
       .take(pageSize)
       .printSql()

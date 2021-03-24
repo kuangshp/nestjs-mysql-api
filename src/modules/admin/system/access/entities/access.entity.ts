@@ -17,7 +17,7 @@ export class AccessEntity extends PublicEntity {
     type: 'tinyint',
     nullable: true,
     name: 'type',
-    comment: '类型,1:表示模块,2:表示菜单,3:表示接口'
+    comment: '类型,1:表示模块,2:表示菜单,3:表示接口(API)'
   })
   type: string;
 

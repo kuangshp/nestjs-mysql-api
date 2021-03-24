@@ -15,6 +15,7 @@ import { RoleEntity } from './role/entities/role.entity';
 import { AccountRoleController } from './account/controllers/account-role/account-role.controller';
 import { AccountRoleService } from './account/services/account-role/account-role.service';
 import { AccountRoleEntity } from './account/entities/account.role.entity';
+import { AccessEntity } from './access/entities/access.entity';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { AccountRoleEntity } from './account/entities/account.role.entity';
       AccountLastLoginEntity,
       AccountRoleEntity,
       RoleEntity,
+      AccessEntity,
     ])
   ],
   controllers: [
