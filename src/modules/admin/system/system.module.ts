@@ -19,6 +19,8 @@ import { AccessEntity } from './access/entities/access.entity';
 import { MenusController } from './access/controllers/menus/menus.controller';
 import { MenusService } from './access/services/menus/menus.service';
 import { RoleAccessEntity } from './role/entities/role.access.entity';
+import { RoleAccessController } from './role/controllers/role-access/role-access.controller';
+import { RoleAccessService } from './role/services/role-access/role-access.service';
 
 @Module({
   imports: [
@@ -37,7 +39,8 @@ import { RoleAccessEntity } from './role/entities/role.access.entity';
     AccessController, 
     LoginController, 
     AccountRoleController, 
-    MenusController
+    MenusController, 
+    RoleAccessController
   ],
   providers: [
     AccountService, 
@@ -45,7 +48,8 @@ import { RoleAccessEntity } from './role/entities/role.access.entity';
     RoleService, 
     LoginService, 
     AccountRoleService, 
-    MenusService
+    MenusService, 
+    RoleAccessService
   ],
 })
 export class SystemModule {}
