@@ -1,4 +1,4 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import { Controller, Post, Body, HttpCode, HttpStatus } from '@nestjs/common';
 import adminConfig from '@src/config/admin.config';
 import { ApiTags, ApiOperation, ApiCreatedResponse } from '@nestjs/swagger';
 
@@ -22,6 +22,7 @@ export class LoginController {
     type: LoginResDto,
     description: '用户登录返回值'
   })
+  @HttpCode(HttpStatus.OK)
   @Post()
   async adminLogin(
     @Body() loginDto: LoginDto,

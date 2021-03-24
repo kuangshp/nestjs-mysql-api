@@ -1,4 +1,4 @@
-import { Controller, UseGuards, Post, Body, Delete, ParseIntPipe, Param, Patch, Get, Query } from '@nestjs/common';
+import { Controller, UseGuards, Post, Body, Delete, ParseIntPipe, Param, Patch, Get, Query, HttpCode, HttpStatus } from '@nestjs/common';
 import { ApiTags, ApiBearerAuth, ApiOperation, ApiCreatedResponse } from '@nestjs/swagger';
 import { AuthGuard } from '@src/guard/auth/auth.guard';
 import adminConfig from '@src/config/admin.config';
@@ -25,6 +25,7 @@ export class RoleController {
     type: String,
     description: '创建角色返回值'
   })
+  @HttpCode(HttpStatus.CREATED)
   @Post()
   async createRole(
     @Body() createRoleDto: CreateRoleDto,
@@ -33,6 +34,11 @@ export class RoleController {
   }
 
   @ApiOperation({summary: '删除角色', description: '根据角色id删除角色'})
+  @ApiCreatedResponse({
+    type: String,
+    description: '删除角色返回值'
+  })
+  @HttpCode(HttpStatus.OK)
   @Delete(':id')
   async destroyRoleById(
     @Param('id', new ParseIntPipe()) id: number,
@@ -41,6 +47,11 @@ export class RoleController {
   }
 
   @ApiOperation({summary: '修改角色', description: '根据角色id修改角色'})
+  @ApiCreatedResponse({
+    type: String,
+    description: '修改角色返回值'
+  })
+  @HttpCode(HttpStatus.OK)
   @Patch(':id')
   async modifyRoleById(
     @Param('id', new ParseIntPipe()) id: number,
@@ -50,6 +61,11 @@ export class RoleController {
   }
 
   @ApiOperation({summary: '查询角色', description: '根据角色id查询角色'})
+  @ApiCreatedResponse({
+    type: RoleResDto,
+    description: '查询单条角色返回值'
+  })
+  @HttpCode(HttpStatus.OK)
   @Get(':id')
   async roleById(
     @Param('id', new ParseIntPipe()) id: number,
@@ -64,6 +80,12 @@ export class RoleController {
       url: 'xx?pageSize=10&pageNumber=1&name=x&status=0'
     }
   })
+  @ApiCreatedResponse({
+    type: RoleResDto,
+    isArray: true,
+    description: '分页查询角色返回值'
+  })
+  @HttpCode(HttpStatus.OK)
   @Get()
   async roleList(
     @Query() roleReqDto: RoleReqDto,
