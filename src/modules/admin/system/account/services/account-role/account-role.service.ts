@@ -36,7 +36,7 @@ export class AccountRoleService {
     console.log(distributionRoleDto);
     const {accountId, roleList } = distributionRoleDto;
     return getManager().transaction(async (entityManager:EntityManager) => {
-      await entityManager.softDelete(AccountRoleEntity, { accountId });
+      await entityManager.delete<AccountRoleEntity>(AccountRoleEntity, { accountId });
       for (const item of roleList) {
         const result = entityManager.create<AccountRoleEntity>(AccountRoleEntity, {accountId, roleId: item});
         await entityManager.save(result);
