@@ -1,4 +1,4 @@
-import { Controller, UseGuards, Post, HttpStatus, Body, HttpCode } from '@nestjs/common';
+import { Controller, UseGuards, Post, HttpStatus, Body, HttpCode, Delete, Param, ParseIntPipe } from '@nestjs/common';
 import { ApiTags, ApiBearerAuth, ApiOperation, ApiCreatedResponse } from '@nestjs/swagger';
 import { AuthGuard } from '@src/guard/auth/auth.guard';
 import adminConfig from '@src/config/admin.config';
@@ -25,5 +25,14 @@ export class AccessController {
     @Body() createAccessDto: CreateAccessDto
   ): Promise<string> {
     return await this.accessService.createAccess(createAccessDto);
+  }
+
+  @ApiOperation({summary: '删除资源', description: '根据资源id删除资源'})
+  @Delete(':id')
+  @HttpCode(HttpStatus.OK)
+  async destroyAccessById(
+    @Param('id', new ParseIntPipe()) id: number,
+  ):Promise<string> {
+    return await this.accessService.destroyAccessById(id);
   }
 }

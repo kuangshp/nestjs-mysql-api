@@ -1,7 +1,9 @@
-import { Column, Entity } from 'typeorm';
+import { Column, Entity, Unique } from 'typeorm';
 import { PublicEntity } from '@src/modules/shared/entities/public.entity';
 
 @Entity('access')
+@Unique('module_name_delete_at', ['moduleName','deletedAt'])
+@Unique('action_name_delete_at', ['actionName','deletedAt'])
 export class AccessEntity extends PublicEntity {
 
   @Column({
