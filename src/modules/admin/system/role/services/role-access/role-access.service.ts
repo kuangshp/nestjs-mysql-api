@@ -48,7 +48,7 @@ export class RoleAccessService {
    * @param {*}
    * @return {*}
    */
-  async accessListByRoleId(roleId: number): Promise<RoleAccessResDto[]> {
-    return await this.roleAccessRepository.find({ where: { roleId }, select: ['id', 'accessId'] });
+  async accessListByRoleId(roleId: number, type: number): Promise<RoleAccessResDto[]> {
+    return await this.roleAccessRepository.find({ where: { roleId, type }, select: ['id', 'accessId'] });
   }
 }

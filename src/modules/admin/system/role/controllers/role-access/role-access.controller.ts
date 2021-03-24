@@ -27,16 +27,23 @@ export class RoleAccessController {
     return await this.roleAccessService.roleToAccess(roleAccessReqDto);
   }
 
-  @ApiOperation({ summary: '获取资源', description: '根据角色ID获取已经分配的资源' })
+  @ApiOperation({ 
+    summary: '获取资源', 
+    description: '根据角色ID获取已经分配的菜单或接口',
+    externalDocs: {
+      url: 'xxx/角色id/type=(2:菜单,3:接口)'
+    }
+  })
   @ApiCreatedResponse({
     type: RoleAccessResDto,
     isArray: true,
     description: '根据角色ID返回授权的资源列表'
   })
-  @Get(':roleId')
+  @Get(':roleId/:type')
   async accessListByRoleId(
     @Param('roleId', new ParseIntPipe()) roleId: number,
+    @Param('type', new ParseIntPipe()) type: number,
   ): Promise<RoleAccessResDto[]> {
-    return await this.roleAccessService.accessListByRoleId(roleId);
+    return await this.roleAccessService.accessListByRoleId(roleId, type);
   }
 }
