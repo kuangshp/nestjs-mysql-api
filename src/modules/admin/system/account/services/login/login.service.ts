@@ -30,7 +30,7 @@ export class LoginService {
   async adminLogin(loginDto: LoginDto, ipAddress: string): Promise<LoginResDto> {
     try {
       const { username, password } = loginDto;
-      let sqlPassword = '';
+      let sqlPassword: string | undefined;
       let findAccount: AccountEntity | undefined;
       if (isMobilePhone(username, 'zh-CN')) {
         const findResult: AccountEntity | undefined = await getConnection().createQueryBuilder(AccountEntity, 'account')
@@ -39,7 +39,7 @@ export class LoginService {
           .where('(account.mobile = :mobile)', { mobile: username })
           .getRawOne();
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        sqlPassword = findResult ? findResult!.password : '';
+        sqlPassword = findResult?.password;
         findAccount = await this.accountRepository.findOne({ where: { mobile: username } });
       } else if (isEmail(username)) {
         const findResult: AccountEntity | undefined = await getConnection().createQueryBuilder(AccountEntity, 'account')
@@ -48,7 +48,7 @@ export class LoginService {
           .where('(account.email = :email)', { email: username })
           .getRawOne();
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        sqlPassword = findResult ? findResult!.password : '';
+        sqlPassword = findResult?.password ;
         findAccount = await this.accountRepository.findOne({ where: { email: username } });
       } else {
         const findResult: AccountEntity | undefined = await getConnection().createQueryBuilder(AccountEntity, 'account')
@@ -57,7 +57,7 @@ export class LoginService {
           .where('(account.username = :username)', { username })
           .getRawOne();
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        sqlPassword = findResult ? findResult!.password : '';
+        sqlPassword = findResult?.password;
         findAccount = await this.accountRepository.findOne({ where: { username } });
       }
       if (sqlPassword && this.toolsService.checkPassword(password, sqlPassword) && findAccount) {
