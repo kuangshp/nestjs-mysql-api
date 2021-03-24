@@ -9,7 +9,7 @@ export enum AccessTypeEnum {
 }
 
 /** 资源类型枚举描素 */
-export const StatusMessage = {
+export const AccessTypeMessage = {
   1: '模块',
   2: '菜单',
   3: '操作(API)'

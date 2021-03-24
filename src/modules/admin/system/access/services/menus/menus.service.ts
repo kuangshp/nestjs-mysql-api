@@ -7,10 +7,10 @@ import { ICurrentUserType } from '@src/decorators/current.user';
 
 @Injectable()
 export class MenusService {
-  constructor(
+  constructor (
     @InjectRepository(AccessEntity)
-    private readonly accessRepository:Repository<AccessEntity>,
-  ) {}
+    private readonly accessRepository: Repository<AccessEntity>,
+  ) { }
 
   /**
    * @Author: 水痕
@@ -23,9 +23,11 @@ export class MenusService {
   async menusList(userInfo: ICurrentUserType): Promise<any> {
     /**
      * 根据用户权限来返回菜单
-     * 1.如果是超级管理员就返回全部菜单
-     * 2.非超级管理员，根据当前用户拥有的角色去查询(角色资源)表获取全部的资源
+     * 1.查询全部的菜单
+     * 2.如果是超级管理员就返回全部菜单
+     * 3.非超级管理员，根据当前用户拥有的角色去查询(角色资源)表获取全部的资源
      */
+    const { id } = userInfo;
     return [];
   }
 }
