@@ -36,9 +36,9 @@ export class AccessDto {
   @ApiPropertyOptional({ required: false, description: '父节点模块id' })
   @IsInt({ message: '模块父节点必须是数字' })
   @Type(() => Number)
-  @ValidateIf(o => o.moduleId != '')
+  @ValidateIf(o => o.parentId != '')
   @IsOptional()
-  readonly moduleId?: number;
+  readonly parentId?: number;
 
   @ApiPropertyOptional({ required: false, description: '排序' })
   @IsInt({ message: '排序必须是数字' })

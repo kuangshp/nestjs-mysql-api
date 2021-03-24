@@ -63,10 +63,10 @@ export class AccessEntity extends PublicEntity {
     type: 'int',
     nullable: false,
     default: () => -1,
-    name: 'module_id',
+    name: 'parent_id',
     comment: '父模块id'
   })
-  moduleId: number;
+  parentId: number;
 
   @Column({
     type: 'int',

@@ -21,7 +21,7 @@ export class MenusListResDto extends QueryResDto{
   method: string;
 
   @ApiProperty({ description: '父模块ID' })
-  moduleId: number;
+  parentId: number;
 
   @ApiProperty({ description: '排序' })
   sort: number;
