@@ -23,7 +23,7 @@ export class RoleAccessEntity extends PublicEntity {
   @Column({
     type: 'tinyint',
     name: 'type',
-    comment: '资源类型:1:表示模块,2:表示菜单,3:表示接口(API)'
+    comment: '资源类型:2:表示菜单,3:表示接口(API)'
   })
   type: number;
 }

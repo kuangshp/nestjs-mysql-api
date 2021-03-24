@@ -15,16 +15,16 @@ export class RoleAccessController {
     private readonly roleAccessService: RoleAccessService
   ) { }
 
-  @ApiOperation({summary: '给角色分配菜单资源', description: '给当前角色分配菜单资源'})
+  @ApiOperation({summary: '给角色分配菜单资源', description: '给当前角色分配菜单或接口资源'})
   @ApiCreatedResponse({
     type: String,
-    description: '给当前角色分配菜单资源返回值'
+    description: '给当前角色分配菜单或接口资源返回值'
   })
   @Post('menus')
-  async roleToAccessMenus(
+  async roleToAccess(
     @Body() roleAccessReqDto: RoleAccessReqDto,
   ):Promise<string> {
-    return await this.roleAccessService.roleToAccessMenus(roleAccessReqDto);
+    return await this.roleAccessService.roleToAccess(roleAccessReqDto);
   }
 
   @ApiOperation({ summary: '获取资源', description: '根据角色ID获取已经分配的资源' })

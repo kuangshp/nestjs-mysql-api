@@ -16,17 +16,18 @@ export class RoleAccessService {
    * @Author: 水痕
    * @Date: 2021-03-24 21:49:26
    * @LastEditors: 水痕
-   * @Description: 给当前角色ID授权菜单权限
+   * @Description: 给当前角色ID授权菜单、接口权限
    * @param {*}
    * @return {*}
    */
-  async roleToAccessMenus(roleAccessReqDto: RoleAccessReqDto): Promise<string> {
+  async roleToAccess(roleAccessReqDto: RoleAccessReqDto): Promise<string> {
     return getManager().transaction(async (entityManager: EntityManager) => {
-      const { roleId, accessList } = roleAccessReqDto;
-      await entityManager.delete<RoleAccessEntity>(RoleAccessEntity, { roleId });
+      const { roleId, accessList, type } = roleAccessReqDto;
+      await entityManager.delete<RoleAccessEntity>(RoleAccessEntity, { roleId, type });
       const newAccessList = accessList.map((item: number) => {
         return {
           roleId,
+          type,
           accessId: item,
         }
       });
