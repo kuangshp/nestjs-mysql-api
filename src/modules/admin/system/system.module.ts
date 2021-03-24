@@ -18,6 +18,7 @@ import { AccountRoleEntity } from './account/entities/account.role.entity';
 import { AccessEntity } from './access/entities/access.entity';
 import { MenusController } from './access/controllers/menus/menus.controller';
 import { MenusService } from './access/services/menus/menus.service';
+import { RoleAccessEntity } from './role/entities/role.access.entity';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { MenusService } from './access/services/menus/menus.service';
       AccountRoleEntity,
       RoleEntity,
       AccessEntity,
+      RoleAccessEntity,
     ])
   ],
   controllers: [
