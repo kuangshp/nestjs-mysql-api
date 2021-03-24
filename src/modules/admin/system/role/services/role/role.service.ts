@@ -8,12 +8,15 @@ import { RoleResDto, RoleListResDtoDto } from '../../controllers/role/dto/role.r
 import { RoleReqDto } from '../../controllers/role/dto/role.req.dto';
 import { PageEnum, StatusEnum } from '@src/enums';
 import { RoleEnum } from '@src/enums/role.enum';
+import { AccountRoleEntity } from '../../../account/entities/account.role.entity';
 
 @Injectable()
 export class RoleService {
   constructor (
     @InjectRepository(RoleEntity)
     private readonly roleRepository: Repository<RoleEntity>,
+    @InjectRepository(AccountRoleEntity)
+    private readonly accountRoleRepository: Repository<AccountRoleEntity>,
   ) { }
 
   /**
@@ -51,6 +54,11 @@ export class RoleService {
    * @return {*}
    */
   async destroyRoleById(id: number): Promise<string> {
+    // 判断当前角色是否已经被占用(有账号绑定了该角色)
+    const accountRoleFindResult: AccountRoleEntity | undefined = await this.accountRoleRepository.findOne({ where: { roleId: id }, select: ['id'] });
+    if (accountRoleFindResult) {
+      throw new HttpException('当前角色有账号与之绑定,不能直接删除', HttpStatus.OK);
+    }
     const { raw: { affectedRows } } = await this.roleRepository.softDelete(id);
     if (affectedRows) {
       return '删除成功';
@@ -71,12 +79,12 @@ export class RoleService {
   async modifyRoleById(id: number, updateRoleDto: UpdateRoleDto): Promise<string> {
     const { isDefault } = updateRoleDto;
     if (Object.is(isDefault, RoleEnum.DEFAULT)) {
-      const findResult = await this.roleRepository.findOne({where:{isDefault}, select: ['id']});
+      const findResult = await this.roleRepository.findOne({ where: { isDefault }, select: ['id'] });
       if (findResult?.id !== id) {
         throw new HttpException('默认角色只能有一个', HttpStatus.OK);
       }
     }
-    const { raw: { affectedRows}} = await this.roleRepository.update(id, updateRoleDto);
+    const { raw: { affectedRows } } = await this.roleRepository.update(id, updateRoleDto);
     if (affectedRows) {
       return '修改成功';
     } else {
@@ -92,7 +100,7 @@ export class RoleService {
    * @param {number} id
    * @return {*}
    */
-  async roleById(id: number):Promise<RoleResDto | undefined> {
+  async roleById(id: number): Promise<RoleResDto | undefined> {
     return await this.roleRepository.findOne(id);
   }
 
