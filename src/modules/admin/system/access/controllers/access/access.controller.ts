@@ -1,11 +1,12 @@
-import { Controller, UseGuards, Post, HttpStatus, Body, HttpCode, Delete, Param, ParseIntPipe, Patch, Get } from '@nestjs/common';
+import { Controller, UseGuards, Post, HttpStatus, Body, HttpCode, Delete, Param, ParseIntPipe, Patch, Get, Query } from '@nestjs/common';
 import { ApiTags, ApiBearerAuth, ApiOperation, ApiCreatedResponse } from '@nestjs/swagger';
 import { AuthGuard } from '@src/guard/auth/auth.guard';
 import adminConfig from '@src/config/admin.config';
 import { AccessService } from '../../services/access/access.service';
 import { CreateAccessDto } from './dto/create.access.dto';
 import { UpdateAccessDto } from './dto/update.access.dto';
-import { AccessResDto } from './dto/access.res.dto';
+import { AccessResDto, AccessListResDtoDto } from './dto/access.res.dto';
+import { AccessReqDto } from './dto/access.req.dto';
 
 @ApiTags('后台管理系统-资源管理')
 @ApiBearerAuth()
@@ -67,16 +68,21 @@ export class AccessController {
   }
 
   @ApiOperation({
-    summary: '获取全部的模块/菜单', 
-    description: '根据类型获取模块、菜单',
+    summary: '获取资源列表', 
+    description: '分页获取资源列表(顶层的)',
     externalDocs: {
-      url: 'xxx/type(type=1是模块,type=2是菜单)'
+      url: 'xxx?pageSize=10&pageNumber=1'
     }
   })
-  @Get('module/:type')
-  async accessListByType(
-    @Param('type', new ParseIntPipe()) type: number,
-  ):Promise<any> {
-    return await this.accessService.accessListByType(type);
+  @ApiCreatedResponse({
+    type: AccessResDto,
+    isArray: true,
+    description: '分页获取资源列表'
+  })
+  @Get()
+  async accessListPage(
+    @Query() accessReqDto: AccessReqDto,
+  ): Promise<AccessListResDtoDto> {
+    return await this.accessService.accessListPage(accessReqDto);
   }
 }

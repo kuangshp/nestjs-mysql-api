@@ -1,11 +1,13 @@
+import { PageEnum } from './../../../../../../enums/page.enum';
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { CreateAccessDto } from '../../controllers/access/dto/create.access.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AccessEntity } from '../../entities/access.entity';
-import { Repository } from 'typeorm';
+import { Repository, getConnection } from 'typeorm';
 import { UpdateAccessDto } from '../../controllers/access/dto/update.access.dto';
-import { AccessResDto } from '../../controllers/access/dto/access.res.dto';
+import { AccessResDto, AccessListResDtoDto } from '../../controllers/access/dto/access.res.dto';
 import { RoleAccessEntity } from '../../../role/entities/role.access.entity';
+import { AccessReqDto } from '../../controllers/access/dto/access.req.dto';
 
 @Injectable()
 export class AccessService {
@@ -104,11 +106,24 @@ export class AccessService {
    * @Author: 水痕
    * @Date: 2021-03-24 14:01:01
    * @LastEditors: 水痕
-   * @Description: 根据type类型获取模块、菜单
+   * @Description: 分页获取资源
    * @param {number} type
    * @return {*}
    */
-  async accessListByType(type: number): Promise<any> {
-    return await this.accessRepository.find({ where: { type } });
+  async accessListPage(accessReqDto: AccessReqDto): Promise<AccessListResDtoDto> {
+    const { pageSize = PageEnum.PAGE_SIZE, pageNumber = PageEnum.PAGE_NUMBER } = accessReqDto;
+    const [data, total] = await getConnection().createQueryBuilder(AccessEntity, 'access')
+      .where('access.parentId = -1')
+      .skip((pageNumber - 1) * pageSize)
+      .take(pageSize)
+      .orderBy({'access.sort': 'DESC', 'access.createdAt': 'DESC'})
+      .printSql()
+      .getManyAndCount();
+    return {
+      data,
+      total,
+      pageNumber,
+      pageSize
+    }
   }
 }
