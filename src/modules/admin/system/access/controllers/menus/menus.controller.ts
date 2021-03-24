@@ -27,7 +27,7 @@ export class MenusController {
   @HttpCode(HttpStatus.OK)
   async menusList(
     @CurrentUser() userInfo: ICurrentUserType,
-  ): Promise<MenusListResDto> {
+  ): Promise<MenusListResDto[]> {
     return await this.menusService.menusList(userInfo);
   }
 }
