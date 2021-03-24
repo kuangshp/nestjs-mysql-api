@@ -5,6 +5,7 @@ import adminConfig from '@src/config/admin.config';
 import { AccessService } from '../../services/access/access.service';
 import { CreateAccessDto } from './dto/create.access.dto';
 import { UpdateAccessDto } from './dto/update.access.dto';
+import { AccessResDto } from './dto/access.res.dto';
 
 @ApiTags('后台管理系统-资源管理')
 @ApiBearerAuth()
@@ -48,6 +49,21 @@ export class AccessController {
     @Body() updateAccessDto: UpdateAccessDto,
   ): Promise<string> {
     return await this.accessService.modifyAccessById(id, updateAccessDto);
+  }
+
+  @ApiOperation({
+    summary: '获取菜单',
+    description: '获取全部的菜单(不分页,给角色分配资源使用)'
+  })
+  @ApiCreatedResponse({
+    type: AccessResDto,
+    isArray: true,
+    description: '获取全部菜单返回DTO'
+  })
+  @HttpCode(HttpStatus.OK)
+  @Get('access_list')
+  async accessList(): Promise<AccessResDto[]> {
+    return await this.accessService.accessList();
   }
 
   @ApiOperation({

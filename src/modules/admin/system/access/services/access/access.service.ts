@@ -4,6 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { AccessEntity } from '../../entities/access.entity';
 import { Repository } from 'typeorm';
 import { UpdateAccessDto } from '../../controllers/access/dto/update.access.dto';
+import { AccessResDto } from '../../controllers/access/dto/access.res.dto';
 
 @Injectable()
 export class AccessService {
@@ -47,10 +48,10 @@ export class AccessService {
    * @param {number} id
    * @return {*}
    */
-  async destroyAccessById(id: number):Promise<string> {
+  async destroyAccessById(id: number): Promise<string> {
     // 1.判断是否有角色关联到当前资源
     // 2.查看该节点下是否有子节点
-    const childNode: AccessEntity | undefined = await this.accessRepository.findOne({where: {moduleId: id}, select: ['id']});
+    const childNode: AccessEntity | undefined = await this.accessRepository.findOne({ where: { moduleId: id }, select: ['id'] });
     if (childNode) {
       throw new HttpException('当前节点下含子节点,不能直接删除', HttpStatus.OK);
     }
@@ -71,8 +72,8 @@ export class AccessService {
    * @param {UpdateAccessDto} updateAccessDto
    * @return {*}
    */
-  async modifyAccessById(id: number, updateAccessDto: UpdateAccessDto):Promise<string> {
-    const { raw: { affectedRows }} = await this.accessRepository.update(id, updateAccessDto);
+  async modifyAccessById(id: number, updateAccessDto: UpdateAccessDto): Promise<string> {
+    const { raw: { affectedRows } } = await this.accessRepository.update(id, updateAccessDto);
     if (affectedRows) {
       return '修改成功';
     } else {
@@ -82,13 +83,25 @@ export class AccessService {
 
   /**
    * @Author: 水痕
+   * @Date: 2021-03-24 21:24:53
+   * @LastEditors: 水痕
+   * @Description: 获取全部的菜单给分配角色的时候用
+   * @param {*}
+   * @return {*}
+   */
+  async accessList(): Promise<AccessResDto[]> {
+    return await this.accessRepository.find({ where: [{ type: 1 }, { type: 2 }], select: ['id', 'moduleName', 'actionName', 'sort'] });
+  }
+  
+  /**
+   * @Author: 水痕
    * @Date: 2021-03-24 14:01:01
    * @LastEditors: 水痕
    * @Description: 根据type类型获取模块、菜单
    * @param {number} type
    * @return {*}
    */
-  async accessListByType(type: number):Promise<any> {
-    return await this.accessRepository.find({where: {type}});
+  async accessListByType(type: number): Promise<any> {
+    return await this.accessRepository.find({ where: { type } });
   }
 }
