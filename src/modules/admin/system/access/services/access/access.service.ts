@@ -72,6 +72,23 @@ export class AccessService {
    * @return {*}
    */
   async modifyAccessById(id: number, updateAccessDto: UpdateAccessDto):Promise<string> {
-    return '修改成功';
+    const { raw: { affectedRows }} = await this.accessRepository.update(id, updateAccessDto);
+    if (affectedRows) {
+      return '修改成功';
+    } else {
+      return '修改失败';
+    }
+  }
+
+  /**
+   * @Author: 水痕
+   * @Date: 2021-03-24 14:01:01
+   * @LastEditors: 水痕
+   * @Description: 根据type类型获取模块、菜单
+   * @param {number} type
+   * @return {*}
+   */
+  async accessListByType(type: number):Promise<any> {
+    return await this.accessRepository.find({where: {type}});
   }
 }

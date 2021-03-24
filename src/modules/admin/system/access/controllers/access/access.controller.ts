@@ -1,4 +1,4 @@
-import { Controller, UseGuards, Post, HttpStatus, Body, HttpCode, Delete, Param, ParseIntPipe, Patch } from '@nestjs/common';
+import { Controller, UseGuards, Post, HttpStatus, Body, HttpCode, Delete, Param, ParseIntPipe, Patch, Get } from '@nestjs/common';
 import { ApiTags, ApiBearerAuth, ApiOperation, ApiCreatedResponse } from '@nestjs/swagger';
 import { AuthGuard } from '@src/guard/auth/auth.guard';
 import adminConfig from '@src/config/admin.config';
@@ -48,5 +48,19 @@ export class AccessController {
     @Body() updateAccessDto: UpdateAccessDto,
   ): Promise<string> {
     return await this.accessService.modifyAccessById(id, updateAccessDto);
+  }
+
+  @ApiOperation({
+    summary: '获取全部的模块/菜单', 
+    description: '根据类型获取模块、菜单',
+    externalDocs: {
+      url: 'xxx/type(type=1是模块,type=2是菜单)'
+    }
+  })
+  @Get('module/:type')
+  async accessListByType(
+    @Param('type', new ParseIntPipe()) type: number,
+  ):Promise<any> {
+    return await this.accessService.accessListByType(type);
   }
 }
