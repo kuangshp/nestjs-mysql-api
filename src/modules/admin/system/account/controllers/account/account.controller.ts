@@ -1,4 +1,4 @@
-import { Controller, Get, Body, Delete, Param, ParseIntPipe, Post, Patch, UseGuards, Query } from '@nestjs/common';
+import { Controller, Get, Body, Delete, Param, ParseIntPipe, Post, Patch, UseGuards, Query, HttpStatus, HttpCode } from '@nestjs/common';
 import adminConfig from '@src/config/admin.config';
 import { ApiOperation, ApiCreatedResponse, ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import { CreateAccountDto } from './dto/create.account.dto';
@@ -26,6 +26,7 @@ export class AccountController {
     type: String,
     description: '创建账号返回值'
   })
+  @HttpCode(HttpStatus.CREATED)
   @Post()
   async createAccount(
     @Body() createAccountDto: CreateAccountDto,
@@ -34,6 +35,11 @@ export class AccountController {
   }
 
   @ApiOperation({ summary: '删除账号', description: '根据id删除账号' })
+  @ApiCreatedResponse({
+    type: String,
+    description: '修改账号返回值'
+  })
+  @HttpCode(HttpStatus.OK)
   @Delete(':id')
   async destroyById(
     @Param('id', new ParseIntPipe()) id: number,
@@ -42,6 +48,11 @@ export class AccountController {
   }
 
   @ApiOperation({ summary: '修改密码', description: '根据账号id修改账号密码' })
+  @ApiCreatedResponse({
+    type: String,
+    description: '修改账号密码返回值'
+  })
+  @HttpCode(HttpStatus.OK)
   @Patch('modify_password/:id')
   async modifyPassWordById(
     @Param('id', new ParseIntPipe()) id: number,
@@ -51,6 +62,11 @@ export class AccountController {
   }
 
   @ApiOperation({ summary: '修改账号信息', description: '根据账号id修改账号信息' })
+  @ApiCreatedResponse({
+    type: String,
+    description: '修改账号返回值'
+  })
+  @HttpCode(HttpStatus.OK)
   @Patch(':id')
   async modifyById(
     @Param('id', new ParseIntPipe()) id: number,
@@ -60,6 +76,11 @@ export class AccountController {
   }
 
   @ApiOperation({ summary: '查询账号信息', description: '根据账号id查询账号信息' })
+  @ApiCreatedResponse({
+    type: AccountResDto,
+    description: '查询单条账号返回值'
+  })
+  @HttpCode(HttpStatus.OK)
   @Get(':id')
   async accountById(
     @Param('id', new ParseIntPipe()) id: number,
@@ -74,6 +95,12 @@ export class AccountController {
       url: 'xx?pageSize=10&pageNumber=1&username=xx&email=xx&mobile=xx&status=0&platform=1'
     }
    })
+  @ApiCreatedResponse({
+    type: AccountResDto,
+    isArray: true,
+    description: '分页查询账号返回值'
+  })
+  @HttpCode(HttpStatus.OK)
   @Get()
   async accountList(
     @Query() accountReqDto: AccountReqDto,
