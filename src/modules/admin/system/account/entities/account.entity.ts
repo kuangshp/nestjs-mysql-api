@@ -79,6 +79,7 @@ export class AccountEntity extends PublicEntity {
   @Column({
     type: 'tinyint', 
     nullable: false,
+    select: false,
     default: () => 0,
     name: 'is_super',
     comment: '是否为超级管理员1表示是,0表示不是'
