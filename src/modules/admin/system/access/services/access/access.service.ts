@@ -5,12 +5,15 @@ import { AccessEntity } from '../../entities/access.entity';
 import { Repository } from 'typeorm';
 import { UpdateAccessDto } from '../../controllers/access/dto/update.access.dto';
 import { AccessResDto } from '../../controllers/access/dto/access.res.dto';
+import { RoleAccessEntity } from '../../../role/entities/role.access.entity';
 
 @Injectable()
 export class AccessService {
   constructor (
     @InjectRepository(AccessEntity)
-    private readonly accessRepository: Repository<AccessEntity>
+    private readonly accessRepository: Repository<AccessEntity>,
+    @InjectRepository(RoleAccessEntity)
+    private readonly roleAccessRepository: Repository<RoleAccessEntity>,
   ) { }
 
   /**
@@ -50,6 +53,10 @@ export class AccessService {
    */
   async destroyAccessById(id: number): Promise<string> {
     // 1.判断是否有角色关联到当前资源
+    const roleAccessResult: RoleAccessEntity | undefined = await this.roleAccessRepository.findOne({ where: { accessId: id }, select: ['id'] });
+    if (roleAccessResult) {
+      throw new HttpException('当前资源已经被角色绑定不能直接删除', HttpStatus.OK);
+    }
     // 2.查看该节点下是否有子节点
     const childNode: AccessEntity | undefined = await this.accessRepository.findOne({ where: { moduleId: id }, select: ['id'] });
     if (childNode) {
@@ -92,7 +99,7 @@ export class AccessService {
   async accessList(): Promise<AccessResDto[]> {
     return await this.accessRepository.find({ where: [{ type: 1 }, { type: 2 }], select: ['id', 'moduleName', 'actionName', 'sort'] });
   }
-  
+
   /**
    * @Author: 水痕
    * @Date: 2021-03-24 14:01:01
