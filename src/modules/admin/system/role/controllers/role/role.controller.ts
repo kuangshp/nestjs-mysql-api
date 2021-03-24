@@ -22,8 +22,8 @@ export class RoleController {
     description: '创建角色',
   })
   @ApiCreatedResponse({
-    type: CreateRoleDto,
-    description: '创建角色DTO'
+    type: String,
+    description: '创建角色返回值'
   })
   @Post()
   async createRole(

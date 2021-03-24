@@ -3,6 +3,7 @@ import { CreateAccessDto } from '../../controllers/access/dto/create.access.dto'
 import { InjectRepository } from '@nestjs/typeorm';
 import { AccessEntity } from '../../entities/access.entity';
 import { Repository } from 'typeorm';
+import { UpdateAccessDto } from '../../controllers/access/dto/update.access.dto';
 
 @Injectable()
 export class AccessService {
@@ -47,6 +48,30 @@ export class AccessService {
    * @return {*}
    */
   async destroyAccessById(id: number):Promise<string> {
-    return '删除成功';
+    // 1.判断是否有角色关联到当前资源
+    // 2.查看该节点下是否有子节点
+    const childNode: AccessEntity | undefined = await this.accessRepository.findOne({where: {moduleId: id}, select: ['id']});
+    if (childNode) {
+      throw new HttpException('当前节点下含子节点,不能直接删除', HttpStatus.OK);
+    }
+    const { raw: { affectedRows } } = await this.accessRepository.softDelete(id);
+    if (affectedRows) {
+      return '删除成功';
+    } else {
+      return '删除失败';
+    }
+  }
+
+  /**
+   * @Author: 水痕
+   * @Date: 2021-03-24 12:36:51
+   * @LastEditors: 水痕
+   * @Description: 根据资源id修改资源
+   * @param {number} id
+   * @param {UpdateAccessDto} updateAccessDto
+   * @return {*}
+   */
+  async modifyAccessById(id: number, updateAccessDto: UpdateAccessDto):Promise<string> {
+    return '修改成功';
   }
 }

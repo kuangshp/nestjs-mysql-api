@@ -19,8 +19,8 @@ export class LoginController {
     description: '用户名可以是手机号码、邮箱、用户名',
   })
   @ApiCreatedResponse({
-    type: LoginDto,
-    description: '用户登录DTO'
+    type: LoginResDto,
+    description: '用户登录返回值'
   })
   @Post()
   async adminLogin(

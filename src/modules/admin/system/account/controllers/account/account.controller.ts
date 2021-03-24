@@ -23,8 +23,8 @@ export class AccountController {
     description: '创建账号',
   })
   @ApiCreatedResponse({
-    type: CreateAccountDto,
-    description: '创建账号DTO'
+    type: String,
+    description: '创建账号返回值'
   })
   @Post()
   async createAccount(

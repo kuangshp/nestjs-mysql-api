@@ -1,9 +1,10 @@
-import { Controller, UseGuards, Post, HttpStatus, Body, HttpCode, Delete, Param, ParseIntPipe } from '@nestjs/common';
+import { Controller, UseGuards, Post, HttpStatus, Body, HttpCode, Delete, Param, ParseIntPipe, Patch } from '@nestjs/common';
 import { ApiTags, ApiBearerAuth, ApiOperation, ApiCreatedResponse } from '@nestjs/swagger';
 import { AuthGuard } from '@src/guard/auth/auth.guard';
 import adminConfig from '@src/config/admin.config';
 import { AccessService } from '../../services/access/access.service';
 import { CreateAccessDto } from './dto/create.access.dto';
+import { UpdateAccessDto } from './dto/update.access.dto';
 
 @ApiTags('后台管理系统-资源管理')
 @ApiBearerAuth()
@@ -16,8 +17,8 @@ export class AccessController {
 
   @ApiOperation({ summary: '创建资源', description: '创建资源' })
   @ApiCreatedResponse({
-    type: CreateAccessDto,
-    description: '创建资源DTO'
+    type: String,
+    description: '创建资源返回值'
   })
   @Post()
   @HttpCode(HttpStatus.CREATED)
@@ -27,12 +28,25 @@ export class AccessController {
     return await this.accessService.createAccess(createAccessDto);
   }
 
-  @ApiOperation({summary: '删除资源', description: '根据资源id删除资源'})
+  @ApiOperation({ summary: '删除资源', description: '根据资源ID删除资源' })
   @Delete(':id')
   @HttpCode(HttpStatus.OK)
   async destroyAccessById(
     @Param('id', new ParseIntPipe()) id: number,
-  ):Promise<string> {
+  ): Promise<string> {
     return await this.accessService.destroyAccessById(id);
+  }
+
+  @ApiOperation({ summary: '修改资源', description: '根据资源ID修改资源' })
+  @ApiCreatedResponse({
+    type: String,
+    description: '修改资源的返回值'
+  })
+  @Patch(':id')
+  async modifyAccessById(
+    @Param('id', new ParseIntPipe()) id: number,
+    @Body() updateAccessDto: UpdateAccessDto,
+  ): Promise<string> {
+    return await this.accessService.modifyAccessById(id, updateAccessDto);
   }
 }
