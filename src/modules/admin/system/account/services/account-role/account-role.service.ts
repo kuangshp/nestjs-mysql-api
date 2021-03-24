@@ -33,7 +33,6 @@ export class AccountRoleService {
    * @return {*}
    */
   async distributionRole(distributionRoleDto: DistributionRoleDto):Promise<string> {
-    console.log(distributionRoleDto);
     const {accountId, roleList } = distributionRoleDto;
     return getManager().transaction(async (entityManager:EntityManager) => {
       await entityManager.delete<AccountRoleEntity>(AccountRoleEntity, { accountId });

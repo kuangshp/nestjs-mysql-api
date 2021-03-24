@@ -12,7 +12,7 @@ import { ModifyPasswordDto } from '../../controllers/account/dto/modify.password
 import { ToolsService } from '@src/modules/shared/services/tools/tools.service';
 import { AccountResDto, AccountListResDtoDto } from '../../controllers/account/dto/account.res.dto';
 import { AccountReqDto } from '../../controllers/account/dto/account.req.dto';
-import { PageEnum } from '@src/enums';
+import { PageEnum, StatusEnum, PlatformEnum } from '@src/enums';
 
 @Injectable()
 export class AccountService {
@@ -158,10 +158,10 @@ export class AccountService {
     if (mobile) {
       queryConditionList.push('account.mobile = :mobile');
     }
-    if (/^\d$/.test(String(status))) {
+    if (/^\d$/.test(String(status)) && [StatusEnum.NORMAL, StatusEnum.FORBIDDEN].includes(<number>status)) {
       queryConditionList.push('account.status = :status');
     }
-    if (/^\d$/.test(String(platform))) {
+    if (/^\d$/.test(String(platform)) && [PlatformEnum.ADMIN_PLATFORM, PlatformEnum.MERCHANT_PLATFORM].includes(<number>platform)) {
       queryConditionList.push('account.platform = :platform');
     }
     const queryCondition = queryConditionList.join(' AND ');

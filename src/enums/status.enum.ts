@@ -1,5 +1,5 @@
 /** 状态枚举类型 */
-export enum StatueEnum {
+export enum StatusEnum {
   /** 禁用 */
   FORBIDDEN = 0,
   /** 正常 */
@@ -7,7 +7,7 @@ export enum StatueEnum {
 }
 
 /** 状态描素 */
-export const StatueMessage = {
+export const StatusMessage = {
   0:'禁用', 
   1:'正常'
 };

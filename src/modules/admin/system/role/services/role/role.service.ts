@@ -6,7 +6,8 @@ import { CreateRoleDto } from '../../controllers/role/dto/create.role.dto';
 import { UpdateRoleDto } from '../../controllers/role/dto/update.role.dto';
 import { RoleResDto, RoleListResDtoDto } from '../../controllers/role/dto/role.res.dto';
 import { RoleReqDto } from '../../controllers/role/dto/role.req.dto';
-import { PageEnum } from '@src/enums';
+import { PageEnum, StatusEnum } from '@src/enums';
+import { RoleEnum } from '@src/enums/role.enum';
 
 @Injectable()
 export class RoleService {
@@ -30,7 +31,7 @@ export class RoleService {
       throw new HttpException(`${name}当前角色已经存在,不能重复创建`, HttpStatus.OK);
     }
     // 如果是默认角色的时候要判断下
-    if (isDefault) {
+    if (Object.is(isDefault, RoleEnum.DEFAULT)) {
       const findDefault = await this.roleRepository.findOne({ where: { isDefault }, select: ['id'] });
       if (findDefault) {
         throw new HttpException('已经存在默认角色不能重复创建', HttpStatus.OK);
@@ -69,7 +70,7 @@ export class RoleService {
    */
   async modifyRoleById(id: number, updateRoleDto: UpdateRoleDto): Promise<string> {
     const { isDefault } = updateRoleDto;
-    if (isDefault) {
+    if (Object.is(isDefault, RoleEnum.DEFAULT)) {
       const findResult = await this.roleRepository.findOne({where:{isDefault}, select: ['id']});
       if (findResult?.id !== id) {
         throw new HttpException('默认角色只能有一个', HttpStatus.OK);
@@ -109,7 +110,7 @@ export class RoleService {
     if (name) {
       queryConditionList.push('role.name LIKE :name');
     }
-    if (/^\d$/.test(String(status))) {
+    if (/^\d$/.test(String(status)) && [StatusEnum.NORMAL, StatusEnum.FORBIDDEN].includes(<number>status)) {
       queryConditionList.push('role.status = :status');
     }
     const queryCondition = queryConditionList.join(' AND ');
