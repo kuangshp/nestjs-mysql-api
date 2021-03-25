@@ -38,7 +38,7 @@ async function bootstrap() {
   app.useGlobalFilters(new HttpExceptionFilter());
   // 全局注册拦截器(成功返回格式)
   app.useGlobalInterceptors(new TransformInterceptor());
-  
+
   await app.listen(PORT, () => {
     Logger.log(`服务已经启动,接口请访问:http://wwww.localhost:${PORT}/${PREFIX}`);
     Logger.log(`服务已经启动,文档请访问:http://wwww.localhost:${PORT}/${PREFIX}/docs`);
