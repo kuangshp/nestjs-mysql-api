@@ -44,6 +44,6 @@ export class AccountRoleService {
       return '分配角色成功';
     }).catch((e:HttpException) => {
       throw new HttpException(`给账号分配角色失败:${e}`, HttpStatus.OK);
-    })
+    });
   }
 }

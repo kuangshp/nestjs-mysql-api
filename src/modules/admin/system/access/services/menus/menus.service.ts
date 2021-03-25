@@ -47,7 +47,7 @@ export class MenusService {
         url,
         sort,
         icon
-      }
+      };
     });
     // 超级管理员就全部返回
     if (Object.is(accountInfo?.isSuper, AdminIdentityEnum.SUPPER)) {

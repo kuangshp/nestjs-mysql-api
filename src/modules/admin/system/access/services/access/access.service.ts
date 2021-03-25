@@ -42,7 +42,7 @@ export class AccessService {
     }
     const access = this.accessRepository.create(createAccessDto);
     await this.accessRepository.save(access);
-    return '创建成功'
+    return '创建成功';
   }
 
   /**
@@ -124,6 +124,6 @@ export class AccessService {
       total,
       pageNumber,
       pageSize
-    }
+    };
   }
 }

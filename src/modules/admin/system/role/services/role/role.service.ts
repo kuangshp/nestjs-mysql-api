@@ -118,6 +118,7 @@ export class RoleService {
     if (name) {
       queryConditionList.push('role.name LIKE :name');
     }
+    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
     if (/^\d$/.test(String(status)) && [StatusEnum.NORMAL, StatusEnum.FORBIDDEN].includes(<number>status)) {
       queryConditionList.push('role.status = :status');
     }

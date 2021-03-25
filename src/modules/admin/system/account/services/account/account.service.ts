@@ -158,9 +158,11 @@ export class AccountService {
     if (mobile) {
       queryConditionList.push('account.mobile = :mobile');
     }
+    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
     if (/^\d$/.test(String(status)) && [StatusEnum.NORMAL, StatusEnum.FORBIDDEN].includes(<number>status)) {
       queryConditionList.push('account.status = :status');
     }
+    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
     if (/^\d$/.test(String(platform)) && [PlatformEnum.ADMIN_PLATFORM, PlatformEnum.MERCHANT_PLATFORM].includes(<number>platform)) {
       queryConditionList.push('account.platform = :platform');
     }

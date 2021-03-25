@@ -29,7 +29,7 @@ export class RoleAccessService {
           roleId,
           type,
           accessId: item,
-        }
+        };
       });
       const result = entityManager.create<RoleAccessEntity>(RoleAccessEntity, newAccessList);
       await entityManager.save<RoleAccessEntity>(result);
@@ -37,7 +37,7 @@ export class RoleAccessService {
       return '分配菜单权限成功';
     }).catch((e: HttpException) => {
       throw new HttpException(e, HttpStatus.OK);
-    })
+    });
   }
 
   /**
