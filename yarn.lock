@@ -1954,11 +1954,6 @@
   "resolved" "https://registry.npm.taobao.org/commander/download/commander-4.1.1.tgz?cache=0&sync_timestamp=1613374024216&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fcommander%2Fdownload%2Fcommander-4.1.1.tgz"
   "version" "4.1.1"
 
-"compare-versions@^3.6.0":
-  "integrity" "sha1-GlaJkTaF5ah2N7jT/8p1UU7EHWI="
-  "resolved" "https://registry.npm.taobao.org/compare-versions/download/compare-versions-3.6.0.tgz"
-  "version" "3.6.0"
-
 "component-emitter@^1.2.1", "component-emitter@^1.3.0":
   "integrity" "sha1-FuQHD7qK4ptnnyIVhT7hgasuq8A="
   "resolved" "https://registry.npm.taobao.org/component-emitter/download/component-emitter-1.3.0.tgz"
@@ -2051,17 +2046,6 @@
     "parse-json" "^5.0.0"
     "path-type" "^4.0.0"
     "yaml" "^1.7.2"
-
-"cosmiconfig@^7.0.0":
-  "integrity" "sha1-75tE13OVnK5j3ezRIt4jhTtg+NM="
-  "resolved" "https://registry.npm.taobao.org/cosmiconfig/download/cosmiconfig-7.0.0.tgz?cache=0&sync_timestamp=1596310819353&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fcosmiconfig%2Fdownload%2Fcosmiconfig-7.0.0.tgz"
-  "version" "7.0.0"
-  dependencies:
-    "@types/parse-json" "^4.0.0"
-    "import-fresh" "^3.2.1"
-    "parse-json" "^5.0.0"
-    "path-type" "^4.0.0"
-    "yaml" "^1.10.0"
 
 "create-require@^1.1.0":
   "integrity" "sha1-wdfo8eX2z8n/ZfnNNS03NIdWwzM="
@@ -2891,13 +2875,6 @@
     "locate-path" "^6.0.0"
     "path-exists" "^4.0.0"
 
-"find-versions@^3.2.0":
-  "integrity" "sha1-ECl/mAMKeGgpaBaQVF72We0dJU4="
-  "resolved" "https://registry.npm.taobao.org/find-versions/download/find-versions-3.2.0.tgz"
-  "version" "3.2.0"
-  dependencies:
-    "semver-regex" "^2.0.0"
-
 "flat-cache@^2.0.1":
   "integrity" "sha1-XSltbwS9pEpGMKMBQTvbwuwIXsA="
   "resolved" "https://registry.npm.taobao.org/flat-cache/download/flat-cache-2.0.1.tgz?cache=0&sync_timestamp=1604831838291&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fflat-cache%2Fdownload%2Fflat-cache-2.0.1.tgz"
@@ -3257,21 +3234,10 @@
   "resolved" "https://registry.npm.taobao.org/human-signals/download/human-signals-1.1.1.tgz"
   "version" "1.1.1"
 
-"husky@^4.3.6":
-  "integrity" "sha1-69ndi5MkqoUfFYcxjbTMy3ZloTw="
-  "resolved" "https://registry.npm.taobao.org/husky/download/husky-4.3.6.tgz?cache=0&sync_timestamp=1616354094371&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fhusky%2Fdownload%2Fhusky-4.3.6.tgz"
-  "version" "4.3.6"
-  dependencies:
-    "chalk" "^4.0.0"
-    "ci-info" "^2.0.0"
-    "compare-versions" "^3.6.0"
-    "cosmiconfig" "^7.0.0"
-    "find-versions" "^3.2.0"
-    "opencollective-postinstall" "^2.0.2"
-    "pkg-dir" "^4.2.0"
-    "please-upgrade-node" "^3.2.0"
-    "slash" "^3.0.0"
-    "which-pm-runs" "^1.0.0"
+"husky@^5.2.0":
+  "integrity" "sha1-/F4cIwDTSFXUfeR1NgfQCUP8CAI="
+  "resolved" "https://registry.npm.taobao.org/husky/download/husky-5.2.0.tgz?cache=0&sync_timestamp=1616354094371&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fhusky%2Fdownload%2Fhusky-5.2.0.tgz"
+  "version" "5.2.0"
 
 "iconv-lite@^0.4.24", "iconv-lite@0.4.24":
   "integrity" "sha1-ICK0sl+93CHS9SSXSkdKr+czkIs="
@@ -3290,7 +3256,7 @@
   "resolved" "https://registry.npm.taobao.org/ignore/download/ignore-4.0.6.tgz?cache=0&sync_timestamp=1590809289115&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fignore%2Fdownload%2Fignore-4.0.6.tgz"
   "version" "4.0.6"
 
-"import-fresh@^3.0.0", "import-fresh@^3.1.0", "import-fresh@^3.2.1":
+"import-fresh@^3.0.0", "import-fresh@^3.1.0":
   "integrity" "sha1-NxYsJfy566oublPVtNiM4X2eDCs="
   "resolved" "https://registry.npm.taobao.org/import-fresh/download/import-fresh-3.3.0.tgz?cache=0&sync_timestamp=1608469561643&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fimport-fresh%2Fdownload%2Fimport-fresh-3.3.0.tgz"
   "version" "3.3.0"
@@ -4816,11 +4782,6 @@
   dependencies:
     "mimic-fn" "^2.1.0"
 
-"opencollective-postinstall@^2.0.2":
-  "integrity" "sha1-eg//l49tv6TQBiOPusmO1BmMMlk="
-  "resolved" "https://registry.npm.taobao.org/opencollective-postinstall/download/opencollective-postinstall-2.0.3.tgz"
-  "version" "2.0.3"
-
 "optional@0.1.4":
   "integrity" "sha1-zbGpvtxzfSAl9pDO61DgSURP1bM="
   "resolved" "https://registry.npm.taobao.org/optional/download/optional-0.1.4.tgz"
@@ -5094,13 +5055,6 @@
   "version" "5.0.0"
   dependencies:
     "find-up" "^5.0.0"
-
-"please-upgrade-node@^3.2.0":
-  "integrity" "sha1-rt3T+ZTJM+StmLmdmlVu+g4v6UI="
-  "resolved" "https://registry.npm.taobao.org/please-upgrade-node/download/please-upgrade-node-3.2.0.tgz"
-  "version" "3.2.0"
-  dependencies:
-    "semver-compare" "^1.0.0"
 
 "pluralize@8.0.0":
   "integrity" "sha1-Gm+hajjRKhkB4DIPoBcFHFOc47E="
@@ -5596,16 +5550,6 @@
     "@types/json-schema" "^7.0.4"
     "ajv" "^6.12.2"
     "ajv-keywords" "^3.4.1"
-
-"semver-compare@^1.0.0":
-  "integrity" "sha1-De4hahyUGrN+nvsXiPavxf9VN/w="
-  "resolved" "https://registry.npm.taobao.org/semver-compare/download/semver-compare-1.0.0.tgz"
-  "version" "1.0.0"
-
-"semver-regex@^2.0.0":
-  "integrity" "sha1-qTwsWERTmncCMzeRB7OMe0rJ0zg="
-  "resolved" "https://registry.npm.taobao.org/semver-regex/download/semver-regex-2.0.0.tgz?cache=0&sync_timestamp=1608920573911&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fsemver-regex%2Fdownload%2Fsemver-regex-2.0.0.tgz"
-  "version" "2.0.0"
 
 "semver@^5.5.0":
   "integrity" "sha1-qVT5Ma66UI0we78Gnv8MAclhFvc="
@@ -6759,11 +6703,6 @@
   "resolved" "https://registry.npm.taobao.org/which-module/download/which-module-2.0.0.tgz"
   "version" "2.0.0"
 
-"which-pm-runs@^1.0.0":
-  "integrity" "sha1-Zws6+8VS4LVd9rd4DKdGFfI60cs="
-  "resolved" "https://registry.npm.taobao.org/which-pm-runs/download/which-pm-runs-1.0.0.tgz"
-  "version" "1.0.0"
-
 "which@^1.2.9":
   "integrity" "sha1-pFBD1U9YBTFtqNYvn1CRjT2nCwo="
   "resolved" "https://registry.npm.taobao.org/which/download/which-1.3.1.tgz?cache=0&sync_timestamp=1589682812246&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fwhich%2Fdownload%2Fwhich-1.3.1.tgz"
@@ -6878,7 +6817,7 @@
   "resolved" "https://registry.npm.taobao.org/yallist/download/yallist-4.0.0.tgz"
   "version" "4.0.0"
 
-"yaml@^1.10.0", "yaml@^1.7.2":
+"yaml@^1.7.2":
   "integrity" "sha1-IwHF/78StGfejaIzOkWeKeeSDks="
   "resolved" "https://registry.npm.taobao.org/yaml/download/yaml-1.10.2.tgz?cache=0&sync_timestamp=1615677716891&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fyaml%2Fdownload%2Fyaml-1.10.2.tgz"
   "version" "1.10.2"
