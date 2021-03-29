@@ -10,9 +10,9 @@ import { ObjectType } from '@src/types/obj-type';
  * @return {*}
  */
 export const mapToObj = (map: Map<string, any>): ObjectType => {
-  let obj: ObjectType = {};
-  for (let [k, v] of map) {
+  const obj: ObjectType = {};
+  for (const [k, v] of map) {
     obj[k] = v;
   }
   return obj;
-}
+};
