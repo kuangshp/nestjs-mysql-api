@@ -44,7 +44,7 @@ export class AccountController {
 
 
   @ApiOperation({ summary: '修改账号自己密码', description: '传递新老密码修改密码' })
-  @Patch('modify_password')
+  @Post('modify_password')
   @HttpCode(HttpStatus.OK)
   async modifyPassword(
     @CurrentUser('id') id: string,
