@@ -2,11 +2,11 @@ import 'dotenv/config';
 import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { Logger } from '@nestjs/common';
+import helmet from 'helmet';
 
 import { AppModule } from './app.module';
 import { HttpExceptionFilter } from './filters/http-exception.filter';
 import { TransformInterceptor } from './interceptors/transform/transform.interceptor';
-
 
 console.log('当前环境', process.env.npm_lifecycle_event);
 
@@ -15,7 +15,8 @@ const PREFIX = process.env.PREFIX || '/';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-
+  //允许跨域请求
+  app.enableCors();
   // 给请求添加prefix
   app.setGlobalPrefix(PREFIX);
 
@@ -32,7 +33,8 @@ async function bootstrap() {
     const document = SwaggerModule.createDocument(app, options);
     SwaggerModule.setup(`${PREFIX}/docs`, app, document);
   }
-
+  // Web漏洞的
+  app.use(helmet());
 
   // 全局注册错误的过滤器(错误异常)
   app.useGlobalFilters(new HttpExceptionFilter());

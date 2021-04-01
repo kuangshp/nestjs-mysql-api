@@ -3483,6 +3483,11 @@
   dependencies:
     "function-bind" "^1.1.1"
 
+"helmet@^4.4.1":
+  "integrity" "sha512-G8tp0wUMI7i8wkMk2xLcEvESg5PiCitFMYgGRc/PwULB0RVhTP5GFdxOwvJwp9XVha8CuS8mnhmE8I/8dx/pbw=="
+  "resolved" "https://registry.npmjs.org/helmet/-/helmet-4.4.1.tgz"
+  "version" "4.4.1"
+
 "highlight.js@^10.0.0":
   "integrity" "sha1-qOxBUtsk6mMMkJJ9bK4qRfjsuVU="
   "resolved" "https://registry.npm.taobao.org/highlight.js/download/highlight.js-10.7.1.tgz"
