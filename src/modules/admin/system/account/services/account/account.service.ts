@@ -13,14 +13,15 @@ import { ToolsService } from '@src/modules/shared/services/tools/tools.service';
 import { AccountResDto, AccountListResDtoDto } from '../../controllers/account/dto/account.res.dto';
 import { AccountReqDto } from '../../controllers/account/dto/account.req.dto';
 import { PageEnum, StatusEnum, PlatformEnum } from '@src/enums';
+import { AccountLastLoginEntity } from '../../entities/account.last.login.entity';
 
 @Injectable()
 export class AccountService {
-  constructor (
+  constructor(
     @InjectRepository(AccountEntity)
     private readonly accountRepository: Repository<AccountEntity>,
     private readonly toolsService: ToolsService,
-  ) { }
+  ) {}
 
   /**
    * @Author: 水痕
@@ -43,7 +44,8 @@ export class AccountService {
       queryConditionList.push('account.mobile = :mobile');
     }
     const queryCondition = queryConditionList.join(' OR ');
-    const findAccount = await getConnection().createQueryBuilder(AccountEntity, 'account')
+    const findAccount = await getConnection()
+      .createQueryBuilder(AccountEntity, 'account')
       .select(['account.username', 'account.email', 'account.mobile'])
       .andWhere(queryCondition, { username, email, mobile })
       .getOne();
@@ -74,7 +76,9 @@ export class AccountService {
    * @return {*}
    */
   async destroyById(id: number): Promise<string> {
-    const { raw: { affectedRows } } = await this.accountRepository.softDelete(id);
+    const {
+      raw: { affectedRows },
+    } = await this.accountRepository.softDelete(id);
     if (affectedRows) {
       return '删除成功';
     } else {
@@ -93,13 +97,11 @@ export class AccountService {
    */
   async modifyPassWordById(id: number, modifyPasswordDto: ModifyPasswordDto): Promise<string> {
     const { password, newPassword } = modifyPasswordDto;
-    const findResult = await getConnection().createQueryBuilder(AccountEntity, 'account')
-      .select([])
-      .addSelect('account.password', 'password')
-      .where('(account.id = :id)', { id })
-      .getRawOne();
+    const findResult = await getConnection().createQueryBuilder(AccountEntity, 'account').select([]).addSelect('account.password', 'password').where('(account.id = :id)', { id }).getRawOne();
     if (findResult?.password && this.toolsService.checkPassword(password, findResult?.password)) {
-      const { raw: { affectedRows } } = await this.accountRepository.update(id, { password: this.toolsService.makePassword(newPassword) });
+      const {
+        raw: { affectedRows },
+      } = await this.accountRepository.update(id, { password: this.toolsService.makePassword(newPassword) });
       if (affectedRows) {
         return '修改成功';
       } else {
@@ -167,14 +169,46 @@ export class AccountService {
       queryConditionList.push('account.platform = :platform');
     }
     const queryCondition = queryConditionList.join(' AND ');
-    const [data, total] = await getConnection().createQueryBuilder(AccountEntity, 'account')
+    const data = await getConnection()
+      .createQueryBuilder(AccountEntity, 'account')
+      .select('account.id', 'id')
+      .addSelect('account.username', 'username')
+      .addSelect('account.mobile', 'mobile')
+      .addSelect('account.email', 'email')
+      .addSelect('account.status', 'status')
+      .addSelect('account.platform', 'platform')
+      .addSelect('account.createdAt', 'createdAt')
+      .addSelect('account.updatedAt', 'updatedAt')
+      .addSelect(
+        (qb) => qb.select('lastLogin.lastLoginIp').from(AccountLastLoginEntity, 'lastLogin').where('(lastLogin.accountId = account.id)').orderBy({ 'lastLogin.id': 'DESC' }).limit(1),
+        'lastLoginIp',
+      )
+      .addSelect(
+        (qb) => qb.select('lastLogin.lastLoginAddress').from(AccountLastLoginEntity, 'lastLogin').where('(lastLogin.accountId = account.id)').orderBy({ 'lastLogin.id': 'DESC' }).limit(1),
+        'lastLoginAddress',
+      )
+      .addSelect(
+        (qb) => qb.select('lastLogin.lastLoginTime').from(AccountLastLoginEntity, 'lastLogin').where('(lastLogin.accountId = account.id)').orderBy({ 'lastLogin.id': 'DESC' }).limit(1),
+        'lastLoginTime',
+      )
       .where(queryCondition, { username, email, mobile, status, platform })
       .skip((pageNumber - 1) * pageSize)
       .take(pageSize)
       .printSql()
-      .getManyAndCount();
+      .getRawMany();
+    const total = await getConnection().createQueryBuilder(AccountEntity, 'account').where(queryCondition, { username, email, mobile, status, platform }).getCount();
+    // 处理当前手机号码或者邮箱不合法的时候
+    const formatData = data.map((item) => {
+      const { username, mobile, email } = item;
+      return {
+        ...item,
+        mobile: isMobilePhone(mobile, 'zh-CN') ? mobile : '',
+        email: isEmail(email) ? email : '',
+        username: usernameReg.test(username) ? username : '',
+      };
+    });
     return {
-      data,
+      data: formatData,
       total,
       pageSize,
       pageNumber,
