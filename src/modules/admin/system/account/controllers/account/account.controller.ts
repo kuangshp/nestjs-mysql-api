@@ -1,4 +1,17 @@
-import { Controller, Get, Body, Delete, Param, ParseIntPipe, Post, Patch, UseGuards, Query, HttpStatus, HttpCode } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Body,
+  Delete,
+  Param,
+  ParseIntPipe,
+  Post,
+  Patch,
+  UseGuards,
+  Query,
+  HttpStatus,
+  HttpCode,
+} from '@nestjs/common';
 import adminConfig from '@src/config/admin.config';
 import { ApiOperation, ApiCreatedResponse, ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import { CreateAccountDto } from './dto/create.account.dto';
@@ -39,6 +52,20 @@ export class AccountController {
     return await this.accountService.resetPassword(id);
   }
 
+  @ApiOperation({ summary: '修改密码', description: '根据账号自己的密码' })
+  @ApiCreatedResponse({
+    type: String,
+    description: '修改账号密码返回值',
+  })
+  @HttpCode(HttpStatus.OK)
+  @Post('modify_password')
+  async modifyPassWordById(
+    @Param('id', new ParseIntPipe()) id: number,
+    @Body() modifyPasswordDto: ModifyPasswordDto,
+  ): Promise<string> {
+    return await this.accountService.modifyPassWordById(id, modifyPasswordDto);
+  }
+
   @ApiOperation({ summary: '删除账号', description: '根据id删除账号' })
   @ApiCreatedResponse({
     type: String,
@@ -50,17 +77,6 @@ export class AccountController {
     return await this.accountService.destroyById(id);
   }
 
-  @ApiOperation({ summary: '修改密码', description: '根据账号id修改账号密码' })
-  @ApiCreatedResponse({
-    type: String,
-    description: '修改账号密码返回值',
-  })
-  @HttpCode(HttpStatus.OK)
-  @Patch('modify_password/:id')
-  async modifyPassWordById(@Param('id', new ParseIntPipe()) id: number, @Body() modifyPasswordDto: ModifyPasswordDto): Promise<string> {
-    return await this.accountService.modifyPassWordById(id, modifyPasswordDto);
-  }
-
   @ApiOperation({ summary: '修改账号信息', description: '根据账号id修改账号信息' })
   @ApiCreatedResponse({
     type: String,
@@ -68,7 +84,10 @@ export class AccountController {
   })
   @HttpCode(HttpStatus.OK)
   @Patch(':id')
-  async modifyById(@Param('id', new ParseIntPipe()) id: number, @Body() updateAccountDto: UpdateAccountDto): Promise<string> {
+  async modifyById(
+    @Param('id', new ParseIntPipe()) id: number,
+    @Body() updateAccountDto: UpdateAccountDto,
+  ): Promise<string> {
     return await this.accountService.modifyById(id, updateAccountDto);
   }
 
@@ -79,7 +98,9 @@ export class AccountController {
   })
   @HttpCode(HttpStatus.OK)
   @Get(':id')
-  async accountById(@Param('id', new ParseIntPipe()) id: number): Promise<AccountResDto | undefined> {
+  async accountById(
+    @Param('id', new ParseIntPipe()) id: number,
+  ): Promise<AccountResDto | undefined> {
     return await this.accountService.accountById(id);
   }
 
