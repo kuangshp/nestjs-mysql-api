@@ -61,7 +61,10 @@ export class AccountService {
         return '创建失败';
       }
     } else {
-      const account = this.accountRepository.create({ ...createAccountDto, password: adminConfig.defaultPassword });
+      const account = this.accountRepository.create({
+        ...createAccountDto,
+        password: adminConfig.defaultPassword,
+      });
       await this.accountRepository.save(account);
       return '创建成功';
     }
@@ -118,11 +121,18 @@ export class AccountService {
    */
   async modifyPassWordById(id: number, modifyPasswordDto: ModifyPasswordDto): Promise<string> {
     const { password, newPassword } = modifyPasswordDto;
-    const findResult = await getConnection().createQueryBuilder(AccountEntity, 'account').select([]).addSelect('account.password', 'password').where('(account.id = :id)', { id }).getRawOne();
+    const findResult = await getConnection()
+      .createQueryBuilder(AccountEntity, 'account')
+      .select([])
+      .addSelect('account.password', 'password')
+      .where('(account.id = :id)', { id })
+      .getRawOne();
     if (findResult?.password && this.toolsService.checkPassword(password, findResult?.password)) {
       const {
         raw: { affectedRows },
-      } = await this.accountRepository.update(id, { password: this.toolsService.makePassword(newPassword) });
+      } = await this.accountRepository.update(id, {
+        password: this.toolsService.makePassword(newPassword),
+      });
       if (affectedRows) {
         return '修改成功';
       } else {
@@ -145,7 +155,9 @@ export class AccountService {
   async modifyById(id: number, updateAccountDto: UpdateAccountDto): Promise<string> {
     const { username, email, mobile, status, platform } = updateAccountDto;
     const result = await this.accountRepository.findOne(id);
-    await this.accountRepository.save(Object.assign(result, { username, email, mobile, status, platform }));
+    await this.accountRepository.save(
+      Object.assign(result, { username, email, mobile, status, platform }),
+    );
     return '修改成功';
   }
 
@@ -170,7 +182,15 @@ export class AccountService {
    * @return {*}
    */
   async accountList(accountReqDto: AccountReqDto): Promise<AccountListResDtoDto> {
-    const { pageNumber = PageEnum.PAGE_NUMBER, pageSize = PageEnum.PAGE_SIZE, email, username, mobile, status, platform } = accountReqDto;
+    const {
+      pageNumber = PageEnum.PAGE_NUMBER,
+      pageSize = PageEnum.PAGE_SIZE,
+      email,
+      username,
+      mobile,
+      status,
+      platform,
+    } = accountReqDto;
     const queryConditionList = [];
     if (username) {
       queryConditionList.push('account.username LIKE :username');
@@ -182,11 +202,16 @@ export class AccountService {
       queryConditionList.push('account.mobile = :mobile');
     }
     // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-    if (/^\d$/.test(String(status)) && [StatusEnum.NORMAL, StatusEnum.FORBIDDEN].includes(<number>status)) {
+    if (
+      /^\d$/.test(String(status)) &&
+      [StatusEnum.NORMAL, StatusEnum.FORBIDDEN].includes(Number(status))
+    ) {
       queryConditionList.push('account.status = :status');
     }
-    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-    if (/^\d$/.test(String(platform)) && [PlatformEnum.ADMIN_PLATFORM, PlatformEnum.MERCHANT_PLATFORM].includes(<number>platform)) {
+    if (
+      /^\d$/.test(String(platform)) &&
+      [PlatformEnum.ADMIN_PLATFORM, PlatformEnum.MERCHANT_PLATFORM].includes(Number(platform))
+    ) {
       queryConditionList.push('account.platform = :platform');
     }
     const queryCondition = queryConditionList.join(' AND ');
@@ -201,15 +226,33 @@ export class AccountService {
       .addSelect('account.createdAt', 'createdAt')
       .addSelect('account.updatedAt', 'updatedAt')
       .addSelect(
-        (qb) => qb.select('lastLogin.lastLoginIp').from(AccountLastLoginEntity, 'lastLogin').where('(lastLogin.accountId = account.id)').orderBy({ 'lastLogin.id': 'DESC' }).limit(1),
+        (qb) =>
+          qb
+            .select('lastLogin.lastLoginIp')
+            .from(AccountLastLoginEntity, 'lastLogin')
+            .where('(lastLogin.accountId = account.id)')
+            .orderBy({ 'lastLogin.id': 'DESC' })
+            .limit(1),
         'lastLoginIp',
       )
       .addSelect(
-        (qb) => qb.select('lastLogin.lastLoginAddress').from(AccountLastLoginEntity, 'lastLogin').where('(lastLogin.accountId = account.id)').orderBy({ 'lastLogin.id': 'DESC' }).limit(1),
+        (qb) =>
+          qb
+            .select('lastLogin.lastLoginAddress')
+            .from(AccountLastLoginEntity, 'lastLogin')
+            .where('(lastLogin.accountId = account.id)')
+            .orderBy({ 'lastLogin.id': 'DESC' })
+            .limit(1),
         'lastLoginAddress',
       )
       .addSelect(
-        (qb) => qb.select('lastLogin.lastLoginTime').from(AccountLastLoginEntity, 'lastLogin').where('(lastLogin.accountId = account.id)').orderBy({ 'lastLogin.id': 'DESC' }).limit(1),
+        (qb) =>
+          qb
+            .select('lastLogin.lastLoginTime')
+            .from(AccountLastLoginEntity, 'lastLogin')
+            .where('(lastLogin.accountId = account.id)')
+            .orderBy({ 'lastLogin.id': 'DESC' })
+            .limit(1),
         'lastLoginTime',
       )
       .where(queryCondition, { username, email, mobile, status, platform })
@@ -217,7 +260,10 @@ export class AccountService {
       .take(pageSize)
       .printSql()
       .getRawMany();
-    const total = await getConnection().createQueryBuilder(AccountEntity, 'account').where(queryCondition, { username, email, mobile, status, platform }).getCount();
+    const total = await getConnection()
+      .createQueryBuilder(AccountEntity, 'account')
+      .where(queryCondition, { username, email, mobile, status, platform })
+      .getCount();
     // 处理当前手机号码或者邮箱不合法的时候
     const formatData = data.map((item) => {
       const { username, mobile, email } = item;
