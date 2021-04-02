@@ -69,6 +69,27 @@ export class AccountService {
 
   /**
    * @Author: 水痕
+   * @Date: 2021-04-02 21:22:21
+   * @LastEditors: 水痕
+   * @Description: 根据用户id重置为默认密码
+   * @param {*}
+   * @return {*}
+   */
+  async resetPassword(id: number): Promise<string> {
+    const {
+      raw: { affectedRows },
+    } = await this.accountRepository.update(id, {
+      password: this.toolsService.makePassword(adminConfig.defaultPassword),
+    });
+    if (affectedRows) {
+      return '重置成功';
+    } else {
+      return '重置失败';
+    }
+  }
+
+  /**
+   * @Author: 水痕
    * @Date: 2021-03-23 09:01:05
    * @LastEditors: 水痕
    * @Description: 根据id删除账号

@@ -14,9 +14,7 @@ import { AccountReqDto } from './dto/account.req.dto';
 @UseGuards(AuthGuard)
 @Controller(`${adminConfig.adminPath}/account`)
 export class AccountController {
-  constructor (
-    private readonly accountService: AccountService,
-  ) { }
+  constructor(private readonly accountService: AccountService) {}
 
   @ApiOperation({
     summary: '创建账号',
@@ -24,87 +22,82 @@ export class AccountController {
   })
   @ApiCreatedResponse({
     type: String,
-    description: '创建账号返回值'
+    description: '创建账号返回值',
   })
   @HttpCode(HttpStatus.CREATED)
   @Post()
-  async createAccount(
-    @Body() createAccountDto: CreateAccountDto,
-  ): Promise<string> {
+  async createAccount(@Body() createAccountDto: CreateAccountDto): Promise<string> {
     return await this.accountService.createAccount(createAccountDto);
+  }
+
+  @ApiOperation({ summary: '重置为默认密码', description: '根据id重置默认密码' })
+  @ApiCreatedResponse({ type: String, description: '重置密码返回值' })
+  @HttpCode(HttpStatus.OK)
+  @Post('reset_password')
+  async resetPassword(@Body() data: { id: number }): Promise<string> {
+    const { id } = data;
+    return await this.accountService.resetPassword(id);
   }
 
   @ApiOperation({ summary: '删除账号', description: '根据id删除账号' })
   @ApiCreatedResponse({
     type: String,
-    description: '修改账号返回值'
+    description: '修改账号返回值',
   })
   @HttpCode(HttpStatus.OK)
   @Delete(':id')
-  async destroyById(
-    @Param('id', new ParseIntPipe()) id: number,
-  ): Promise<string> {
+  async destroyById(@Param('id', new ParseIntPipe()) id: number): Promise<string> {
     return await this.accountService.destroyById(id);
   }
 
   @ApiOperation({ summary: '修改密码', description: '根据账号id修改账号密码' })
   @ApiCreatedResponse({
     type: String,
-    description: '修改账号密码返回值'
+    description: '修改账号密码返回值',
   })
   @HttpCode(HttpStatus.OK)
   @Patch('modify_password/:id')
-  async modifyPassWordById(
-    @Param('id', new ParseIntPipe()) id: number,
-    @Body() modifyPasswordDto: ModifyPasswordDto,
-  ): Promise<string> {
+  async modifyPassWordById(@Param('id', new ParseIntPipe()) id: number, @Body() modifyPasswordDto: ModifyPasswordDto): Promise<string> {
     return await this.accountService.modifyPassWordById(id, modifyPasswordDto);
   }
 
   @ApiOperation({ summary: '修改账号信息', description: '根据账号id修改账号信息' })
   @ApiCreatedResponse({
     type: String,
-    description: '修改账号返回值'
+    description: '修改账号返回值',
   })
   @HttpCode(HttpStatus.OK)
   @Patch(':id')
-  async modifyById(
-    @Param('id', new ParseIntPipe()) id: number,
-    @Body() updateAccountDto: UpdateAccountDto,
-  ): Promise<string> {
+  async modifyById(@Param('id', new ParseIntPipe()) id: number, @Body() updateAccountDto: UpdateAccountDto): Promise<string> {
     return await this.accountService.modifyById(id, updateAccountDto);
   }
 
   @ApiOperation({ summary: '查询账号信息', description: '根据账号id查询账号信息' })
   @ApiCreatedResponse({
     type: AccountResDto,
-    description: '查询单条账号返回值'
+    description: '查询单条账号返回值',
   })
   @HttpCode(HttpStatus.OK)
   @Get(':id')
-  async accountById(
-    @Param('id', new ParseIntPipe()) id: number,
-  ): Promise<AccountResDto | undefined> {
+  async accountById(@Param('id', new ParseIntPipe()) id: number): Promise<AccountResDto | undefined> {
     return await this.accountService.accountById(id);
   }
 
-  @ApiOperation({ 
-    summary: '查询账号列表', 
+  @ApiOperation({
+    summary: '查询账号列表',
     description: '根据条件查询账号列表',
     externalDocs: {
-      url: 'xx?pageSize=10&pageNumber=1&username=xx&email=xx&mobile=xx&status=0&platform=1'
-    }
-   })
+      url: 'xx?pageSize=10&pageNumber=1&username=xx&email=xx&mobile=xx&status=0&platform=1',
+    },
+  })
   @ApiCreatedResponse({
     type: AccountResDto,
     isArray: true,
-    description: '分页查询账号返回值'
+    description: '分页查询账号返回值',
   })
   @HttpCode(HttpStatus.OK)
   @Get()
-  async accountList(
-    @Query() accountReqDto: AccountReqDto,
-  ): Promise<AccountListResDtoDto> {
+  async accountList(@Query() accountReqDto: AccountReqDto): Promise<AccountListResDtoDto> {
     return await this.accountService.accountList(accountReqDto);
   }
 }
