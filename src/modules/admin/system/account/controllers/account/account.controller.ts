@@ -21,6 +21,7 @@ import { ModifyPasswordDto } from './dto/modify.password.dto';
 import { AuthGuard } from '@src/guard/auth/auth.guard';
 import { AccountResDto, AccountListResDtoDto } from './dto/account.res.dto';
 import { AccountReqDto } from './dto/account.req.dto';
+import { CurrentUser, ICurrentUserType } from '@src/decorators/current.user';
 
 @ApiTags('后台管理系统-账号管理')
 @ApiBearerAuth()
@@ -60,9 +61,10 @@ export class AccountController {
   @HttpCode(HttpStatus.OK)
   @Post('modify_password')
   async modifyPassWordById(
-    @Param('id', new ParseIntPipe()) id: number,
+    @CurrentUser() userInfo: ICurrentUserType,
     @Body() modifyPasswordDto: ModifyPasswordDto,
   ): Promise<string> {
+    const { id } = userInfo;
     return await this.accountService.modifyPassWordById(id, modifyPasswordDto);
   }
 
