@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsInt, IsNotEmpty, IsArray, ArrayMinSize, ValidateNested } from 'class-validator';
+import { IsInt, IsNotEmpty, IsArray, ArrayMinSize } from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class DistributionRoleDto {

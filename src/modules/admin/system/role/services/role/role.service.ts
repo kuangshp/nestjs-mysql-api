@@ -88,7 +88,7 @@ export class RoleService {
    */
   async modifyRoleById(id: number, updateRoleDto: UpdateRoleDto): Promise<string> {
     const { isDefault } = updateRoleDto;
-    if (Object.is(isDefault, RoleEnum.DEFAULT)) {
+    if (Object.is(isDefault, String(RoleEnum.DEFAULT))) {
       const findResult = await this.roleRepository.findOne({
         where: { isDefault },
         select: ['id'],
