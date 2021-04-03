@@ -9,11 +9,11 @@ export class DistributionRoleDto {
   readonly accountId: number;
 
   @ApiProperty({ required: true, description: '角色ID列表' })
-  @ValidateNested({
-    each: true, // 对数组中每一项进行校验
-  })
+  // @ValidateNested({
+  //   each: true, // 对数组中每一项进行校验
+  // })
   @Type(() => Number)
-  @ArrayMinSize(1, {message: '角色至少一个'})
+  @ArrayMinSize(1, { message: '角色至少一个' })
   @IsArray({ message: '角色ID列表必须是一个数组' })
-  readonly roleList: number[]
+  readonly roleList: number[];
 }

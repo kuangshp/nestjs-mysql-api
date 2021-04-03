@@ -7,3 +7,11 @@ export class AccountRoleListResDto {
   @ApiProperty({ required: true, description: '角色ID' })
   roleId?: number;
 }
+
+export class RoleAccountListDto {
+  @ApiProperty({ required: true, description: '角色ID' })
+  id: number;
+
+  @ApiProperty({ required: true, description: '角色名称' })
+  name: string;
+}
