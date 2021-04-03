@@ -100,6 +100,9 @@ export class AccountService {
    * @return {*}
    */
   async destroyById(id: number): Promise<string> {
+    if (id === 1) {
+      throw new HttpException('当前账号不能删除', HttpStatus.OK);
+    }
     const {
       raw: { affectedRows },
     } = await this.accountRepository.softDelete(id);
