@@ -12,12 +12,12 @@ import { AccountRoleEntity } from '../../../account/entities/account.role.entity
 
 @Injectable()
 export class RoleService {
-  constructor (
+  constructor(
     @InjectRepository(RoleEntity)
     private readonly roleRepository: Repository<RoleEntity>,
     @InjectRepository(AccountRoleEntity)
     private readonly accountRoleRepository: Repository<AccountRoleEntity>,
-  ) { }
+  ) {}
 
   /**
    * @Author: 水痕
@@ -35,7 +35,10 @@ export class RoleService {
     }
     // 如果是默认角色的时候要判断下
     if (Object.is(isDefault, RoleEnum.DEFAULT)) {
-      const findDefault = await this.roleRepository.findOne({ where: { isDefault }, select: ['id'] });
+      const findDefault = await this.roleRepository.findOne({
+        where: { isDefault },
+        select: ['id'],
+      });
       if (findDefault) {
         throw new HttpException('已经存在默认角色不能重复创建', HttpStatus.OK);
       }
@@ -55,11 +58,18 @@ export class RoleService {
    */
   async destroyRoleById(id: number): Promise<string> {
     // 判断当前角色是否已经被占用(有账号绑定了该角色)
-    const accountRoleFindResult: AccountRoleEntity | undefined = await this.accountRoleRepository.findOne({ where: { roleId: id }, select: ['id'] });
+    const accountRoleFindResult:
+      | AccountRoleEntity
+      | undefined = await this.accountRoleRepository.findOne({
+      where: { roleId: id },
+      select: ['id'],
+    });
     if (accountRoleFindResult) {
       throw new HttpException('当前角色有账号与之绑定,不能直接删除', HttpStatus.OK);
     }
-    const { raw: { affectedRows } } = await this.roleRepository.softDelete(id);
+    const {
+      raw: { affectedRows },
+    } = await this.roleRepository.softDelete(id);
     if (affectedRows) {
       return '删除成功';
     } else {
@@ -79,12 +89,17 @@ export class RoleService {
   async modifyRoleById(id: number, updateRoleDto: UpdateRoleDto): Promise<string> {
     const { isDefault } = updateRoleDto;
     if (Object.is(isDefault, RoleEnum.DEFAULT)) {
-      const findResult = await this.roleRepository.findOne({ where: { isDefault }, select: ['id'] });
+      const findResult = await this.roleRepository.findOne({
+        where: { isDefault },
+        select: ['id'],
+      });
       if (findResult?.id !== id) {
         throw new HttpException('默认角色只能有一个', HttpStatus.OK);
       }
     }
-    const { raw: { affectedRows } } = await this.roleRepository.update(id, updateRoleDto);
+    const {
+      raw: { affectedRows },
+    } = await this.roleRepository.update(id, updateRoleDto);
     if (affectedRows) {
       return '修改成功';
     } else {
@@ -113,17 +128,26 @@ export class RoleService {
    * @return {*}
    */
   async roleList(roleReqDto: RoleReqDto): Promise<RoleListResDtoDto> {
-    const { pageNumber = PageEnum.PAGE_NUMBER, pageSize = PageEnum.PAGE_SIZE, name, status } = roleReqDto;
+    const {
+      pageNumber = PageEnum.PAGE_NUMBER,
+      pageSize = PageEnum.PAGE_SIZE,
+      name,
+      status,
+    } = roleReqDto;
     const queryConditionList = [];
     if (name) {
       queryConditionList.push('role.name LIKE :name');
     }
     // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-    if (/^\d$/.test(String(status)) && [StatusEnum.NORMAL, StatusEnum.FORBIDDEN].includes(<number>status)) {
+    if (
+      /^\d$/.test(String(status)) &&
+      [StatusEnum.NORMAL, StatusEnum.FORBIDDEN].includes(Number(status))
+    ) {
       queryConditionList.push('role.status = :status');
     }
     const queryCondition = queryConditionList.join(' AND ');
-    const [data, total] = await getConnection().createQueryBuilder(RoleEntity, 'role')
+    const [data, total] = await getConnection()
+      .createQueryBuilder(RoleEntity, 'role')
       .where(queryCondition, { name: `%${name}%`, status })
       .skip((pageNumber - 1) * pageSize)
       .take(pageSize)
