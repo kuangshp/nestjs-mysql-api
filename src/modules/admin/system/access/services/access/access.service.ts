@@ -70,7 +70,7 @@ export class AccessService {
     }
     // 2.查看该节点下是否有子节点
     const childNode: AccessEntity | undefined = await this.accessRepository.findOne({
-      where: { moduleId: id },
+      where: { parentId: id },
       select: ['id'],
     });
     if (childNode) {
