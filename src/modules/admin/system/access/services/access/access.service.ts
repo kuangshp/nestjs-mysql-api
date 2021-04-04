@@ -11,12 +11,12 @@ import { AccessReqDto } from '../../controllers/access/dto/access.req.dto';
 
 @Injectable()
 export class AccessService {
-  constructor (
+  constructor(
     @InjectRepository(AccessEntity)
     private readonly accessRepository: Repository<AccessEntity>,
     @InjectRepository(RoleAccessEntity)
     private readonly roleAccessRepository: Repository<RoleAccessEntity>,
-  ) { }
+  ) {}
 
   /**
    * @Author: 水痕
@@ -29,13 +29,19 @@ export class AccessService {
   async createAccess(createAccessDto: CreateAccessDto): Promise<string> {
     const { moduleName, actionName } = createAccessDto;
     if (moduleName) {
-      const result: AccessEntity | undefined = await this.accessRepository.findOne({ where: { moduleName }, select: ['id'] });
+      const result: AccessEntity | undefined = await this.accessRepository.findOne({
+        where: { moduleName },
+        select: ['id'],
+      });
       if (result) {
         throw new HttpException(`${moduleName}当前模块名已经存在,不能重复创建`, HttpStatus.OK);
       }
     }
     if (actionName) {
-      const result: AccessEntity | undefined = await this.accessRepository.findOne({ where: { actionName }, select: ['id'] });
+      const result: AccessEntity | undefined = await this.accessRepository.findOne({
+        where: { actionName },
+        select: ['id'],
+      });
       if (result) {
         throw new HttpException(`${actionName}当前操作名已经存在,不能重复创建`, HttpStatus.OK);
       }
@@ -55,16 +61,24 @@ export class AccessService {
    */
   async destroyAccessById(id: number): Promise<string> {
     // 1.判断是否有角色关联到当前资源
-    const roleAccessResult: RoleAccessEntity | undefined = await this.roleAccessRepository.findOne({ where: { accessId: id }, select: ['id'] });
+    const roleAccessResult: RoleAccessEntity | undefined = await this.roleAccessRepository.findOne({
+      where: { accessId: id },
+      select: ['id'],
+    });
     if (roleAccessResult) {
       throw new HttpException('当前资源已经被角色绑定不能直接删除', HttpStatus.OK);
     }
     // 2.查看该节点下是否有子节点
-    const childNode: AccessEntity | undefined = await this.accessRepository.findOne({ where: { moduleId: id }, select: ['id'] });
+    const childNode: AccessEntity | undefined = await this.accessRepository.findOne({
+      where: { moduleId: id },
+      select: ['id'],
+    });
     if (childNode) {
       throw new HttpException('当前节点下含子节点,不能直接删除', HttpStatus.OK);
     }
-    const { raw: { affectedRows } } = await this.accessRepository.softDelete(id);
+    const {
+      raw: { affectedRows },
+    } = await this.accessRepository.softDelete(id);
     if (affectedRows) {
       return '删除成功';
     } else {
@@ -82,7 +96,10 @@ export class AccessService {
    * @return {*}
    */
   async modifyAccessById(id: number, updateAccessDto: UpdateAccessDto): Promise<string> {
-    const { raw: { affectedRows } } = await this.accessRepository.update(id, updateAccessDto);
+    console.log(updateAccessDto, '??', id);
+    const {
+      raw: { affectedRows },
+    } = await this.accessRepository.update(id, updateAccessDto);
     if (affectedRows) {
       return '修改成功';
     } else {
@@ -99,7 +116,10 @@ export class AccessService {
    * @return {*}
    */
   async accessList(): Promise<AccessResDto[]> {
-    return await this.accessRepository.find({ where: [{ type: 1 }, { type: 2 }], select: ['id', 'moduleName', 'actionName', 'sort'] });
+    return await this.accessRepository.find({
+      where: [{ type: 1 }, { type: 2 }],
+      select: ['id', 'moduleName', 'actionName', 'sort'],
+    });
   }
 
   /**
@@ -111,19 +131,24 @@ export class AccessService {
    * @return {*}
    */
   async accessListPage(accessReqDto: AccessReqDto): Promise<AccessListResDtoDto> {
-    const { pageSize = PageEnum.PAGE_SIZE, pageNumber = PageEnum.PAGE_NUMBER } = accessReqDto;
-    const [data, total] = await getConnection().createQueryBuilder(AccessEntity, 'access')
-      .where('access.parentId = -1')
+    const {
+      pageSize = PageEnum.PAGE_SIZE,
+      pageNumber = PageEnum.PAGE_NUMBER,
+      parentId = -1,
+    } = accessReqDto;
+    const [data, total] = await getConnection()
+      .createQueryBuilder(AccessEntity, 'access')
+      .where('access.parentId = :parentId', { parentId })
       .skip((pageNumber - 1) * pageSize)
       .take(pageSize)
-      .orderBy({'access.sort': 'DESC', 'access.createdAt': 'DESC'})
+      .orderBy({ 'access.sort': 'DESC', 'access.createdAt': 'DESC' })
       .printSql()
       .getManyAndCount();
     return {
       data,
       total,
       pageNumber,
-      pageSize
+      pageSize,
     };
   }
 }
