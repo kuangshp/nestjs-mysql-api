@@ -111,10 +111,8 @@ export class InitDbService {
     // 如果不存在的时候就插入数据
     const isExist = await this.accessRepository.count();
     if (!isExist) {
-      for (const item of accessList) {
-        const account = this.accessRepository.create(item);
-        await this.accessRepository.save(account);
-      }
+      // 批量插入数据
+      await this.accessRepository.insert(accessList);
     }
   }
 }
