@@ -141,7 +141,7 @@ export class AccessService {
       .where('access.parentId = :parentId', { parentId })
       .skip((pageNumber - 1) * pageSize)
       .take(pageSize)
-      .orderBy({ 'access.sort': 'DESC', 'access.createdAt': 'DESC' })
+      .orderBy({ 'access.sort': 'ASC', 'access.createdAt': 'DESC' })
       .printSql()
       .getManyAndCount();
     return {
