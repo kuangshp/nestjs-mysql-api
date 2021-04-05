@@ -6,6 +6,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, getManager, EntityManager } from 'typeorm';
 import { RoleAccessResDto } from '../../controllers/role-access/dto/role.access.res.dto';
 import { RoleAccessReqDto } from '../../controllers/role-access/dto/role.access.req.dto';
+import { AllMenusResDto } from '../../controllers/role-access/dto/all.menus.res.dto';
+import { AllApiResDto } from '../../controllers/role-access/dto/all.api.res.dto';
 
 @Injectable()
 export class RoleAccessService {
@@ -55,11 +57,11 @@ export class RoleAccessService {
    * @param {*}
    * @return {*}
    */
-  async allMenus(): Promise<any> {
+  async allMenus(): Promise<AllMenusResDto[]> {
     const menusList = await this.accessRepository.find({
       where: [{ type: AccessTypeEnum.MODULE }, { type: AccessTypeEnum.MENUS }],
       select: ['id', 'moduleName', 'actionName', 'parentId'],
-      order: { status: 'ASC' },
+      order: { status: 'ASC', createdAt: 'DESC' },
     });
     return menusList.map((item: AccessEntity) => {
       return {
@@ -68,6 +70,22 @@ export class RoleAccessService {
         title: item.moduleName ? item.moduleName : item.actionName,
         parentId: item.parentId === -1 ? null : item.parentId,
       };
+    });
+  }
+
+  /**
+   * @Author: 水痕
+   * @Date: 2021-04-05 21:14:57
+   * @LastEditors: 水痕
+   * @Description: 获取全部的API
+   * @param {*}
+   * @return {*}
+   */
+  async allApi(): Promise<AllApiResDto[]> {
+    return await this.accessRepository.find({
+      where: { type: AccessTypeEnum.OPERATION },
+      select: ['id', 'apiName'],
+      order: { status: 'ASC', createdAt: 'DESC' },
     });
   }
 

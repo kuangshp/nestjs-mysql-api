@@ -5,6 +5,8 @@ import adminConfig from '@src/config/admin.config';
 import { RoleAccessService } from '../../services/role-access/role-access.service';
 import { RoleAccessResDto } from './dto/role.access.res.dto';
 import { RoleAccessReqDto } from './dto/role.access.req.dto';
+import { AllMenusResDto } from './dto/all.menus.res.dto';
+import { AllApiResDto } from './dto/all.api.res.dto';
 
 @ApiTags('后台管理系统-角色资源管理')
 @ApiBearerAuth()
@@ -28,8 +30,17 @@ export class RoleAccessController {
     description: '获取全部的菜单(可授权)',
   })
   @Get('all_menus')
-  async allMenus(): Promise<any> {
+  async allMenus(): Promise<AllMenusResDto[]> {
     return await this.roleAccessService.allMenus();
+  }
+
+  @ApiOperation({
+    summary: '获取全部的API',
+    description: '获取全部的API(可授权)',
+  })
+  @Get('all_api')
+  async allApi(): Promise<AllApiResDto[]> {
+    return await this.roleAccessService.allApi();
   }
 
   @ApiOperation({
