@@ -35,6 +35,15 @@ export class AccessEntity extends PublicEntity {
     type: 'varchar',
     nullable: true,
     length: 100,
+    name: 'api_name',
+    comment: '接口名称',
+  })
+  apiName: string;
+
+  @Column({
+    type: 'varchar',
+    nullable: true,
+    length: 100,
     name: 'icon',
     comment: '小图标',
   })
