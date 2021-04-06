@@ -61,7 +61,7 @@ export class RoleAccessService {
     const menusList = await this.accessRepository.find({
       where: [{ type: AccessTypeEnum.MODULE }, { type: AccessTypeEnum.MENUS }],
       select: ['id', 'moduleName', 'actionName', 'parentId'],
-      order: { status: 'ASC', createdAt: 'DESC' },
+      order: { sort: 'ASC', createdAt: 'DESC' },
     });
     return menusList.map((item: AccessEntity) => {
       return {
@@ -85,7 +85,7 @@ export class RoleAccessService {
     return await this.accessRepository.find({
       where: { type: AccessTypeEnum.OPERATION },
       select: ['id', 'apiName'],
-      order: { status: 'ASC', createdAt: 'DESC' },
+      order: { sort: 'ASC', createdAt: 'DESC' },
     });
   }
 
