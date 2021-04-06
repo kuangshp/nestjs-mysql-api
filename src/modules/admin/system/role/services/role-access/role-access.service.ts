@@ -26,10 +26,10 @@ export class RoleAccessService {
    * @param {*}
    * @return {*}
    */
-  async roleToAccess(roleAccessReqDto: RoleAccessReqDto): Promise<string> {
+  async roleToAccess(roleId: number, roleAccessReqDto: RoleAccessReqDto): Promise<string> {
     return getManager()
       .transaction(async (entityManager: EntityManager) => {
-        const { roleId, accessList, type } = roleAccessReqDto;
+        const { accessList, type } = roleAccessReqDto;
         await entityManager.delete<RoleAccessEntity>(RoleAccessEntity, { roleId, type });
         const newAccessList = accessList.map((item: number) => {
           return {

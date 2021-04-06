@@ -1,4 +1,4 @@
-import { Controller, UseGuards, Get, Param, ParseIntPipe, Body, Post } from '@nestjs/common';
+import { Controller, UseGuards, Get, Param, ParseIntPipe, Body, Post, Patch } from '@nestjs/common';
 import { ApiTags, ApiBearerAuth, ApiOperation, ApiCreatedResponse } from '@nestjs/swagger';
 import { AuthGuard } from '@src/guard/auth/auth.guard';
 import adminConfig from '@src/config/admin.config';
@@ -15,14 +15,20 @@ import { AllApiResDto } from './dto/all.api.res.dto';
 export class RoleAccessController {
   constructor(private readonly roleAccessService: RoleAccessService) {}
 
-  @ApiOperation({ summary: '给角色分配菜单资源', description: '给当前角色分配菜单或接口资源' })
+  @ApiOperation({
+    summary: '给角色分配菜单资源',
+    description: '根据角色ID给当前角色分配菜单或接口资源',
+  })
   @ApiCreatedResponse({
     type: String,
     description: '给当前角色分配菜单或接口资源返回值',
   })
-  @Post('menus')
-  async roleToAccess(@Body() roleAccessReqDto: RoleAccessReqDto): Promise<string> {
-    return await this.roleAccessService.roleToAccess(roleAccessReqDto);
+  @Patch('menus/:roleId')
+  async roleToAccess(
+    @Param('roleId', new ParseIntPipe()) roleId: number,
+    @Body() roleAccessReqDto: RoleAccessReqDto,
+  ): Promise<string> {
+    return await this.roleAccessService.roleToAccess(roleId, roleAccessReqDto);
   }
 
   @ApiOperation({
