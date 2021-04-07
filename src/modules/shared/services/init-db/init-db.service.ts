@@ -52,6 +52,7 @@ export class InitDbService {
       {
         moduleName: '系统管理',
         parentId: 0,
+        url: 'system',
         type: 1,
         sort: 6,
       },
