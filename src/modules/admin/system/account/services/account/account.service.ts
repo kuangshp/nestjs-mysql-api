@@ -101,7 +101,7 @@ export class AccountService {
    */
   async destroyById(id: number): Promise<string> {
     if (id === 1) {
-      throw new HttpException('当前账号不能删除', HttpStatus.OK);
+      throw new HttpException('系统默认生成的账号不能删除', HttpStatus.OK);
     }
     const {
       raw: { affectedRows },
@@ -124,7 +124,7 @@ export class AccountService {
    */
   async modifyPassWordById(id: number, modifyPasswordDto: ModifyPasswordDto): Promise<string> {
     if (id === 1) {
-      throw new HttpException('当前账号不能修改密码', HttpStatus.OK);
+      throw new HttpException('系统默认生成的账号不能修改密码', HttpStatus.OK);
     }
     const { password, newPassword } = modifyPasswordDto;
     const findResult = await getConnection()
@@ -160,7 +160,7 @@ export class AccountService {
    */
   async modifyById(id: number, updateAccountDto: UpdateAccountDto): Promise<string> {
     if (id === 1) {
-      throw new HttpException('当前账号不能修改资料', HttpStatus.OK);
+      throw new HttpException('系统默认生成的账号不能修改信息', HttpStatus.OK);
     }
     const { username, email, mobile, status, platform } = updateAccountDto;
     const result = await this.accountRepository.findOne(id);

@@ -60,6 +60,9 @@ export class AccessService {
    * @return {*}
    */
   async destroyAccessById(id: number): Promise<string> {
+    if (id <= 8) {
+      throw new HttpException('系统默认生成的资源不能删除', HttpStatus.OK);
+    }
     // 1.判断是否有角色关联到当前资源
     const roleAccessResult: RoleAccessEntity | undefined = await this.roleAccessRepository.findOne({
       where: { accessId: id },
@@ -96,7 +99,9 @@ export class AccessService {
    * @return {*}
    */
   async modifyAccessById(id: number, updateAccessDto: UpdateAccessDto): Promise<string> {
-    console.log(updateAccessDto, '??', id);
+    if (id <= 8) {
+      throw new HttpException('系统默认生成的资源不能修改', HttpStatus.OK);
+    }
     const {
       raw: { affectedRows },
     } = await this.accessRepository.update(id, updateAccessDto);
