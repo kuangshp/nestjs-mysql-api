@@ -139,7 +139,7 @@ export class AccessService {
     const {
       pageSize = PageEnum.PAGE_SIZE,
       pageNumber = PageEnum.PAGE_NUMBER,
-      parentId = -1,
+      parentId = 0,
     } = accessReqDto;
     const [data, total] = await getConnection()
       .createQueryBuilder(AccessEntity, 'access')

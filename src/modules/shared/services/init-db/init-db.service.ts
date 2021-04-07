@@ -51,7 +51,7 @@ export class InitDbService {
     const accessList: ObjectType[] = [
       {
         moduleName: '系统管理',
-        parentId: -1,
+        parentId: 0,
         type: 1,
         sort: 6,
       },
