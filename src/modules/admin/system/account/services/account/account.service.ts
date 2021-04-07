@@ -123,6 +123,9 @@ export class AccountService {
    * @return {*}
    */
   async modifyPassWordById(id: number, modifyPasswordDto: ModifyPasswordDto): Promise<string> {
+    if (id === 1) {
+      throw new HttpException('当前账号不能修改密码', HttpStatus.OK);
+    }
     const { password, newPassword } = modifyPasswordDto;
     const findResult = await getConnection()
       .createQueryBuilder(AccountEntity, 'account')
@@ -156,6 +159,9 @@ export class AccountService {
    * @return {*}
    */
   async modifyById(id: number, updateAccountDto: UpdateAccountDto): Promise<string> {
+    if (id === 1) {
+      throw new HttpException('当前账号不能修改资料', HttpStatus.OK);
+    }
     const { username, email, mobile, status, platform } = updateAccountDto;
     const result = await this.accountRepository.findOne(id);
     await this.accountRepository.save(

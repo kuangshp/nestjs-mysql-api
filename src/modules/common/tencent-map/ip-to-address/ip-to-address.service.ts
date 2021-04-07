@@ -4,6 +4,9 @@ import * as superagent from 'superagent';
 @Injectable()
 export class IpToAddressService {
   public async IpToAddress(ip: string): Promise<string | null> {
+    if (ip === '::1') {
+      return '开发环境运行';
+    }
     try {
       const responseText = await superagent
         .get('https://apis.map.qq.com/ws/location/v1/ip')
