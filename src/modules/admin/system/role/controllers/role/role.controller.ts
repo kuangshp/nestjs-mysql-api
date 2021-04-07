@@ -20,7 +20,6 @@ import { CreateRoleDto } from './dto/create.role.dto';
 import { UpdateRoleDto } from './dto/update.role.dto';
 import { RoleResDto, RoleListResDtoDto } from './dto/role.res.dto';
 import { RoleReqDto } from './dto/role.req.dto';
-import { ApiAuth } from '@src/decorators/api.auth';
 
 @ApiTags('后台管理系统-角色管理')
 @ApiBearerAuth()
@@ -48,7 +47,6 @@ export class RoleController {
     type: String,
     description: '删除角色返回值',
   })
-  @ApiAuth()
   @HttpCode(HttpStatus.OK)
   @Delete(':id')
   async destroyRoleById(@Param('id', new ParseIntPipe()) id: number): Promise<string> {

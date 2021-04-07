@@ -39,7 +39,7 @@ export class AuthGuard implements CanActivate {
             console.log('11走资源守卫');
             const method = request.method;
             const url = request.url;
-            return this.apiAuthService.apiAuth(user, classAuth, methodAuth, method, url);
+            return this.apiAuthService.apiAuth(user, method, url);
           } else {
             console.log('11不走资源守卫');
             return true;

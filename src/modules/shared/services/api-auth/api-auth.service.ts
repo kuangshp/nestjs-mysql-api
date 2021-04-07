@@ -22,19 +22,11 @@ export class ApiAuthService {
    * @LastEditors: 水痕
    * @Description: 拦截api
    * @param {ICurrentUserType} user
-   * @param {boolean} classAuth
-   * @param {boolean} methodAuth
    * @param {string} method
    * @param {string} url
    * @return {*}
    */
-  public async apiAuth(
-    user: ICurrentUserType,
-    classAuth: boolean,
-    methodAuth: boolean,
-    method: string,
-    url: string,
-  ): Promise<boolean> {
+  public async apiAuth(user: ICurrentUserType, method: string, url: string): Promise<boolean> {
     const { isSuper, id } = user;
     // 1.如果是超级管理员就直接返回true
     if (isSuper) {
@@ -54,27 +46,19 @@ export class ApiAuthService {
         .where('role_access.roleId in (:...roleId)', { roleId: authRoleIdList })
         .getMany();
       console.log(authAccessList, '授权的资源列表'); // [ RoleAccessEntity { accessId: 5, type: 3 } ]
-      console.log(method, url, '===>');
-      if (classAuth) {
-        // 如果是类API守卫的时候
-        return false;
-      } else if (methodAuth) {
-        // 如果是方法守卫
-        const formatUrl = this.formatUrl(method, url);
-        // 4.根据请求方式和路径去查询数据
-        const accessResult: AccessEntity | undefined = await this.accessRepository.findOne({
-          where: { method, url: formatUrl },
-          select: ['id', 'type'],
-        });
-        const isExist = authAccessList.find(
-          (item: RoleAccessEntity) =>
-            item.accessId === accessResult?.id && Number(item.type) === Number(accessResult?.type),
-        );
-        if (isExist) {
-          return true;
-        } else {
-          throw new HttpException(`当前账号没操作:${method}-${url}的权限`, HttpStatus.OK);
-        }
+      const formatUrl = this.formatUrl(method, url);
+      // 4.根据请求方式和路径去查询数据
+      const accessResult: AccessEntity | undefined = await this.accessRepository.findOne({
+        where: { method, url: formatUrl },
+        select: ['id', 'type'],
+      });
+      console.log(accessResult, '当前请求的资源');
+      const isExist = authAccessList.find(
+        (item: RoleAccessEntity) =>
+          item.accessId === accessResult?.id && Number(item.type) === Number(accessResult?.type),
+      );
+      if (isExist) {
+        return true;
       } else {
         throw new HttpException(`当前账号没操作:${method}-${url}的权限`, HttpStatus.OK);
       }
@@ -87,7 +71,7 @@ export class ApiAuthService {
         // 去除问号后面的
         return url.substring(0, url.indexOf('?'));
       case 'DELETE':
-      case 'PATH':
+      case 'PATCH':
       case 'PUT':
         // url最后一个改为*通配符
         return url.replace(/(.*?\/)\d+$/, '$1*');

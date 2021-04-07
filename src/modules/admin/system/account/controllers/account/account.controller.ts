@@ -22,10 +22,12 @@ import { AuthGuard } from '@src/guard/auth/auth.guard';
 import { AccountResDto, AccountListResDtoDto } from './dto/account.res.dto';
 import { AccountReqDto } from './dto/account.req.dto';
 import { CurrentUser, ICurrentUserType } from '@src/decorators/current.user';
+import { ApiAuth } from '@src/decorators/api.auth';
 
 @ApiTags('后台管理系统-账号管理')
 @ApiBearerAuth()
 @UseGuards(AuthGuard)
+@ApiAuth()
 @Controller(`${adminConfig.adminPath}/account`)
 export class AccountController {
   constructor(private readonly accountService: AccountService) {}
