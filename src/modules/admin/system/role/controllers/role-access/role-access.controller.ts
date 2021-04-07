@@ -7,10 +7,12 @@ import { RoleAccessResDto } from './dto/role.access.res.dto';
 import { RoleAccessReqDto } from './dto/role.access.req.dto';
 import { AllMenusResDto } from './dto/all.menus.res.dto';
 import { AllApiResDto } from './dto/all.api.res.dto';
+import { ApiAuth } from '@src/decorators/api.auth';
 
 @ApiTags('后台管理系统-角色资源管理')
 @ApiBearerAuth()
 @UseGuards(AuthGuard)
+@ApiAuth()
 @Controller(`${adminConfig.adminPath}/role_access`)
 export class RoleAccessController {
   constructor(private readonly roleAccessService: RoleAccessService) {}

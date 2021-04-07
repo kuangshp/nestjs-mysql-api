@@ -15,10 +15,12 @@ import adminConfig from '@src/config/admin.config';
 import { AccountRoleService } from '../../services/account-role/account-role.service';
 import { AccountRoleListResDto, RoleAccountListDto } from './dto/account.role.res.dto';
 import { DistributionRoleDto } from './dto/distribution.role.dto';
+import { ApiAuth } from '@src/decorators/api.auth';
 
 @ApiTags('后台管理系统-账号角色管理')
 @ApiBearerAuth()
 @UseGuards(AuthGuard)
+@ApiAuth()
 @Controller(`${adminConfig.adminPath}/account_role`)
 export class AccountRoleController {
   constructor(private readonly accountRoleService: AccountRoleService) {}

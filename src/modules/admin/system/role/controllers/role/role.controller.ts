@@ -20,10 +20,12 @@ import { CreateRoleDto } from './dto/create.role.dto';
 import { UpdateRoleDto } from './dto/update.role.dto';
 import { RoleResDto, RoleListResDtoDto } from './dto/role.res.dto';
 import { RoleReqDto } from './dto/role.req.dto';
+import { ApiAuth } from '@src/decorators/api.auth';
 
 @ApiTags('后台管理系统-角色管理')
 @ApiBearerAuth()
 @UseGuards(AuthGuard)
+@ApiAuth()
 @Controller(`${adminConfig.adminPath}/role`)
 export class RoleController {
   constructor(private readonly roleService: RoleService) {}
