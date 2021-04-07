@@ -70,7 +70,7 @@ export class AccessEntity extends PublicEntity {
   @Column({
     type: 'int',
     nullable: false,
-    default: () => -1,
+    default: () => 0,
     name: 'parent_id',
     comment: '父模块id',
   })
