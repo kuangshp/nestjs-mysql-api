@@ -232,6 +232,7 @@ export class AccountService {
       .addSelect('account.email', 'email')
       .addSelect('account.status', 'status')
       .addSelect('account.platform', 'platform')
+      .addSelect('account.isSuper', 'isSuper')
       .addSelect('account.createdAt', 'createdAt')
       .addSelect('account.updatedAt', 'updatedAt')
       .addSelect(
