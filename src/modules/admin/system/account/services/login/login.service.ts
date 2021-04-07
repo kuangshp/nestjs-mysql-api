@@ -70,6 +70,7 @@ export class LoginService {
           lastLoginIp: ipAddress,
         });
         await this.accountLastLoginRepository.save(lastLogin);
+        console.log(findAccount, '当前用户');
         return Object.assign(findAccount, { token: this.toolsService.generateToken(findAccount) });
       } else {
         throw new HttpException('用户名或密码错误', HttpStatus.OK);

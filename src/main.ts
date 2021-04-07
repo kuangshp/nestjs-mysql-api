@@ -7,7 +7,6 @@ import helmet from 'helmet';
 import { AppModule } from './app.module';
 import { HttpExceptionFilter } from './filters/http-exception.filter';
 import { TransformInterceptor } from './interceptors/transform/transform.interceptor';
-import { ApiGuard } from './guard/api/api.guard';
 
 console.log('当前环境', process.env.npm_lifecycle_event);
 

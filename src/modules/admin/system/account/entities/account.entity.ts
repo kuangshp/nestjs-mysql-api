@@ -14,7 +14,7 @@ import { usernameReg } from '@src/constants';
 export class AccountEntity extends PublicEntity {
   @Exclude()
   private nodeAuth: NodeAuth;
-  constructor () {
+  constructor() {
     super();
     this.nodeAuth = new NodeAuth();
   }
@@ -24,9 +24,9 @@ export class AccountEntity extends PublicEntity {
     type: 'varchar',
     length: 50,
     name: 'username',
-    comment: '用户名'
+    comment: '用户名',
   })
-  username: string
+  username: string;
 
   @Exclude()
   @Column({
@@ -34,55 +34,54 @@ export class AccountEntity extends PublicEntity {
     length: 100,
     name: 'password',
     select: false,
-    comment: '密码'
+    comment: '密码',
   })
   password: string;
 
   @Index()
-  @Column( {
+  @Column({
     type: 'varchar',
     nullable: true,
     length: 11,
     name: 'mobile',
-    comment: '手机号码'
+    comment: '手机号码',
   })
   mobile: string;
 
   @Index()
-  @Column( {
+  @Column({
     type: 'varchar',
     nullable: true,
     length: 50,
     name: 'email',
-    comment: '邮箱'
+    comment: '邮箱',
   })
   email: string;
 
   @Column({
-    type: 'tinyint', 
+    type: 'tinyint',
     nullable: true,
     default: () => 1,
     name: 'status',
-    comment: '状态,0表示禁止,1表示正常'
+    comment: '状态,0表示禁止,1表示正常',
   })
   status: number;
 
   @Column({
-    type: 'tinyint', 
+    type: 'tinyint',
     nullable: true,
     name: 'platform',
     default: () => 0,
-    comment: '平台:0表示普通用户(没权限),1表示为运营管理,2表示入住商家'
+    comment: '平台:0表示普通用户(没权限),1表示为运营管理,2表示入住商家',
   })
   platform: number;
 
   @Column({
-    type: 'tinyint', 
+    type: 'tinyint',
     nullable: false,
-    select: false,
     default: () => 0,
     name: 'is_super',
-    comment: '是否为超级管理员1表示是,0表示不是'
+    comment: '是否为超级管理员1表示是,0表示不是',
   })
   isSuper: number;
 
@@ -97,14 +96,18 @@ export class AccountEntity extends PublicEntity {
   @BeforeInsert()
   generateUserNameOrEmailOrMobile() {
     if (this.username) {
-      this.mobile = this.mobile && isMobilePhone(this.mobile, 'zh-CN') ? this.mobile : `_${this.username}`;
+      this.mobile =
+        this.mobile && isMobilePhone(this.mobile, 'zh-CN') ? this.mobile : `_${this.username}`;
       this.email = this.email && isEmail(this.email) ? this.email : `_${this.username}`;
     } else if (this.mobile) {
-      this.username = this.username && usernameReg.test(this.username) ? this.username : `_${this.mobile}`;
+      this.username =
+        this.username && usernameReg.test(this.username) ? this.username : `_${this.mobile}`;
       this.email = this.email && isEmail(this.email) ? this.email : `_${this.mobile}`;
     } else if (this.email) {
-      this.username = this.username && usernameReg.test(this.username) ? this.username : `_${this.email}`;
-      this.mobile = this.mobile && isMobilePhone(this.mobile, 'zh-CN') ? this.mobile : `_${this.email}`;
+      this.username =
+        this.username && usernameReg.test(this.username) ? this.username : `_${this.email}`;
+      this.mobile =
+        this.mobile && isMobilePhone(this.mobile, 'zh-CN') ? this.mobile : `_${this.email}`;
     }
   }
 
@@ -112,7 +115,6 @@ export class AccountEntity extends PublicEntity {
   formatResponseData() {
     this.mobile = isMobilePhone(this.mobile, 'zh-CN') ? this.mobile : '';
     this.email = isEmail(this.email) ? this.email : '';
-    this.username = usernameReg.test(this.username) ? this.username: '';
+    this.username = usernameReg.test(this.username) ? this.username : '';
   }
-  
 }

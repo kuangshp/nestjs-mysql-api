@@ -4,17 +4,18 @@ import * as jwt from 'jsonwebtoken';
 import { isInt } from 'class-validator';
 
 interface ITokenParams {
-  id: number, 
-  username?: string, 
-  mobile?: string, 
-  email?: string, 
-  platform?:number, 
+  id: number;
+  username?: string;
+  mobile?: string;
+  email?: string;
+  platform?: number;
+  isSuper?: number;
 }
 
 @Injectable()
 export class ToolsService {
   private nodeAuth: NodeAuth;
-  constructor () {
+  constructor() {
     this.nodeAuth = new NodeAuth();
   }
 
@@ -43,7 +44,6 @@ export class ToolsService {
     return this.nodeAuth.checkPassword(password, sqlPassword);
   }
 
-
   /**
    * @Author: 水痕
    * @Date: 2021-03-22 12:57:56
@@ -55,10 +55,12 @@ export class ToolsService {
    */
   public checkPage(pageNumber: number, pageSize: number): void {
     if (!isInt(Number(pageSize)) || !isInt(Number(pageNumber))) {
-      throw new HttpException(`传递的pageSize:${pageSize},pageNumber:${pageNumber}其中一个不是整数`, HttpStatus.OK);
+      throw new HttpException(
+        `传递的pageSize:${pageSize},pageNumber:${pageNumber}其中一个不是整数`,
+        HttpStatus.OK,
+      );
     }
   }
-
 
   /**
    * @Author: 水痕
@@ -69,7 +71,7 @@ export class ToolsService {
    * @return {*}
    */
   public generateToken(params: ITokenParams): string {
-    const { id, username, mobile, email, platform } = params;
+    const { id, username, mobile, email, platform, isSuper } = params;
     const SECRET: string = process.env.SECRET as string;
     // 生成签名
     return jwt.sign(
@@ -79,6 +81,7 @@ export class ToolsService {
         mobile,
         email,
         platform,
+        isSuper,
       },
       SECRET, // 加盐
       {
