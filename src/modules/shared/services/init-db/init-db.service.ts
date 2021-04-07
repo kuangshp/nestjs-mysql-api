@@ -52,13 +52,14 @@ export class InitDbService {
       {
         moduleName: '系统管理',
         parentId: -1,
+        type: 1,
         sort: 6,
       },
       {
         actionName: '账号管理',
         url: 'system/account',
         parentId: '1',
-        type: 1,
+        type: 2,
         sort: 3,
       },
       {

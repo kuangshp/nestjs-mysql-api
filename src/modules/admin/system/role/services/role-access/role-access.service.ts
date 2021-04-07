@@ -63,6 +63,7 @@ export class RoleAccessService {
       select: ['id', 'moduleName', 'actionName', 'parentId'],
       order: { sort: 'ASC', createdAt: 'DESC' },
     });
+    console.log(menusList, '===');
     return menusList.map((item: AccessEntity) => {
       return {
         id: item.id,
