@@ -34,7 +34,6 @@ export class AuthGuard implements CanActivate {
         console.log(user, '当前用户');
         if (user) {
           request.user = user;
-          // 如果有接口守卫的时候要先判断接口是否有权限
           if (methodAuth || classAuth) {
             console.log('11走资源守卫');
             const method = request.method;
