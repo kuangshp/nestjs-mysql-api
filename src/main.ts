@@ -23,8 +23,8 @@ async function bootstrap() {
   // 配置api文档信息(不是生产环境配置文档)
   if (process.env.NODE_ENV != 'production') {
     const options = new DocumentBuilder()
-      .setTitle('dance box  api文档')
-      .setDescription('dance box  api接口文档')
+      .setTitle('权限系统管理  api文档')
+      .setDescription('权限系统管理  api接口文档')
       .setBasePath(PREFIX)
       .addBearerAuth({ type: 'apiKey', in: 'header', name: 'token' })
       .setVersion('0.0.1')
