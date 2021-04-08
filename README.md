@@ -2,6 +2,7 @@
 
 * 1、项目前端采用`react`开发的，[预览地址](http://admin.yst168.cn/)。前端项目地址
   * [`github`地址](https://github.com/kuangshp/nestjs-mysql-api-react)
+  * [码云地址](https://gitee.com/k_2021/nestjs-mysql-api-react)
 * 2、采用`angular`模块化开发方式来构建项目，如果你想用`java`的`mvc`方式来开发`nestjs`项目你可以查看`v1`分支。
 * 3、项目是基于`mysql`数据库，项目中全部采用`typeorm`来操作数据库，弱化了原生`sql`，避免前端的小伙伴没有`sql`基础。
 * 4、实现用户名、手机号码、邮箱任一的方式实现登录。
