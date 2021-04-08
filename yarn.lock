@@ -2245,8 +2245,8 @@
   "version" "0.4.0"
 
 "cookiejar@^2.1.2":
-  "integrity" "sha1-3YojVTB1L5iPmghE8/xYnjERElw="
-  "resolved" "https://registry.npm.taobao.org/cookiejar/download/cookiejar-2.1.2.tgz"
+  "integrity" "sha512-Mw+adcfzPxcPeI+0WlvRrr/3lGVO0bD75SxX6811cxSh1Wbxx7xZBGK1eVtDf6si8rg2lhnUjsVLMFMfbRIuwA=="
+  "resolved" "https://registry.npmjs.org/cookiejar/-/cookiejar-2.1.2.tgz"
   "version" "2.1.2"
 
 "copy-descriptor@^0.1.0":
@@ -2623,7 +2623,7 @@
     "graceful-fs" "^4.2.4"
     "tapable" "^2.2.0"
 
-"enquirer@^2.3.6", "enquirer@>= 2.3.0 < 3":
+"enquirer@^2.3.6":
   "integrity" "sha1-Kn/l3WNKHkElqXXsmU/1RW3Dc00="
   "resolved" "https://registry.npm.taobao.org/enquirer/download/enquirer-2.3.6.tgz?cache=0&sync_timestamp=1593693291943&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fenquirer%2Fdownload%2Fenquirer-2.3.6.tgz"
   "version" "2.3.6"
@@ -3197,8 +3197,8 @@
     "tapable" "^1.0.0"
 
 "form-data@^3.0.0":
-  "integrity" "sha1-69U3kbeDVqma+aMA1CgsTV65dV8="
-  "resolved" "https://registry.npm.taobao.org/form-data/download/form-data-3.0.1.tgz"
+  "integrity" "sha512-RHkBKtLWUVwd7SqRIvCZMEvAMoGUp0XU+seQiZejj0COz3RI3hWP4sCv3gZWWLjJTd7rGwcsF5eKZGii0r/hbg=="
+  "resolved" "https://registry.npmjs.org/form-data/-/form-data-3.0.1.tgz"
   "version" "3.0.1"
   dependencies:
     "asynckit" "^0.4.0"
@@ -3215,8 +3215,8 @@
     "mime-types" "^2.1.12"
 
 "formidable@^1.2.2":
-  "integrity" "sha1-v2muopcpgmdfAIZTQrmCmG9rjdk="
-  "resolved" "https://registry.npm.taobao.org/formidable/download/formidable-1.2.2.tgz"
+  "integrity" "sha512-V8gLm+41I/8kguQ4/o1D3RIHRmhYFG4pnNyonvua+40rqcEmT4+V71yaZ3B457xbbgCsCfjSPi65u/W6vK1U5Q=="
+  "resolved" "https://registry.npmjs.org/formidable/-/formidable-1.2.2.tgz"
   "version" "1.2.2"
 
 "forwarded@~0.1.2":
@@ -4907,8 +4907,8 @@
     "mime-db" "1.46.0"
 
 "mime@^2.4.6":
-  "integrity" "sha1-bj3GzCuVEGQ4MOXxnVy3U9pe6r4="
-  "resolved" "https://registry.npm.taobao.org/mime/download/mime-2.5.2.tgz"
+  "integrity" "sha512-tqkh47FzKeCPD2PUiPB6pkbMzsCasjxAfC62/Wap5qrUWcb+sFasXUC5I3gYM5iBM8v/Qpn4UK0x+j0iHyFPDg=="
+  "resolved" "https://registry.npmjs.org/mime/-/mime-2.5.2.tgz"
   "version" "2.5.2"
 
 "mime@1.6.0":
@@ -5633,9 +5633,9 @@
   "version" "1.5.1"
 
 "qs@^6.9.4":
-  "integrity" "sha1-i2UZEhqykcMWo+TUnOz20T2Mf+U="
-  "resolved" "https://registry.npm.taobao.org/qs/download/qs-6.10.0.tgz?cache=0&sync_timestamp=1616096451342&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fqs%2Fdownload%2Fqs-6.10.0.tgz"
-  "version" "6.10.0"
+  "integrity" "sha512-M528Hph6wsSVOBiYUnGf+K/7w0hNshs/duGsNXPUCLH5XAqjEtiPGwNONLV0tBH8NoGb0mvD5JubnUTrujKDTg=="
+  "resolved" "https://registry.npmjs.org/qs/-/qs-6.10.1.tgz"
+  "version" "6.10.1"
   dependencies:
     "side-channel" "^1.0.4"
 
@@ -5762,8 +5762,8 @@
     "util-deprecate" "^1.0.1"
 
 "readable-stream@^3.6.0":
-  "integrity" "sha1-M3u9o63AcGvT4CRCaihtS0sskZg="
-  "resolved" "https://registry.npm.taobao.org/readable-stream/download/readable-stream-3.6.0.tgz"
+  "integrity" "sha512-BViHy7LKeTz4oNnkcLJ+lVSL6vpiFeX6/d3oSH8zCW7UxP2onchk+vTGB143xuFjHS3deTgkKoXXymXqymiIdA=="
+  "resolved" "https://registry.npmjs.org/readable-stream/-/readable-stream-3.6.0.tgz"
   "version" "3.6.0"
   dependencies:
     "inherits" "^2.0.3"
@@ -6224,8 +6224,8 @@
   "version" "0.1.1"
 
 "side-channel@^1.0.4":
-  "integrity" "sha1-785cj9wQTudRslxY1CkAEfpeos8="
-  "resolved" "https://registry.npm.taobao.org/side-channel/download/side-channel-1.0.4.tgz?cache=0&sync_timestamp=1609270210432&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fside-channel%2Fdownload%2Fside-channel-1.0.4.tgz"
+  "integrity" "sha512-q5XPytqFEIKHkGdiMIrY10mvLRvnQh42/+GoBlFW3b2LXLE2xxJpZFdm94we0BaoV3RwJyGqg5wS7epxTv0Zvw=="
+  "resolved" "https://registry.npmjs.org/side-channel/-/side-channel-1.0.4.tgz"
   "version" "1.0.4"
   dependencies:
     "call-bind" "^1.0.0"
@@ -6621,8 +6621,8 @@
   "version" "3.1.1"
 
 "superagent@^6.1.0":
-  "integrity" "sha1-CfCIB7xBEI7xZM+0vik869SA9KY="
-  "resolved" "https://registry.npm.taobao.org/superagent/download/superagent-6.1.0.tgz"
+  "integrity" "sha512-OUDHEssirmplo3F+1HWKUrUjvnQuA+nZI6i/JJBdXb5eq9IyEQwPyPpqND+SSsxf6TygpBEkUjISVRN4/VOpeg=="
+  "resolved" "https://registry.npmjs.org/superagent/-/superagent-6.1.0.tgz"
   "version" "6.1.0"
   dependencies:
     "component-emitter" "^1.3.0"
