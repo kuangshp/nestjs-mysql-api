@@ -1,4 +1,4 @@
-import { Injectable, HttpException, HttpCode, HttpStatus } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { ICurrentUserType } from '@src/decorators/current.user';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, getConnection } from 'typeorm';
@@ -11,8 +11,6 @@ export class ApiAuthService {
   constructor(
     @InjectRepository(AccountRoleEntity)
     private readonly accountRoleRepository: Repository<AccountRoleEntity>,
-    @InjectRepository(RoleAccessEntity)
-    private readonly roleAccessRepository: Repository<RoleAccessEntity>,
     @InjectRepository(AccessEntity)
     private readonly accessRepository: Repository<AccessEntity>,
   ) {}

@@ -4,7 +4,6 @@ import { AccessEntity } from '../../entities/access.entity';
 import { Repository, getConnection } from 'typeorm';
 import { MenusListResDto } from '../../controllers/menus/dto/menus.res.dto';
 import { ICurrentUserType } from '@src/decorators/current.user';
-import { AccountEntity } from '../../../account/entities/account.entity';
 import { AdminIdentityEnum, AccessTypeEnum } from '@src/enums';
 import { AccountRoleEntity } from '../../../account/entities/account.role.entity';
 import { RoleAccessEntity } from '../../../role/entities/role.access.entity';
