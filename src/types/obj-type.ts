@@ -1,3 +1,1 @@
-export type ObjectType = {
-  [propsName: string]: any
-}
+export type ObjectType = Partial<{ [key: string]: unknown }>;

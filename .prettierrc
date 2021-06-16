@@ -1,6 +1,9 @@
 {
+  "prettier.semi": true,
   "singleQuote": true,
-  "trailingComma": "all",
+  "trailingComma": "es5",
+  "printWidth": 100,
   "tabWidth": 2,
-  "printWidth": 100
+  "endOfLine": "auto",
+  "arrowParens": "always"
 }
