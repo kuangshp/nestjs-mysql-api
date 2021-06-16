@@ -1,4 +1,4 @@
-import { Injectable, HttpException, HttpCode, HttpStatus } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { ICurrentUserType } from '@src/decorators/current.user';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, getConnection } from 'typeorm';
@@ -11,10 +11,8 @@ export class ApiAuthService {
   constructor(
     @InjectRepository(AccountRoleEntity)
     private readonly accountRoleRepository: Repository<AccountRoleEntity>,
-    @InjectRepository(RoleAccessEntity)
-    private readonly roleAccessRepository: Repository<RoleAccessEntity>,
     @InjectRepository(AccessEntity)
-    private readonly accessRepository: Repository<AccessEntity>,
+    private readonly accessRepository: Repository<AccessEntity>
   ) {}
   /**
    * @Author: 水痕
@@ -55,7 +53,7 @@ export class ApiAuthService {
       console.log(accessResult, '当前请求的资源');
       const isExist = authAccessList.find(
         (item: RoleAccessEntity) =>
-          item.accessId === accessResult?.id && Number(item.type) === Number(accessResult?.type),
+          item.accessId === accessResult?.id && Number(item.type) === Number(accessResult?.type)
       );
       if (isExist) {
         return true;

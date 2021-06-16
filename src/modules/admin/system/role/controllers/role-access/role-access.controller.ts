@@ -1,4 +1,4 @@
-import { Controller, UseGuards, Get, Param, ParseIntPipe, Body, Post, Patch } from '@nestjs/common';
+import { Controller, UseGuards, Get, Param, ParseIntPipe, Body, Patch } from '@nestjs/common';
 import { ApiTags, ApiBearerAuth, ApiOperation, ApiCreatedResponse } from '@nestjs/swagger';
 import { AuthGuard } from '@src/guard/auth/auth.guard';
 import adminConfig from '@src/config/admin.config';
@@ -28,7 +28,7 @@ export class RoleAccessController {
   @Patch('menus/:roleId')
   async roleToAccess(
     @Param('roleId', new ParseIntPipe()) roleId: number,
-    @Body() roleAccessReqDto: RoleAccessReqDto,
+    @Body() roleAccessReqDto: RoleAccessReqDto
   ): Promise<string> {
     return await this.roleAccessService.roleToAccess(roleId, roleAccessReqDto);
   }
@@ -66,7 +66,7 @@ export class RoleAccessController {
   @Get(':roleId/:type')
   async accessListByRoleId(
     @Param('roleId', new ParseIntPipe()) roleId: number,
-    @Param('type', new ParseIntPipe()) type: number,
+    @Param('type', new ParseIntPipe()) type: number
   ): Promise<RoleAccessResDto[]> {
     return await this.roleAccessService.accessListByRoleId(roleId, type);
   }

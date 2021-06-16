@@ -1,13 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  IsNotEmpty,
-  IsInt,
-  ValidateIf,
-  ValidateNested,
-  ArrayMinSize,
-  IsArray,
-  IsEnum,
-} from 'class-validator';
+import { IsNotEmpty, ValidateIf, IsArray, IsEnum } from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class RoleAccessReqDto {
