@@ -61,7 +61,7 @@ export class AccountEntity extends PublicEntity {
   @Column({
     type: 'tinyint',
     nullable: true,
-    default: () => 1,
+    default: () => '1',
     name: 'status',
     comment: '状态,0表示禁止,1表示正常',
   })
