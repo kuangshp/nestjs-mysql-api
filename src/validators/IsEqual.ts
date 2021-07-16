@@ -1,6 +1,6 @@
 import { registerDecorator, ValidationOptions, ValidationArguments } from 'class-validator';
 
-export function IsEqual(property: string, validationOptions?: ValidationOptions): Function {
+export function IsEqual(property: string, validationOptions?: ValidationOptions) {
   return function (object: Record<string, any>, propertyName: string) {
     registerDecorator({
       name: 'isEqual',

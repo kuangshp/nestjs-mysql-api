@@ -9,6 +9,6 @@ import { API_AUTH_KEY } from '@src/constants';
  * @param {*}
  * @return {*}
  */
-export function ApiAuth(): Function {
+export function ApiAuth() {
   return applyDecorators(SetMetadata(API_AUTH_KEY, true));
 }

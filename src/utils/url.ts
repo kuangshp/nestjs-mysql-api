@@ -1,19 +1,15 @@
-import * as url from 'url';
-
+import { URL } from 'url';
 /**
  * @Author: 水痕
- * @Date: 2021-03-22 11:11:55
+ * @Date: 2021-07-16 16:47:27
  * @LastEditors: 水痕
  * @Description: 根据key从一段url中获取query值
- * @param {string} urlPath url地址
- * @param {string} key 获取单独的一个key
+ * @param urlPath {String} url地址
+ * @param key {String} 获取单独的一个key
  * @return {*}
  */
-export const getUrlQuery = (urlPath: string, key?: string): string | object | undefined => {
-  const query = url.parse(urlPath, true).query;
-  if (key) {
-    return query[key];
-  } else {
-    return query;
-  }
+export const getUrlQuery = (urlPath: string, key: string): string | null => {
+  const url = new URL(urlPath);
+  const params = new URLSearchParams(url.search.substring(1));
+  return params.get(key);
 };
