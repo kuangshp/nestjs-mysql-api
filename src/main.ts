@@ -12,14 +12,20 @@ const PORT = process.env.PORT || 8080;
 const PREFIX = process.env.PREFIX || '/';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const logger: Logger = new Logger('main.ts');
+  const IS_DEV = process.env.NODE_ENV !== 'production';
+  console.log(IS_DEV, '是否为开发环境');
+  const app = await NestFactory.create(AppModule, {
+    // 开启日志级别打印
+    logger: IS_DEV ? ['log', 'debug', 'error', 'warn'] : ['error', 'warn'],
+  });
   //允许跨域请求
   app.enableCors();
   // 给请求添加prefix
   app.setGlobalPrefix(PREFIX);
 
   // 配置api文档信息(不是生产环境配置文档)
-  if (process.env.NODE_ENV != 'production') {
+  if (IS_DEV) {
     const options = new DocumentBuilder()
       .setTitle('权限系统管理  api文档')
       .setDescription('权限系统管理  api接口文档')
@@ -41,8 +47,8 @@ async function bootstrap() {
   // 全局注册拦截器(成功返回格式)
   app.useGlobalInterceptors(new TransformInterceptor());
   await app.listen(PORT, () => {
-    Logger.log(`服务已经启动,接口请访问:http://wwww.localhost:${PORT}/${PREFIX}`);
-    Logger.log(`服务已经启动,文档请访问:http://wwww.localhost:${PORT}/${PREFIX}/docs`);
+    logger.log(`服务已经启动,接口请访问:http://wwww.localhost:${PORT}/${PREFIX}`);
+    logger.log(`服务已经启动,文档请访问:http://wwww.localhost:${PORT}/${PREFIX}/docs`);
   });
 }
 bootstrap();
