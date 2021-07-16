@@ -3,5 +3,14 @@
     "Tencent",
     "metatype",
     "prebuild"
-  ]
+  ],
+  //全局使用保存自动格式化功能
+  "editor.formatOnSave": true,
+  // 使用eslint格式化
+  "editor.codeActionsOnSave": {
+    "source.fixAll": true,
+  },
+  "files.autoSave": "afterDelay",
+  // 让函数名后与括号加空格
+  "javascript.format.insertSpaceBeforeFunctionParenthesis": true,
 }
