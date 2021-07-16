@@ -1,5 +1,4 @@
-import { Controller, Post, Body, HttpCode, HttpStatus } from '@nestjs/common';
-import adminConfig from '@src/config/admin.config';
+import { Controller, Post, Body, HttpCode, HttpStatus, Logger } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiCreatedResponse } from '@nestjs/swagger';
 
 import { LoginService } from '../../services/login/login.service';
@@ -8,8 +7,9 @@ import { IpAddress } from '@src/decorators/ip.address';
 import { LoginResDto } from './dto/login.res.dto';
 
 @ApiTags('后台管理系统-用户登录')
-@Controller(`${adminConfig.adminPath}/login`)
+@Controller('login')
 export class LoginController {
+  private readonly logger: Logger = new Logger(LoginController.name);
   constructor(private readonly loginService: LoginService) {}
 
   @ApiOperation({
@@ -26,6 +26,7 @@ export class LoginController {
     @Body() loginDto: LoginDto,
     @IpAddress() ipAddress: string,
   ): Promise<LoginResDto> {
+    this.logger.log('接收的登录参数:', loginDto);
     return this.loginService.adminLogin(loginDto, ipAddress);
   }
 }

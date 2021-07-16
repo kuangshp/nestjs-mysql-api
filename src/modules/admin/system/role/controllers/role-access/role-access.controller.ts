@@ -1,7 +1,6 @@
 import { Controller, UseGuards, Get, Param, ParseIntPipe, Body, Patch } from '@nestjs/common';
 import { ApiTags, ApiBearerAuth, ApiOperation, ApiCreatedResponse } from '@nestjs/swagger';
 import { AuthGuard } from '@src/guard/auth/auth.guard';
-import adminConfig from '@src/config/admin.config';
 import { RoleAccessService } from '../../services/role-access/role-access.service';
 import { RoleAccessResDto } from './dto/role.access.res.dto';
 import { RoleAccessReqDto } from './dto/role.access.req.dto';
@@ -13,7 +12,7 @@ import { ApiAuth } from '@src/decorators/api.auth';
 @ApiBearerAuth()
 @UseGuards(AuthGuard)
 @ApiAuth()
-@Controller(`${adminConfig.adminPath}/role_access`)
+@Controller('role_access')
 export class RoleAccessController {
   constructor(private readonly roleAccessService: RoleAccessService) {}
 
