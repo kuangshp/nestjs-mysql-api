@@ -1,5 +1,6 @@
 import { Column, Entity, Unique } from 'typeorm';
 import { PublicEntity } from '@src/modules/shared/entities/public.entity';
+import { StatusEnum } from '@src/enums';
 
 @Entity('access')
 @Unique('module_name_delete_at', ['moduleName', 'deletedAt'])
@@ -92,7 +93,7 @@ export class AccessEntity extends PublicEntity {
     name: 'status',
     comment: '状态,0表示禁止,1表示正常',
   })
-  status: number;
+  status: StatusEnum;
 
   @Column({
     type: 'varchar',

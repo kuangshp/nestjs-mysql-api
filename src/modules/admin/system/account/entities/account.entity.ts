@@ -5,6 +5,7 @@ import { isMobilePhone, isEmail } from 'class-validator';
 
 import { PublicEntity } from '@src/modules/shared/entities/public.entity';
 import { usernameReg } from '@src/constants';
+import { PlatformEnum, StatusEnum } from '@src/enums';
 
 @Entity('account')
 @Unique('username_mobile_email_unique', ['username', 'mobile', 'email'])
@@ -65,7 +66,7 @@ export class AccountEntity extends PublicEntity {
     name: 'status',
     comment: '状态,0表示禁止,1表示正常',
   })
-  status: number;
+  status: StatusEnum;
 
   @Column({
     type: 'tinyint',
@@ -74,7 +75,7 @@ export class AccountEntity extends PublicEntity {
     default: 0,
     comment: '平台:0表示普通用户(没权限),1表示为运营管理,2表示入住商家',
   })
-  platform: number;
+  platform: PlatformEnum;
 
   @Column({
     type: 'tinyint',

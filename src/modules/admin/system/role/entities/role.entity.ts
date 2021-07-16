@@ -1,5 +1,6 @@
 import { Column, Entity, Unique, Index } from 'typeorm';
 import { PublicEntity } from '@src/modules/shared/entities/public.entity';
+import { StatusEnum } from '@src/enums';
 
 @Entity('role')
 @Unique('name_deleted', ['name', 'deletedAt'])
@@ -30,7 +31,7 @@ export class RoleEntity extends PublicEntity {
     name: 'status',
     comment: '状态1表示正常,0表示不正常',
   })
-  status: number;
+  status: StatusEnum;
 
   @Column({
     type: 'tinyint',
