@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AccessEntity } from '../../entities/access.entity';
 import { Repository, getConnection } from 'typeorm';
@@ -7,9 +7,18 @@ import { ICurrentUserType } from '@src/decorators/current.user';
 import { AdminIdentityEnum, AccessTypeEnum } from '@src/enums';
 import { AccountRoleEntity } from '../../../account/entities/account.role.entity';
 import { RoleAccessEntity } from '../../../role/entities/role.access.entity';
-
+interface IAccessList {
+  id: number;
+  moduleName: string;
+  actionName: string;
+  parentId: number;
+  url: string;
+  sort: number;
+  icon: string;
+}
 @Injectable()
 export class MenusService {
+  private readonly logger: Logger = new Logger(MenusService.name);
   constructor(
     @InjectRepository(AccessEntity)
     private readonly accessRepository: Repository<AccessEntity>,
@@ -43,26 +52,29 @@ export class MenusService {
       return this.formatMenus(accessList);
     } else {
       // 2.根据当前账号id查询已经授权的角色
-      const authRoleList: AccountRoleEntity[] = await this.accountRoleRepository.find({
-        where: { accountId: id },
-        select: ['roleId'],
-      });
-      const authRoleIdList: number[] = authRoleList.map((item: AccountRoleEntity) => item.roleId);
+      const authRoleList: Pick<AccountRoleEntity, 'roleId'>[] =
+        await this.accountRoleRepository.find({
+          where: { accountId: id },
+          select: ['roleId'],
+        });
+      const authRoleIdList: number[] = authRoleList.map(
+        (item: Pick<AccountRoleEntity, 'roleId'>) => item.roleId,
+      );
       console.log(authRoleList, '授权的角色列表', authRoleIdList);
       // 3.根据角色ID列表获取当前账号拥有的资源id
-      const authAccessList: RoleAccessEntity[] = await getConnection()
+      const authAccessList: Pick<RoleAccessEntity, 'accessId'>[] = await getConnection()
         .createQueryBuilder(RoleAccessEntity, 'role_access')
         .select(['role_access.accessId'])
         .where('role_access.roleId in (:...roleId) and role_access.type = 2', {
           roleId: authRoleIdList,
         })
         .getMany();
-      console.log(authAccessList, '授权的资源列表'); // [ RoleAccessEntity { accessId: 5 } ]
+      this.logger.log('授权的资源列表', authAccessList); // [ RoleAccessEntity { accessId: 5 } ]
       const authAccessIdList: number[] = authAccessList.map(
-        (item: RoleAccessEntity) => item.accessId,
+        (item: Pick<RoleAccessEntity, 'accessId'>) => item.accessId,
       );
       // 4.根据资源id去查询菜单并且格式化返回
-      const accessList = await getConnection()
+      const accessList: Extract<AccessEntity, IAccessList>[] = await getConnection()
         .createQueryBuilder(AccessEntity, 'access')
         .select([
           'access.id',
@@ -89,8 +101,8 @@ export class MenusService {
    * @param {AccessEntity} accessList
    * @return {*}
    */
-  private formatMenus(accessList: AccessEntity[]): MenusListResDto[] {
-    return accessList.map((item: AccessEntity) => {
+  private formatMenus(accessList: IAccessList[]): MenusListResDto[] {
+    return accessList.map((item: IAccessList) => {
       const { id, moduleName, actionName, parentId, url, sort, icon } = item;
       return {
         id,

@@ -18,7 +18,7 @@ import { AccountService } from '../../services/account/account.service';
 import { UpdateAccountDto } from './dto/update.account.dto';
 import { ModifyPasswordDto } from './dto/modify.password.dto';
 import { AuthGuard } from '@src/guard/auth/auth.guard';
-import { AccountResDto, AccountListResDtoDto } from './dto/account.res.dto';
+import { AccountVo, AccountListVo } from './vo/account.vo';
 import { AccountReqDto } from './dto/account.req.dto';
 import { CurrentUser, ICurrentUserType } from '@src/decorators/current.user';
 import { ApiAuth } from '@src/decorators/api.auth';
@@ -96,14 +96,12 @@ export class AccountController {
 
   @ApiOperation({ summary: '查询账号信息', description: '根据账号id查询账号信息' })
   @ApiCreatedResponse({
-    type: AccountResDto,
+    type: AccountVo,
     description: '查询单条账号返回值',
   })
   @HttpCode(HttpStatus.OK)
   @Get(':id')
-  async accountById(
-    @Param('id', new ParseIntPipe()) id: number,
-  ): Promise<AccountResDto | undefined> {
+  async accountById(@Param('id', new ParseIntPipe()) id: number): Promise<AccountVo | undefined> {
     return await this.accountService.accountById(id);
   }
 
@@ -115,13 +113,13 @@ export class AccountController {
     },
   })
   @ApiCreatedResponse({
-    type: AccountResDto,
+    type: AccountListVo,
     isArray: true,
     description: '分页查询账号返回值',
   })
   @HttpCode(HttpStatus.OK)
   @Get()
-  async accountList(@Query() accountReqDto: AccountReqDto): Promise<AccountListResDtoDto> {
+  async accountList(@Query() accountReqDto: AccountReqDto): Promise<AccountListVo> {
     return await this.accountService.accountList(accountReqDto);
   }
 }

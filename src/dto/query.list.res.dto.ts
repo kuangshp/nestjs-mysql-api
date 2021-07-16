@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class QueryListResDto<T> {
+export class QueryListVo<T> {
   @ApiProperty({ description: '列表数据', isArray: true })
   data: T[];
 

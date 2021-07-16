@@ -1,5 +1,5 @@
 import { QueryResDto } from '@src/dto/query.res.dto';
-import { QueryListResDto } from '@src/dto/query.list.res.dto';
+import { QueryListVo } from '@src/dto/query.list.res.dto';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class AccessResDto extends QueryResDto {
@@ -28,7 +28,7 @@ export class AccessResDto extends QueryResDto {
   description?: string;
 }
 
-export class AccessListResDtoDto extends QueryListResDto<AccessResDto> {
+export class AccessListResDtoDto extends QueryListVo<AccessResDto> {
   constructor(pageSize: number, pageNumber: number, data: AccessResDto[]) {
     super(pageSize, pageNumber, data);
   }

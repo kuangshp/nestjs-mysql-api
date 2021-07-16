@@ -1,7 +1,7 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { isMobilePhone, isEmail } from 'class-validator';
-import { Repository, getConnection } from 'typeorm';
+import { Repository, getConnection, ILike, Equal } from 'typeorm';
 
 import { AccountEntity } from '../../entities/account.entity';
 import { CreateAccountDto } from '../../controllers/account/dto/create.account.dto';
@@ -10,10 +10,11 @@ import { usernameReg } from '@src/constants';
 import { UpdateAccountDto } from '../../controllers/account/dto/update.account.dto';
 import { ModifyPasswordDto } from '../../controllers/account/dto/modify.password.dto';
 import { ToolsService } from '@src/modules/shared/services/tools/tools.service';
-import { AccountResDto, AccountListResDtoDto } from '../../controllers/account/dto/account.res.dto';
+import { AccountListVo, AccountVo } from '../../controllers/account/vo/account.vo';
 import { AccountReqDto } from '../../controllers/account/dto/account.req.dto';
 import { PageEnum, StatusEnum, PlatformEnum } from '@src/enums';
 import { AccountLastLoginEntity } from '../../entities/account.last.login.entity';
+import { mapToObj } from '@src/utils';
 
 @Injectable()
 export class AccountService {
@@ -44,11 +45,12 @@ export class AccountService {
       queryConditionList.push('account.mobile = :mobile');
     }
     const queryCondition = queryConditionList.join(' OR ');
-    const findAccount = await getConnection()
-      .createQueryBuilder(AccountEntity, 'account')
-      .select(['account.username', 'account.email', 'account.mobile'])
-      .andWhere(queryCondition, { username, email, mobile })
-      .getOne();
+    const findAccount: Pick<AccountEntity, 'username' | 'email' | 'mobile'> | undefined =
+      await getConnection()
+        .createQueryBuilder(AccountEntity, 'account')
+        .select(['account.username', 'account.email', 'account.mobile'])
+        .andWhere(queryCondition, { username, email, mobile })
+        .getOne();
     if (findAccount) {
       const { username, email, mobile } = findAccount;
       if (usernameReg.test(username)) {
@@ -61,7 +63,7 @@ export class AccountService {
         return '创建失败';
       }
     } else {
-      const account = this.accountRepository.create({
+      const account: AccountEntity = this.accountRepository.create({
         ...createAccountDto,
         password: adminConfig.defaultPassword,
       });
@@ -127,7 +129,7 @@ export class AccountService {
       throw new HttpException('系统默认生成的账号不能修改密码', HttpStatus.OK);
     }
     const { password, newPassword } = modifyPasswordDto;
-    const findResult = await getConnection()
+    const findResult: Pick<AccountEntity, 'password'> = await getConnection()
       .createQueryBuilder(AccountEntity, 'account')
       .select([])
       .addSelect('account.password', 'password')
@@ -178,7 +180,7 @@ export class AccountService {
    * @param {number} id
    * @return {*}
    */
-  async accountById(id: number): Promise<AccountResDto | undefined> {
+  async accountById(id: number): Promise<AccountVo | undefined> {
     return await this.accountRepository.findOne(id);
   }
 
@@ -190,7 +192,7 @@ export class AccountService {
    * @param {AccountReqDto} accountReqDto
    * @return {*}
    */
-  async accountList(accountReqDto: AccountReqDto): Promise<AccountListResDtoDto> {
+  async accountList(accountReqDto: AccountReqDto): Promise<AccountListVo> {
     const {
       pageNumber = PageEnum.PAGE_NUMBER,
       pageSize = PageEnum.PAGE_SIZE,
@@ -200,31 +202,23 @@ export class AccountService {
       status,
       platform,
     } = accountReqDto;
-    const queryConditionList = [];
+    const query = new Map();
     if (username) {
-      queryConditionList.push('account.username LIKE :username');
+      query.set('username', ILike(username));
     }
     if (email) {
-      queryConditionList.push('account.email = :email');
+      query.set('email', Equal(email));
     }
     if (mobile) {
-      queryConditionList.push('account.mobile = :mobile');
+      query.set('mobile', Equal(mobile));
     }
-    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-    if (
-      /^\d$/.test(String(status)) &&
-      [StatusEnum.NORMAL, StatusEnum.FORBIDDEN].includes(Number(status))
-    ) {
-      queryConditionList.push('account.status = :status');
+    if ([StatusEnum.NORMAL, StatusEnum.FORBIDDEN].includes(Number(status))) {
+      query.set('status', Equal(status));
     }
-    if (
-      /^\d$/.test(String(platform)) &&
-      [PlatformEnum.ADMIN_PLATFORM, PlatformEnum.MERCHANT_PLATFORM].includes(Number(platform))
-    ) {
-      queryConditionList.push('account.platform = :platform');
+    if ([PlatformEnum.ADMIN_PLATFORM, PlatformEnum.MERCHANT_PLATFORM].includes(Number(platform))) {
+      query.set('platform', Equal(platform));
     }
-    const queryCondition = queryConditionList.join(' AND ');
-    const data = await getConnection()
+    const data: AccountVo[] = await getConnection()
       .createQueryBuilder(AccountEntity, 'account')
       .select('account.id', 'id')
       .addSelect('account.username', 'username')
@@ -265,14 +259,14 @@ export class AccountService {
             .limit(1),
         'lastLoginTime',
       )
-      .where(queryCondition, { username, email, mobile, status, platform })
+      .where(mapToObj(query))
       .skip((pageNumber - 1) * pageSize)
       .take(pageSize)
       .printSql()
       .getRawMany();
-    const total = await getConnection()
+    const total: number = await getConnection()
       .createQueryBuilder(AccountEntity, 'account')
-      .where(queryCondition, { username, email, mobile, status, platform })
+      .where(mapToObj(query))
       .getCount();
     // 处理当前手机号码或者邮箱不合法的时候
     const formatData = data.map((item) => {
@@ -281,7 +275,7 @@ export class AccountService {
         ...item,
         mobile: isMobilePhone(mobile, 'zh-CN') ? mobile : '',
         email: isEmail(email) ? email : '',
-        username: usernameReg.test(username) ? username : '',
+        username: usernameReg.test(<string>username) ? username : '',
       };
     });
     return {

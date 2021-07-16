@@ -29,7 +29,7 @@ export class AccessService {
   async createAccess(createAccessDto: CreateAccessDto): Promise<string> {
     const { moduleName, actionName } = createAccessDto;
     if (moduleName) {
-      const result: AccessEntity | undefined = await this.accessRepository.findOne({
+      const result: Pick<AccessEntity, 'id'> | undefined = await this.accessRepository.findOne({
         where: { moduleName },
         select: ['id'],
       });
@@ -38,7 +38,7 @@ export class AccessService {
       }
     }
     if (actionName) {
-      const result: AccessEntity | undefined = await this.accessRepository.findOne({
+      const result: Pick<AccessEntity, 'id'> | undefined = await this.accessRepository.findOne({
         where: { actionName },
         select: ['id'],
       });
@@ -64,15 +64,16 @@ export class AccessService {
       throw new HttpException('系统默认生成的资源不能删除', HttpStatus.OK);
     }
     // 1.判断是否有角色关联到当前资源
-    const roleAccessResult: RoleAccessEntity | undefined = await this.roleAccessRepository.findOne({
-      where: { accessId: id },
-      select: ['id'],
-    });
+    const roleAccessResult: Pick<RoleAccessEntity, 'id'> | undefined =
+      await this.roleAccessRepository.findOne({
+        where: { accessId: id },
+        select: ['id'],
+      });
     if (roleAccessResult) {
       throw new HttpException('当前资源已经被角色绑定不能直接删除', HttpStatus.OK);
     }
     // 2.查看该节点下是否有子节点
-    const childNode: AccessEntity | undefined = await this.accessRepository.findOne({
+    const childNode: Pick<AccessEntity, 'id'> | undefined = await this.accessRepository.findOne({
       where: { parentId: id },
       select: ['id'],
     });

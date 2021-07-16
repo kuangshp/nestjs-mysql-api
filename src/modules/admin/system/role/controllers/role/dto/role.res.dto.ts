@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { QueryResDto } from '@src/dto/query.res.dto';
-import { QueryListResDto } from '@src/dto/query.list.res.dto';
+import { QueryListVo } from '@src/dto/query.list.res.dto';
 
 export class RoleResDto extends QueryResDto {
   @ApiProperty({ description: '角色名称' })
@@ -13,7 +13,7 @@ export class RoleResDto extends QueryResDto {
   isDefault?: number;
 }
 
-export class RoleListResDtoDto extends QueryListResDto<RoleResDto> {
+export class RoleListResDtoDto extends QueryListVo<RoleResDto> {
   constructor(pageSize: number, pageNumber: number, data: RoleResDto[]) {
     super(pageSize, pageNumber, data);
   }
