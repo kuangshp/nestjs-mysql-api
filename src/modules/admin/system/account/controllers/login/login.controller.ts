@@ -1,5 +1,5 @@
 import { Controller, Post, Body, HttpCode, HttpStatus, Logger } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiCreatedResponse } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiOkResponse } from '@nestjs/swagger';
 
 import { LoginService } from '../../services/login/login.service';
 import { LoginDto } from './dto/login.dto';
@@ -16,7 +16,7 @@ export class LoginController {
     summary: '用户登录',
     description: '用户名可以是手机号码、邮箱、用户名',
   })
-  @ApiCreatedResponse({
+  @ApiOkResponse({
     type: LoginResDto,
     description: '用户登录返回值',
   })

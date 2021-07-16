@@ -8,7 +8,7 @@ import {
 
 export class PublicEntity extends BaseEntity {
   @PrimaryGeneratedColumn({
-    type: 'int',
+    type: 'bigint',
     name: 'id',
     comment: '主键id',
   })
