@@ -12,7 +12,7 @@ export class ApiAuthService {
     @InjectRepository(AccountRoleEntity)
     private readonly accountRoleRepository: Repository<AccountRoleEntity>,
     @InjectRepository(AccessEntity)
-    private readonly accessRepository: Repository<AccessEntity>
+    private readonly accessRepository: Repository<AccessEntity>,
   ) {}
   /**
    * @Author: 水痕
@@ -53,7 +53,7 @@ export class ApiAuthService {
       console.log(accessResult, '当前请求的资源');
       const isExist = authAccessList.find(
         (item: RoleAccessEntity) =>
-          item.accessId === accessResult?.id && Number(item.type) === Number(accessResult?.type)
+          item.accessId === accessResult?.id && Number(item.type) === Number(accessResult?.type),
       );
       if (isExist) {
         return true;

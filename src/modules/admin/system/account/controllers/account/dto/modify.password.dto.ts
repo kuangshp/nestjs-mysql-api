@@ -14,7 +14,7 @@ export class ModifyPasswordDto {
   readonly newPassword: string;
 
   @ApiProperty({ required: true, description: '再次输入新密码' })
-  @IsEqual('newPassword', {message: '两次密码不一致'})
+  @IsEqual('newPassword', { message: '两次密码不一致' })
   @IsString({ message: '再次输入新密码必须为字符类型' })
   @IsNotEmpty({ message: '再次输入新密码不能为空' })
   readonly repPassword: string;

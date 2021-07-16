@@ -12,5 +12,5 @@ export enum AccessTypeEnum {
 export const AccessTypeMessage = {
   1: '模块',
   2: '菜单',
-  3: '操作(API)'
+  3: '操作(API)',
 };

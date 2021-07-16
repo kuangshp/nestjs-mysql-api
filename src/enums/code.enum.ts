@@ -4,7 +4,6 @@ export enum CodeEnum {
   NO_TOKEN = 10042,
   /** token错误 */
   TOKEN_ERROR = 10043,
-
 }
 
 /** 错误的code文字描素 */

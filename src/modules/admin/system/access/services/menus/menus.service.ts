@@ -14,7 +14,7 @@ export class MenusService {
     @InjectRepository(AccessEntity)
     private readonly accessRepository: Repository<AccessEntity>,
     @InjectRepository(AccountRoleEntity)
-    private readonly accountRoleRepository: Repository<AccountRoleEntity>
+    private readonly accountRoleRepository: Repository<AccountRoleEntity>,
   ) {}
 
   /**
@@ -59,7 +59,7 @@ export class MenusService {
         .getMany();
       console.log(authAccessList, '授权的资源列表'); // [ RoleAccessEntity { accessId: 5 } ]
       const authAccessIdList: number[] = authAccessList.map(
-        (item: RoleAccessEntity) => item.accessId
+        (item: RoleAccessEntity) => item.accessId,
       );
       // 4.根据资源id去查询菜单并且格式化返回
       const accessList = await getConnection()

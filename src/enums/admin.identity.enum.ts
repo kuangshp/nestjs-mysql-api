@@ -9,5 +9,5 @@ export enum AdminIdentityEnum {
 /** 后台管理账号身份描素 */
 export const AdminIdentityMessage = {
   0: '普通账号',
-  1: '超级管理员'
+  1: '超级管理员',
 };

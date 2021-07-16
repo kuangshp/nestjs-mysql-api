@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { QueryResDto } from '@src/dto/query.res.dto';
 import { QueryListResDto } from '@src/dto/query.list.res.dto';
 
-export class AccountResDto extends QueryResDto{
+export class AccountResDto extends QueryResDto {
   @ApiProperty({ description: '用户名' })
   username?: string;
 
@@ -19,10 +19,8 @@ export class AccountResDto extends QueryResDto{
   platform?: number;
 }
 
-
-export class AccountListResDtoDto extends QueryListResDto<AccountResDto>{
-  constructor (pageSize: number, pageNumber: number, data: AccountResDto[]) {
+export class AccountListResDtoDto extends QueryListResDto<AccountResDto> {
+  constructor(pageSize: number, pageNumber: number, data: AccountResDto[]) {
     super(pageSize, pageNumber, data);
   }
 }
-

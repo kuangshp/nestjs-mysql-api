@@ -1,6 +1,6 @@
 import { registerDecorator, ValidationOptions, ValidationArguments } from 'class-validator';
 
-export function IsEqual(property: string,validationOptions?: ValidationOptions):Function {
+export function IsEqual(property: string, validationOptions?: ValidationOptions): Function {
   return function (object: Record<string, any>, propertyName: string) {
     registerDecorator({
       name: 'isEqual',
@@ -14,9 +14,7 @@ export function IsEqual(property: string,validationOptions?: ValidationOptions):
           const [relatedPropertyName] = args.constraints;
           const relatedValue = (args.object as any)[relatedPropertyName];
           return (
-            typeof value === 'string' &&
-            typeof relatedValue === 'string' &&
-            value === relatedValue
+            typeof value === 'string' && typeof relatedValue === 'string' && value === relatedValue
           );
         },
         defaultMessage() {

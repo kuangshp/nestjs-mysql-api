@@ -1,7 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
 export class QueryResDto {
-
   @ApiProperty({ description: '主键id' })
   id?: number;
 

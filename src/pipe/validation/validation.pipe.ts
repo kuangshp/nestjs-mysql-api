@@ -1,5 +1,11 @@
-
-import { ArgumentMetadata, Injectable, PipeTransform, Logger, HttpException, HttpStatus, } from '@nestjs/common';
+import {
+  ArgumentMetadata,
+  Injectable,
+  PipeTransform,
+  Logger,
+  HttpException,
+  HttpStatus,
+} from '@nestjs/common';
 import { validate } from 'class-validator';
 import { plainToClass } from 'class-transformer';
 import { values } from 'lodash';
@@ -27,10 +33,7 @@ export class ValidationPipe implements PipeTransform<any> {
       //获取第一个错误并且返回
       const msg = values(errors[0].constraints)[0];
       // 统一抛出异常
-      throw new HttpException(
-        { message: msg },
-        HttpStatus.OK,
-      );
+      throw new HttpException({ message: msg }, HttpStatus.OK);
     }
     return value;
   }

@@ -23,7 +23,10 @@ export class AccountDto {
   readonly status?: number;
 
   @ApiPropertyOptional({ required: false, description: '平台', enum: [0, 1, 2] })
-  @IsEnum({ 普通用户: 0, 运营管理: 1, 商家入驻: 2 }, { message: '平台必须是(0表示普通用户(没权限),1表示为运营管理,2表示入住商家)的数字' })
+  @IsEnum(
+    { 普通用户: 0, 运营管理: 1, 商家入驻: 2 },
+    { message: '平台必须是(0表示普通用户(没权限),1表示为运营管理,2表示入住商家)的数字' },
+  )
   @Type(() => Number)
   @ValidateIf((o) => o.platform != '')
   @IsOptional()

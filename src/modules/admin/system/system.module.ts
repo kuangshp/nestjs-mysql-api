@@ -31,25 +31,25 @@ import { RoleAccessService } from './role/services/role-access/role-access.servi
       RoleEntity,
       AccessEntity,
       RoleAccessEntity,
-    ])
+    ]),
   ],
   controllers: [
-    AccountController, 
-    RoleController, 
-    AccessController, 
-    LoginController, 
-    AccountRoleController, 
-    MenusController, 
-    RoleAccessController
+    AccountController,
+    RoleController,
+    AccessController,
+    LoginController,
+    AccountRoleController,
+    MenusController,
+    RoleAccessController,
   ],
   providers: [
-    AccountService, 
-    AccessService, 
-    RoleService, 
-    LoginService, 
-    AccountRoleService, 
-    MenusService, 
-    RoleAccessService
+    AccountService,
+    AccessService,
+    RoleService,
+    LoginService,
+    AccountRoleService,
+    MenusService,
+    RoleAccessService,
   ],
 })
 export class SystemModule {}

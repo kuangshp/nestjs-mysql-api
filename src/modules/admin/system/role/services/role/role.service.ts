@@ -58,12 +58,11 @@ export class RoleService {
    */
   async destroyRoleById(id: number): Promise<string> {
     // 判断当前角色是否已经被占用(有账号绑定了该角色)
-    const accountRoleFindResult:
-      | AccountRoleEntity
-      | undefined = await this.accountRoleRepository.findOne({
-      where: { roleId: id },
-      select: ['id'],
-    });
+    const accountRoleFindResult: AccountRoleEntity | undefined =
+      await this.accountRoleRepository.findOne({
+        where: { roleId: id },
+        select: ['id'],
+      });
     if (accountRoleFindResult) {
       throw new HttpException('当前角色有账号与之绑定,不能直接删除', HttpStatus.OK);
     }

@@ -10,9 +10,7 @@ import { LoginResDto } from './dto/login.res.dto';
 @ApiTags('后台管理系统-用户登录')
 @Controller(`${adminConfig.adminPath}/login`)
 export class LoginController {
-  constructor(
-    private readonly loginService:LoginService,
-  ) {}
+  constructor(private readonly loginService: LoginService) {}
 
   @ApiOperation({
     summary: '用户登录',
@@ -20,7 +18,7 @@ export class LoginController {
   })
   @ApiCreatedResponse({
     type: LoginResDto,
-    description: '用户登录返回值'
+    description: '用户登录返回值',
   })
   @HttpCode(HttpStatus.OK)
   @Post()

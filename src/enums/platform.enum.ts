@@ -6,7 +6,6 @@ export enum PlatformEnum {
   ADMIN_PLATFORM = 1,
   /** 入住商家平台 */
   MERCHANT_PLATFORM = 2,
-  
 }
 
 /** 平台文字描素 */

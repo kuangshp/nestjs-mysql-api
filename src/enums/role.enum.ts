@@ -9,5 +9,5 @@ export enum RoleEnum {
 /** 角色描素 */
 export const RoleMessage = {
   0: '正常分配的角色',
-  1: '系统默认的角色'
+  1: '系统默认的角色',
 };

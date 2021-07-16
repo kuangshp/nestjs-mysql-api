@@ -4,6 +4,4 @@ export enum PageEnum {
   PAGE_SIZE = 10,
   /** 当前页 */
   PAGE_NUMBER = 1,
-
 }
-

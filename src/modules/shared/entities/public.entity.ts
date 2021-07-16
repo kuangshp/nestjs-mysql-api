@@ -1,11 +1,16 @@
-import { BaseEntity, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, DeleteDateColumn } from 'typeorm';
+import {
+  BaseEntity,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+  DeleteDateColumn,
+} from 'typeorm';
 
 export class PublicEntity extends BaseEntity {
-
   @PrimaryGeneratedColumn({
     type: 'int',
     name: 'id',
-    comment: '主键id'
+    comment: '主键id',
   })
   id: number;
 
@@ -13,7 +18,7 @@ export class PublicEntity extends BaseEntity {
     type: 'timestamp',
     nullable: false,
     name: 'created_at',
-    comment: '创建时间'
+    comment: '创建时间',
   })
   createdAt: Date;
 
@@ -32,5 +37,5 @@ export class PublicEntity extends BaseEntity {
     select: false,
     comment: '软删除时间',
   })
-  deletedAt: Date
+  deletedAt: Date;
 }

@@ -28,8 +28,8 @@ export class AccessResDto extends QueryResDto {
   description?: string;
 }
 
-export class AccessListResDtoDto extends QueryListResDto<AccessResDto>{
-  constructor (pageSize: number, pageNumber: number, data: AccessResDto[]) {
+export class AccessListResDtoDto extends QueryListResDto<AccessResDto> {
+  constructor(pageSize: number, pageNumber: number, data: AccessResDto[]) {
     super(pageSize, pageNumber, data);
   }
 }

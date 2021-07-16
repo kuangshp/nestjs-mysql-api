@@ -8,7 +8,7 @@ export class AccountRoleEntity extends PublicEntity {
     type: 'int',
     nullable: false,
     name: 'account_id',
-    comment: '账号id'
+    comment: '账号id',
   })
   accountId: number;
 
@@ -16,7 +16,7 @@ export class AccountRoleEntity extends PublicEntity {
     type: 'int',
     nullable: false,
     name: 'role_id',
-    comment: '角色id'
+    comment: '角色id',
   })
   roleId: number;
 }

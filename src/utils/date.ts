@@ -8,10 +8,7 @@ import moment from 'moment';
  * @LastEditors: 水痕
  * @Date: 2019-07-31 15:27:39
  */
-export const formatDate = (
-  dateNum: string | number,
-  isDue = false,
-): string => {
+export const formatDate = (dateNum: string | number, isDue = false): string => {
   if (!dateNum) {
     return '';
   }
@@ -30,8 +27,8 @@ export const formatDate = (
  * @Date: 2020-02-20 20:51:54
  * @LastEditors: 水痕
  * @Description: 获取年月日时间
- * @param {type} 
- * @return: 
+ * @param {type}
+ * @return:
  */
 export const getDay = (date: Date = new Date()): string => {
   return moment(date).format('YYYYMMDD');
@@ -42,8 +39,8 @@ export const getDay = (date: Date = new Date()): string => {
  * @Date: 2020-02-20 21:47:49
  * @LastEditors: 水痕
  * @Description: 获取当前的时间鹾
- * @param {type} 
- * @return: 
+ * @param {type}
+ * @return:
  */
 export const getTime = (): number => {
   return new Date().getTime();
@@ -51,7 +48,7 @@ export const getTime = (): number => {
 
 /**
  * 根据生日计算年龄
- * @param date 
+ * @param date
  */
 export const birthdayYear = (date: Date): string | null => {
   try {

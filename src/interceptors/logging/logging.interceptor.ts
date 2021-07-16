@@ -11,10 +11,7 @@ export class LoggingInterceptor implements NestInterceptor {
     const now = Date.now();
     return next.handle().pipe(
       tap(() => {
-        Logger.log(
-          `${method} ${url} ${Date.now() - now}ms`,
-          context.getClass().name,
-        );
+        Logger.log(`${method} ${url} ${Date.now() - now}ms`, context.getClass().name);
       }),
     );
   }

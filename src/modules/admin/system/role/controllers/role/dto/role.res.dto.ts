@@ -13,10 +13,8 @@ export class RoleResDto extends QueryResDto {
   isDefault?: number;
 }
 
-
-export class RoleListResDtoDto extends QueryListResDto<RoleResDto>{
-  constructor (pageSize: number, pageNumber: number, data: RoleResDto[]) {
+export class RoleListResDtoDto extends QueryListResDto<RoleResDto> {
+  constructor(pageSize: number, pageNumber: number, data: RoleResDto[]) {
     super(pageSize, pageNumber, data);
   }
 }
-
