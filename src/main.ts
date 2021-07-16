@@ -8,8 +8,10 @@ import { AppModule } from './app.module';
 import { HttpExceptionFilter } from './filters/http-exception.filter';
 import { TransformInterceptor } from './interceptors/transform/transform.interceptor';
 
-console.log('当前环境', process.env.npm_lifecycle_event);
-
+console.log(process.env.NODE_ENV, '当前环境NODE_ENV', process.env.NODE_ENV);
+console.log(process.env.PORT, '当前端口');
+const IS_DEV = process.env.NODE_ENV === 'development';
+console.log(IS_DEV, '是否为开发环境');
 const PORT = process.env.PORT || 8080;
 const PREFIX = process.env.PREFIX || '/';
 

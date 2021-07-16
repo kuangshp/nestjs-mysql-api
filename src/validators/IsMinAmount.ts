@@ -1,8 +1,15 @@
-import { registerDecorator, ValidationOptions, ValidatorConstraint, ValidatorConstraintInterface, ValidationArguments } from 'class-validator';
+import {
+  registerDecorator,
+  ValidationOptions,
+  ValidatorConstraint,
+  ValidatorConstraintInterface,
+  ValidationArguments,
+} from 'class-validator';
 import { minMoneyReg } from '@src/constants';
 
 @ValidatorConstraint({ async: true })
 export class IsMinAmountConstraint implements ValidatorConstraintInterface {
+  // eslint-disable-next-line
   async validate(value: number, _args: ValidationArguments) {
     // value是用户输入的金额
     if (minMoneyReg.test(String(value))) {

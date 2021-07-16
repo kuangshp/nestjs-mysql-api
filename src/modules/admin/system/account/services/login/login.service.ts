@@ -64,8 +64,8 @@ export class LoginService {
         findAccount = await this.accountRepository.findOne({ where: { username } });
       }
       if (sqlPassword && this.toolsService.checkPassword(password, sqlPassword) && findAccount) {
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         const lastLogin = this.accountLastLoginRepository.create({
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           accountId: findAccount!.id,
           lastLoginIp: ipAddress,
         });

@@ -15,9 +15,11 @@ export class IpToAddressService {
         .query({ key: process.env.TENCENT_MAP_KEY });
       const {
         status,
+        // eslint-disable-next-line
         result: { ad_info },
       } = JSON.parse(responseText.text) || {};
       if (status == 0) {
+        // eslint-disable-next-line
         const { province, city, district } = ad_info;
         return `${province}${city}${district}`;
       } else {
