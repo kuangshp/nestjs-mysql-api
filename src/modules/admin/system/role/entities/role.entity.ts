@@ -26,7 +26,7 @@ export class RoleEntity extends PublicEntity {
   @Column({
     type: 'tinyint',
     nullable: true,
-    default: () => '1',
+    default: 1,
     name: 'status',
     comment: '状态1表示正常,0表示不正常',
   })
@@ -35,7 +35,7 @@ export class RoleEntity extends PublicEntity {
   @Column({
     type: 'tinyint',
     nullable: true,
-    default: () => 0,
+    default: 0,
     name: 'is_default',
     comment: '针对后期提供注册用,1表示默认角色,0表示非默认角色',
   })

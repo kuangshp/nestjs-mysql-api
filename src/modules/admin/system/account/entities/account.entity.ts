@@ -61,7 +61,7 @@ export class AccountEntity extends PublicEntity {
   @Column({
     type: 'tinyint',
     nullable: true,
-    default: () => '1',
+    default: 1,
     name: 'status',
     comment: '状态,0表示禁止,1表示正常',
   })
@@ -71,7 +71,7 @@ export class AccountEntity extends PublicEntity {
     type: 'tinyint',
     nullable: true,
     name: 'platform',
-    default: () => 0,
+    default: 0,
     comment: '平台:0表示普通用户(没权限),1表示为运营管理,2表示入住商家',
   })
   platform: number;
@@ -79,7 +79,7 @@ export class AccountEntity extends PublicEntity {
   @Column({
     type: 'tinyint',
     nullable: false,
-    default: () => 0,
+    default: 0,
     name: 'is_super',
     comment: '是否为超级管理员1表示是,0表示不是',
   })

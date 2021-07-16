@@ -70,7 +70,7 @@ export class AccessEntity extends PublicEntity {
   @Column({
     type: 'int',
     nullable: false,
-    default: () => 0,
+    default: 0,
     name: 'parent_id',
     comment: '父模块id',
   })
@@ -79,7 +79,7 @@ export class AccessEntity extends PublicEntity {
   @Column({
     type: 'int',
     nullable: false,
-    default: () => '1',
+    default: 1,
     name: 'sort',
     comment: '排序',
   })
@@ -88,7 +88,7 @@ export class AccessEntity extends PublicEntity {
   @Column({
     type: 'tinyint',
     nullable: true,
-    default: () => '1',
+    default: 1,
     name: 'status',
     comment: '状态,0表示禁止,1表示正常',
   })
