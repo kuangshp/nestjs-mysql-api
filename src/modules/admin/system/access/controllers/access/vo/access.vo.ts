@@ -1,8 +1,8 @@
-import { QueryResDto } from '@src/dto/query.res.dto';
-import { QueryListVo } from '@src/dto/query.list.res.dto';
+import { QueryVo } from '@src/dto/query.vo';
+import { QueryListVo } from '@src/dto/query.list.vo';
 import { ApiProperty } from '@nestjs/swagger';
 
-export class AccessResDto extends QueryResDto {
+export class AccessVo extends QueryVo {
   @ApiProperty({ description: '模块名称' })
   moduleName: string;
 
@@ -28,8 +28,7 @@ export class AccessResDto extends QueryResDto {
   description?: string;
 }
 
-export class AccessListResDtoDto extends QueryListVo<AccessResDto> {
-  constructor(pageSize: number, pageNumber: number, data: AccessResDto[]) {
-    super(pageSize, pageNumber, data);
-  }
+export class AccessListVo extends QueryListVo {
+  @ApiProperty({ description: '返回数据列表', type: AccessVo, isArray: true })
+  data: AccessVo[];
 }

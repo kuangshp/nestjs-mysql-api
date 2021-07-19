@@ -12,7 +12,7 @@ import {
   HttpStatus,
   HttpCode,
 } from '@nestjs/common';
-import { ApiOperation, ApiCreatedResponse, ApiTags, ApiBearerAuth } from '@nestjs/swagger';
+import { ApiOperation, ApiTags, ApiBearerAuth, ApiOkResponse } from '@nestjs/swagger';
 import { CreateAccountDto } from './dto/create.account.dto';
 import { AccountService } from '../../services/account/account.service';
 import { UpdateAccountDto } from './dto/update.account.dto';
@@ -35,7 +35,7 @@ export class AccountController {
     summary: '创建账号',
     description: '创建账号',
   })
-  @ApiCreatedResponse({
+  @ApiOkResponse({
     type: String,
     description: '创建账号返回值',
   })
@@ -46,7 +46,7 @@ export class AccountController {
   }
 
   @ApiOperation({ summary: '重置为默认密码', description: '根据id重置默认密码' })
-  @ApiCreatedResponse({ type: String, description: '重置密码返回值' })
+  @ApiOkResponse({ type: String, description: '重置密码返回值' })
   @HttpCode(HttpStatus.OK)
   @Post('reset_password')
   async resetPassword(@Body() data: { id: number }): Promise<string> {
@@ -55,7 +55,7 @@ export class AccountController {
   }
 
   @ApiOperation({ summary: '修改密码', description: '根据账号自己的密码' })
-  @ApiCreatedResponse({
+  @ApiOkResponse({
     type: String,
     description: '修改账号密码返回值',
   })
@@ -70,7 +70,7 @@ export class AccountController {
   }
 
   @ApiOperation({ summary: '删除账号', description: '根据id删除账号' })
-  @ApiCreatedResponse({
+  @ApiOkResponse({
     type: String,
     description: '修改账号返回值',
   })
@@ -81,7 +81,7 @@ export class AccountController {
   }
 
   @ApiOperation({ summary: '修改账号信息', description: '根据账号id修改账号信息' })
-  @ApiCreatedResponse({
+  @ApiOkResponse({
     type: String,
     description: '修改账号返回值',
   })
@@ -95,7 +95,7 @@ export class AccountController {
   }
 
   @ApiOperation({ summary: '查询账号信息', description: '根据账号id查询账号信息' })
-  @ApiCreatedResponse({
+  @ApiOkResponse({
     type: AccountVo,
     description: '查询单条账号返回值',
   })
@@ -112,9 +112,8 @@ export class AccountController {
       url: 'xx?pageSize=10&pageNumber=1&username=xx&email=xx&mobile=xx&status=0&platform=1',
     },
   })
-  @ApiCreatedResponse({
+  @ApiOkResponse({
     type: AccountListVo,
-    isArray: true,
     description: '分页查询账号返回值',
   })
   @HttpCode(HttpStatus.OK)

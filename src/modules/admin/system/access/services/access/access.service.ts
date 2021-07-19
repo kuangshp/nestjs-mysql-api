@@ -5,7 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { AccessEntity } from '../../entities/access.entity';
 import { Repository, getConnection } from 'typeorm';
 import { UpdateAccessDto } from '../../controllers/access/dto/update.access.dto';
-import { AccessResDto, AccessListResDtoDto } from '../../controllers/access/dto/access.res.dto';
+import { AccessListVo, AccessVo } from '../../controllers/access/vo/access.vo';
 import { RoleAccessEntity } from '../../../role/entities/role.access.entity';
 import { AccessReqDto } from '../../controllers/access/dto/access.req.dto';
 
@@ -121,7 +121,7 @@ export class AccessService {
    * @param {*}
    * @return {*}
    */
-  async accessList(): Promise<AccessResDto[]> {
+  async accessList(): Promise<AccessVo[]> {
     return await this.accessRepository.find({
       where: [{ type: 1 }, { type: 2 }],
       select: ['id', 'moduleName', 'actionName', 'sort'],
@@ -136,7 +136,7 @@ export class AccessService {
    * @param {number} type
    * @return {*}
    */
-  async accessListPage(accessReqDto: AccessReqDto): Promise<AccessListResDtoDto> {
+  async accessListPage(accessReqDto: AccessReqDto): Promise<AccessListVo> {
     const {
       pageSize = PageEnum.PAGE_SIZE,
       pageNumber = PageEnum.PAGE_NUMBER,

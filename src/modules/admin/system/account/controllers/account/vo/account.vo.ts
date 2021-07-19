@@ -1,8 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { QueryResDto } from '@src/dto/query.res.dto';
-import { QueryListVo } from '@src/dto/query.list.res.dto';
+import { QueryListVo } from '@src/dto/query.list.vo';
+import { QueryVo } from '@src/dto/query.vo';
 
-export class AccountVo extends QueryResDto {
+export class AccountVo extends QueryVo {
   @ApiProperty({ description: '用户名' })
   username?: string;
 
@@ -18,9 +18,7 @@ export class AccountVo extends QueryResDto {
   @ApiProperty({ description: '平台:0表示普通用户(没权限),1表示为运营管理,2表示入住商家' })
   platform?: number;
 }
-
-export class AccountListVo extends QueryListVo<AccountVo> {
-  constructor(pageSize: number, pageNumber: number, data: AccountVo[]) {
-    super(pageSize, pageNumber, data);
-  }
+export class AccountListVo extends QueryListVo {
+  @ApiProperty({ description: '返回数据列表', type: AccountVo, isArray: true })
+  data: AccountVo[];
 }

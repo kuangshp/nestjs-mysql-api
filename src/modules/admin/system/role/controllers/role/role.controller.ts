@@ -12,12 +12,12 @@ import {
   HttpCode,
   HttpStatus,
 } from '@nestjs/common';
-import { ApiTags, ApiBearerAuth, ApiOperation, ApiCreatedResponse } from '@nestjs/swagger';
+import { ApiTags, ApiBearerAuth, ApiOperation, ApiOkResponse } from '@nestjs/swagger';
 import { AuthGuard } from '@src/guard/auth/auth.guard';
 import { RoleService } from '../../services/role/role.service';
 import { CreateRoleDto } from './dto/create.role.dto';
 import { UpdateRoleDto } from './dto/update.role.dto';
-import { RoleResDto, RoleListResDtoDto } from './dto/role.res.dto';
+import { RoleListVo, RoleVo } from './vo/role.vo';
 import { RoleReqDto } from './dto/role.req.dto';
 import { ApiAuth } from '@src/decorators/api.auth';
 
@@ -33,7 +33,7 @@ export class RoleController {
     summary: '创建角色',
     description: '创建角色',
   })
-  @ApiCreatedResponse({
+  @ApiOkResponse({
     type: String,
     description: '创建角色返回值',
   })
@@ -44,7 +44,7 @@ export class RoleController {
   }
 
   @ApiOperation({ summary: '删除角色', description: '根据角色id删除角色' })
-  @ApiCreatedResponse({
+  @ApiOkResponse({
     type: String,
     description: '删除角色返回值',
   })
@@ -55,7 +55,7 @@ export class RoleController {
   }
 
   @ApiOperation({ summary: '修改角色', description: '根据角色id修改角色' })
-  @ApiCreatedResponse({
+  @ApiOkResponse({
     type: String,
     description: '修改角色返回值',
   })
@@ -69,13 +69,13 @@ export class RoleController {
   }
 
   @ApiOperation({ summary: '查询角色', description: '根据角色id查询角色' })
-  @ApiCreatedResponse({
-    type: RoleResDto,
+  @ApiOkResponse({
+    type: RoleVo,
     description: '查询单条角色返回值',
   })
   @HttpCode(HttpStatus.OK)
   @Get(':id')
-  async roleById(@Param('id', new ParseIntPipe()) id: number): Promise<RoleResDto | undefined> {
+  async roleById(@Param('id', new ParseIntPipe()) id: number): Promise<RoleVo | undefined> {
     return await this.roleService.roleById(id);
   }
 
@@ -86,14 +86,13 @@ export class RoleController {
       url: 'xx?pageSize=10&pageNumber=1&name=x&status=0',
     },
   })
-  @ApiCreatedResponse({
-    type: RoleResDto,
-    isArray: true,
+  @ApiOkResponse({
+    type: RoleListVo,
     description: '分页查询角色返回值',
   })
   @HttpCode(HttpStatus.OK)
   @Get()
-  async roleList(@Query() roleReqDto: RoleReqDto): Promise<RoleListResDtoDto> {
+  async roleList(@Query() roleReqDto: RoleReqDto): Promise<RoleListVo> {
     return await this.roleService.roleList(roleReqDto);
   }
 }

@@ -1,8 +1,8 @@
 import { Controller, UseGuards, HttpCode, HttpStatus, Get } from '@nestjs/common';
-import { ApiTags, ApiBearerAuth, ApiOperation, ApiCreatedResponse } from '@nestjs/swagger';
+import { ApiTags, ApiBearerAuth, ApiOperation, ApiOkResponse } from '@nestjs/swagger';
 import { AuthGuard } from '@src/guard/auth/auth.guard';
 import { MenusService } from '../../services/menus/menus.service';
-import { MenusListResDto } from './dto/menus.res.dto';
+import { MenusListVo } from './vo/menus.vo';
 import { CurrentUser, ICurrentUserType } from '@src/decorators/current.user';
 
 @ApiTags('后台管理系统-菜单管理')
@@ -16,14 +16,14 @@ export class MenusController {
     summary: '获取菜单列表',
     description: '获取菜单',
   })
-  @ApiCreatedResponse({
-    type: MenusListResDto,
+  @ApiOkResponse({
+    type: MenusListVo,
     isArray: true,
     description: '获取菜单返回值',
   })
   @HttpCode(HttpStatus.OK)
   @Get()
-  async menusList(@CurrentUser() userInfo: ICurrentUserType): Promise<MenusListResDto[]> {
+  async menusList(@CurrentUser() userInfo: ICurrentUserType): Promise<MenusListVo[]> {
     return await this.menusService.menusList(userInfo);
   }
 }

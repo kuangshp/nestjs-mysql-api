@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class AllMenusResDto {
+export class AllMenusVo {
   @ApiProperty({ description: '主键ID' })
   id: number;
 

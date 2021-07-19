@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { QueryResDto } from '@src/dto/query.res.dto';
+import { QueryVo } from '@src/dto/query.vo';
 
-export class LoginResDto extends QueryResDto {
+export class LoginVo extends QueryVo {
   @ApiProperty({ description: '账号绑定的手机号码' })
   mobile?: string;
 

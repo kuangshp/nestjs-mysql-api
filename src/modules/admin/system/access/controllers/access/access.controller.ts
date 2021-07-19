@@ -12,12 +12,12 @@ import {
   Get,
   Query,
 } from '@nestjs/common';
-import { ApiTags, ApiBearerAuth, ApiOperation, ApiCreatedResponse } from '@nestjs/swagger';
+import { ApiTags, ApiBearerAuth, ApiOperation, ApiOkResponse } from '@nestjs/swagger';
 import { AuthGuard } from '@src/guard/auth/auth.guard';
 import { AccessService } from '../../services/access/access.service';
 import { CreateAccessDto } from './dto/create.access.dto';
 import { UpdateAccessDto } from './dto/update.access.dto';
-import { AccessResDto, AccessListResDtoDto } from './dto/access.res.dto';
+import { AccessListVo, AccessVo } from './vo/access.vo';
 import { AccessReqDto } from './dto/access.req.dto';
 import { ApiAuth } from '@src/decorators/api.auth';
 
@@ -30,7 +30,7 @@ export class AccessController {
   constructor(private readonly accessService: AccessService) {}
 
   @ApiOperation({ summary: '创建资源', description: '创建资源' })
-  @ApiCreatedResponse({
+  @ApiOkResponse({
     type: String,
     description: '创建资源返回值',
   })
@@ -48,7 +48,7 @@ export class AccessController {
   }
 
   @ApiOperation({ summary: '修改资源', description: '根据资源ID修改资源' })
-  @ApiCreatedResponse({
+  @ApiOkResponse({
     type: String,
     description: '修改资源的返回值',
   })
@@ -64,14 +64,14 @@ export class AccessController {
     summary: '获取菜单',
     description: '获取全部的菜单(不分页,给角色分配资源使用)',
   })
-  @ApiCreatedResponse({
-    type: AccessResDto,
+  @ApiOkResponse({
+    type: AccessVo,
     isArray: true,
     description: '获取全部菜单返回DTO',
   })
   @HttpCode(HttpStatus.OK)
   @Get('access_list')
-  async accessList(): Promise<AccessResDto[]> {
+  async accessList(): Promise<AccessVo[]> {
     return await this.accessService.accessList();
   }
 
@@ -82,13 +82,12 @@ export class AccessController {
       url: 'xxx?pageSize=10&pageNumber=1',
     },
   })
-  @ApiCreatedResponse({
-    type: AccessResDto,
-    isArray: true,
+  @ApiOkResponse({
+    type: AccessListVo,
     description: '分页获取资源列表',
   })
   @Get()
-  async accessListPage(@Query() accessReqDto: AccessReqDto): Promise<AccessListResDtoDto> {
+  async accessListPage(@Query() accessReqDto: AccessReqDto): Promise<AccessListVo> {
     return await this.accessService.accessListPage(accessReqDto);
   }
 }

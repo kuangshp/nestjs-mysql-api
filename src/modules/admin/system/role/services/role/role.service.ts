@@ -4,7 +4,7 @@ import { RoleEntity } from '../../entities/role.entity';
 import { Repository, getConnection } from 'typeorm';
 import { CreateRoleDto } from '../../controllers/role/dto/create.role.dto';
 import { UpdateRoleDto } from '../../controllers/role/dto/update.role.dto';
-import { RoleResDto, RoleListResDtoDto } from '../../controllers/role/dto/role.res.dto';
+import { RoleListVo, RoleVo } from '../../controllers/role/vo/role.vo';
 import { RoleReqDto } from '../../controllers/role/dto/role.req.dto';
 import { PageEnum, StatusEnum } from '@src/enums';
 import { RoleEnum } from '@src/enums/role.enum';
@@ -114,7 +114,7 @@ export class RoleService {
    * @param {number} id
    * @return {*}
    */
-  async roleById(id: number): Promise<RoleResDto | undefined> {
+  async roleById(id: number): Promise<RoleVo | undefined> {
     return await this.roleRepository.findOne(id);
   }
 
@@ -126,7 +126,7 @@ export class RoleService {
    * @param {RoleReqDto} roleReqDto
    * @return {*}
    */
-  async roleList(roleReqDto: RoleReqDto): Promise<RoleListResDtoDto> {
+  async roleList(roleReqDto: RoleReqDto): Promise<RoleListVo> {
     const {
       pageNumber = PageEnum.PAGE_NUMBER,
       pageSize = PageEnum.PAGE_SIZE,

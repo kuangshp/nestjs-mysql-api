@@ -4,10 +4,10 @@ import { RoleAccessEntity } from './../../entities/role.access.entity';
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, getManager, EntityManager } from 'typeorm';
-import { RoleAccessResDto } from '../../controllers/role-access/dto/role.access.res.dto';
 import { RoleAccessReqDto } from '../../controllers/role-access/dto/role.access.req.dto';
-import { AllMenusResDto } from '../../controllers/role-access/dto/all.menus.res.dto';
-import { AllApiResDto } from '../../controllers/role-access/dto/all.api.res.dto';
+import { AllApiVo } from '../../controllers/role-access/vo/all.api.vo';
+import { AllMenusVo } from '../../controllers/role-access/vo/all.menus.vo';
+import { RoleAccessVo } from '../../controllers/role-access/vo/role.access.vo';
 
 @Injectable()
 export class RoleAccessService {
@@ -57,7 +57,7 @@ export class RoleAccessService {
    * @param {*}
    * @return {*}
    */
-  async allMenus(): Promise<AllMenusResDto[]> {
+  async allMenus(): Promise<AllMenusVo[]> {
     const menusList = await this.accessRepository.find({
       where: [{ type: AccessTypeEnum.MODULE }, { type: AccessTypeEnum.MENUS }],
       select: ['id', 'moduleName', 'actionName', 'parentId'],
@@ -81,7 +81,7 @@ export class RoleAccessService {
    * @param {*}
    * @return {*}
    */
-  async allApi(): Promise<AllApiResDto[]> {
+  async allApi(): Promise<AllApiVo[]> {
     return await this.accessRepository.find({
       where: { type: AccessTypeEnum.OPERATION },
       select: ['id', 'apiName'],
@@ -97,7 +97,7 @@ export class RoleAccessService {
    * @param {*}
    * @return {*}
    */
-  async accessListByRoleId(roleId: number, type: number): Promise<RoleAccessResDto[]> {
+  async accessListByRoleId(roleId: number, type: number): Promise<RoleAccessVo[]> {
     return await this.roleAccessRepository.find({
       where: { roleId, type },
       select: ['id', 'accessId'],

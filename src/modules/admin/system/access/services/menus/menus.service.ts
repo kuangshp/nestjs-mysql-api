@@ -2,7 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AccessEntity } from '../../entities/access.entity';
 import { Repository, getConnection } from 'typeorm';
-import { MenusListResDto } from '../../controllers/menus/dto/menus.res.dto';
+import { MenusListVo } from '../../controllers/menus/vo/menus.vo';
 import { ICurrentUserType } from '@src/decorators/current.user';
 import { AdminIdentityEnum, AccessTypeEnum } from '@src/enums';
 import { AccountRoleEntity } from '../../../account/entities/account.role.entity';
@@ -34,7 +34,7 @@ export class MenusService {
    * @param {ICurrentUserType} userInfo
    * @return {*}
    */
-  async menusList(userInfo: ICurrentUserType): Promise<MenusListResDto[]> {
+  async menusList(userInfo: ICurrentUserType): Promise<MenusListVo[]> {
     /**
      * 根据用户权限来返回菜单
      * 1.查询全部的菜单
@@ -101,7 +101,7 @@ export class MenusService {
    * @param {AccessEntity} accessList
    * @return {*}
    */
-  private formatMenus(accessList: IAccessList[]): MenusListResDto[] {
+  private formatMenus(accessList: IAccessList[]): MenusListVo[] {
     return accessList.map((item: IAccessList) => {
       const { id, moduleName, actionName, parentId, url, sort, icon } = item;
       return {

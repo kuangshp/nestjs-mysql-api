@@ -6,7 +6,7 @@ import { Repository, getConnection } from 'typeorm';
 import { ToolsService } from '@src/modules/shared/services/tools/tools.service';
 import { isMobilePhone, isEmail } from 'class-validator';
 import { AccountLastLoginEntity } from '../../entities/account.last.login.entity';
-import { LoginResDto } from '../../controllers/login/dto/login.res.dto';
+import { LoginVo } from '../../controllers/login/vo/login.vo';
 
 @Injectable()
 export class LoginService {
@@ -27,7 +27,7 @@ export class LoginService {
    * @param {string} ipAddress
    * @return {*}
    */
-  async adminLogin(loginDto: LoginDto, ipAddress: string): Promise<LoginResDto> {
+  async adminLogin(loginDto: LoginDto, ipAddress: string): Promise<LoginVo> {
     try {
       const { username, password } = loginDto;
       let sqlPassword: string | undefined;

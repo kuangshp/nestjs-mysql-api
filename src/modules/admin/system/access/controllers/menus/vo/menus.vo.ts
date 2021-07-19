@@ -1,7 +1,7 @@
-import { QueryResDto } from '@src/dto/query.res.dto';
+import { QueryVo } from '@src/dto/query.vo';
 import { ApiProperty } from '@nestjs/swagger';
 
-export class MenusListResDto extends QueryResDto {
+export class MenusListVo extends QueryVo {
   @ApiProperty({ description: '名称' })
   name: string;
 

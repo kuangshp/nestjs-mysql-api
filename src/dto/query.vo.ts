@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class QueryResDto {
+export class QueryVo {
   @ApiProperty({ description: '主键id' })
   id?: number;
 

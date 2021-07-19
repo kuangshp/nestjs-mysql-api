@@ -4,9 +4,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { AccountRoleEntity } from '../../entities/account.role.entity';
 import { Repository, getManager, EntityManager, getConnection } from 'typeorm';
 import {
-  AccountRoleListResDto,
-  RoleAccountListDto,
-} from '../../controllers/account-role/dto/account.role.res.dto';
+  AccountRoleListVo,
+  RoleAccountListVo,
+} from '../../controllers/account-role/vo/account.role.vo';
 import { DistributionRoleDto } from '../../controllers/account-role/dto/distribution.role.dto';
 
 @Injectable()
@@ -24,9 +24,7 @@ export class AccountRoleService {
    * @param {number} accountId
    * @return {*}
    */
-  async accountRoleListByAccountId(
-    accountId: number,
-  ): Promise<AccountRoleListResDto[] | undefined> {
+  async accountRoleListByAccountId(accountId: number): Promise<AccountRoleListVo[] | undefined> {
     return await this.accountRoleRepository.find({
       where: { accountId },
       select: ['id', 'roleId'],
@@ -70,7 +68,7 @@ export class AccountRoleService {
    * @param {*}
    * @return {*}
    */
-  async roleList(): Promise<RoleAccountListDto[]> {
+  async roleList(): Promise<RoleAccountListVo[]> {
     return await getConnection()
       .createQueryBuilder(RoleEntity, 'role')
       .select(['role.id', 'role.name'])
