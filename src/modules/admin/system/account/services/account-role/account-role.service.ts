@@ -1,5 +1,5 @@
 import { RoleEntity } from './../../../role/entities/role.entity';
-import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AccountRoleEntity } from '../../entities/account.role.entity';
 import { Repository, getManager, EntityManager, getConnection } from 'typeorm';
@@ -11,6 +11,7 @@ import { DistributionRoleDto } from '../../controllers/account-role/dto/distribu
 
 @Injectable()
 export class AccountRoleService {
+  private readonly logger: Logger = new Logger(AccountRoleService.name);
   constructor(
     @InjectRepository(AccountRoleEntity)
     private readonly accountRoleRepository: Repository<AccountRoleEntity>,
@@ -45,10 +46,13 @@ export class AccountRoleService {
       .transaction(async (entityManager: EntityManager) => {
         await entityManager.delete<AccountRoleEntity>(AccountRoleEntity, { accountId });
         for (const item of roleList) {
-          const result = entityManager.create<AccountRoleEntity>(AccountRoleEntity, {
-            accountId,
-            roleId: item,
-          });
+          const result: AccountRoleEntity = entityManager.create<AccountRoleEntity>(
+            AccountRoleEntity,
+            {
+              accountId,
+              roleId: item,
+            },
+          );
           await entityManager.save(result);
         }
       })
@@ -56,7 +60,8 @@ export class AccountRoleService {
         return '分配角色成功';
       })
       .catch((e: HttpException) => {
-        throw new HttpException(`给账号分配角色失败:${e}`, HttpStatus.OK);
+        this.logger.error('给账号分配角色错误', e.message);
+        throw new HttpException(`给账号分配角色失败:${e.message}`, HttpStatus.OK);
       });
   }
 

@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { QueryListVo } from '@src/dto/query.list.vo';
-import { QueryVo } from '@src/dto/query.vo';
+import { QueryListVo } from '@src/vo/query.list.vo';
+import { QueryVo } from '@src/vo/query.vo';
 
 export class AccountVo extends QueryVo {
   @ApiProperty({ description: '用户名' })

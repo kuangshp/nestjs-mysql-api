@@ -1,5 +1,5 @@
-import { QueryVo } from '@src/dto/query.vo';
-import { QueryListVo } from '@src/dto/query.list.vo';
+import { QueryVo } from '@src/vo/query.vo';
+import { QueryListVo } from '@src/vo/query.list.vo';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class AccessVo extends QueryVo {

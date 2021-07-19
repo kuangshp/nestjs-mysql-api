@@ -1,7 +1,7 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { RoleEntity } from '../../entities/role.entity';
-import { Repository, getConnection } from 'typeorm';
+import { Repository, getConnection, ILike, Equal } from 'typeorm';
 import { CreateRoleDto } from '../../controllers/role/dto/create.role.dto';
 import { UpdateRoleDto } from '../../controllers/role/dto/update.role.dto';
 import { RoleListVo, RoleVo } from '../../controllers/role/vo/role.vo';
@@ -9,6 +9,7 @@ import { RoleReqDto } from '../../controllers/role/dto/role.req.dto';
 import { PageEnum, StatusEnum } from '@src/enums';
 import { RoleEnum } from '@src/enums/role.enum';
 import { AccountRoleEntity } from '../../../account/entities/account.role.entity';
+import { mapToObj } from '@src/utils';
 
 @Injectable()
 export class RoleService {
@@ -29,13 +30,16 @@ export class RoleService {
    */
   async createRole(createRoleDto: CreateRoleDto): Promise<string> {
     const { name, isDefault } = createRoleDto;
-    const findNameResult = await this.roleRepository.findOne({ where: { name }, select: ['id'] });
+    const findNameResult: Pick<RoleEntity, 'id'> | undefined = await this.roleRepository.findOne({
+      where: { name },
+      select: ['id'],
+    });
     if (findNameResult) {
       throw new HttpException(`${name}当前角色已经存在,不能重复创建`, HttpStatus.OK);
     }
     // 如果是默认角色的时候要判断下
     if (Object.is(isDefault, RoleEnum.DEFAULT)) {
-      const findDefault = await this.roleRepository.findOne({
+      const findDefault: Pick<RoleEntity, 'id'> | undefined = await this.roleRepository.findOne({
         where: { isDefault },
         select: ['id'],
       });
@@ -43,7 +47,7 @@ export class RoleService {
         throw new HttpException('已经存在默认角色不能重复创建', HttpStatus.OK);
       }
     }
-    const role = this.roleRepository.create(createRoleDto);
+    const role: RoleEntity = this.roleRepository.create(createRoleDto);
     await this.roleRepository.save(role);
     return '创建角色成功';
   }
@@ -58,7 +62,7 @@ export class RoleService {
    */
   async destroyRoleById(id: number): Promise<string> {
     // 判断当前角色是否已经被占用(有账号绑定了该角色)
-    const accountRoleFindResult: AccountRoleEntity | undefined =
+    const accountRoleFindResult: Pick<AccountRoleEntity, 'id'> | undefined =
       await this.accountRoleRepository.findOne({
         where: { roleId: id },
         select: ['id'],
@@ -133,21 +137,16 @@ export class RoleService {
       name,
       status,
     } = roleReqDto;
-    const queryConditionList = [];
+    const query = new Map();
     if (name) {
-      queryConditionList.push('role.name LIKE :name');
+      query.set('name', ILike(name));
     }
-    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-    if (
-      /^\d$/.test(String(status)) &&
-      [StatusEnum.NORMAL, StatusEnum.FORBIDDEN].includes(Number(status))
-    ) {
-      queryConditionList.push('role.status = :status');
+    if ([StatusEnum.NORMAL, StatusEnum.FORBIDDEN].includes(Number(status))) {
+      query.set('status', Equal(status));
     }
-    const queryCondition = queryConditionList.join(' AND ');
     const [data, total] = await getConnection()
       .createQueryBuilder(RoleEntity, 'role')
-      .where(queryCondition, { name: `%${name}%`, status })
+      .where(mapToObj(query))
       .skip((pageNumber - 1) * pageSize)
       .take(pageSize)
       .printSql()

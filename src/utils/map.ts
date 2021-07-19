@@ -1,5 +1,4 @@
-import { ObjectType } from '@src/types/obj-type';
-
+type ObjectType = Record<string, number | string | boolean>;
 /**
  * @Author: 水痕
  * @Date: 2021-03-26 14:35:21

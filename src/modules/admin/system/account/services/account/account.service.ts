@@ -165,7 +165,7 @@ export class AccountService {
       throw new HttpException('系统默认生成的账号不能修改信息', HttpStatus.OK);
     }
     const { username, email, mobile, status, platform } = updateAccountDto;
-    const result = await this.accountRepository.findOne(id);
+    const result: AccountEntity | undefined = await this.accountRepository.findOne(id);
     await this.accountRepository.save(
       Object.assign(result, { username, email, mobile, status, platform }),
     );
@@ -269,7 +269,7 @@ export class AccountService {
       .where(mapToObj(query))
       .getCount();
     // 处理当前手机号码或者邮箱不合法的时候
-    const formatData = data.map((item) => {
+    const formatData: AccountVo[] = data.map((item) => {
       const { username, mobile, email } = item;
       return {
         ...item,

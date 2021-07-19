@@ -58,19 +58,22 @@ export class RoleAccessService {
    * @return {*}
    */
   async allMenus(): Promise<AllMenusVo[]> {
-    const menusList = await this.accessRepository.find({
-      where: [{ type: AccessTypeEnum.MODULE }, { type: AccessTypeEnum.MENUS }],
-      select: ['id', 'moduleName', 'actionName', 'parentId'],
-      order: { sort: 'ASC', createdAt: 'DESC' },
-    });
-    return menusList.map((item: AccessEntity) => {
-      return {
-        id: item.id,
-        key: String(item.id),
-        title: item.moduleName ? item.moduleName : item.actionName,
-        parentId: item.parentId,
-      };
-    });
+    const menusList: Pick<AccessEntity, 'id' | 'moduleName' | 'actionName' | 'parentId'>[] =
+      await this.accessRepository.find({
+        where: [{ type: AccessTypeEnum.MODULE }, { type: AccessTypeEnum.MENUS }],
+        select: ['id', 'moduleName', 'actionName', 'parentId'],
+        order: { sort: 'ASC', createdAt: 'DESC' },
+      });
+    return menusList.map(
+      (item: Pick<AccessEntity, 'id' | 'moduleName' | 'actionName' | 'parentId'>) => {
+        return {
+          id: item.id,
+          key: String(item.id),
+          title: item.moduleName ? item.moduleName : item.actionName,
+          parentId: item.parentId,
+        };
+      },
+    );
   }
 
   /**

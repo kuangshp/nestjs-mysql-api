@@ -4,7 +4,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { AccessEntity } from '@src/modules/admin/system/access/entities/access.entity';
 import adminConfig from '@src/config/admin.config';
-import { ObjectType } from '@src/types/obj-type';
 
 @Injectable()
 export class InitDbService {
@@ -30,8 +29,8 @@ export class InitDbService {
    * @return {*}
    */
   private async initAccount(): Promise<void> {
-    const username = adminConfig.defaultAccount;
-    const password = adminConfig.defaultPassword;
+    const username: string = adminConfig.defaultAccount;
+    const password: string = adminConfig.defaultPassword;
     const isExist = await this.accountRepository.findOne({ where: { username } });
     if (!isExist) {
       const account = this.accountRepository.create({ username, password, isSuper: 1 });
@@ -48,7 +47,7 @@ export class InitDbService {
    * @return {*}
    */
   private async initAccess(): Promise<void> {
-    const accessList: ObjectType[] = [
+    const accessList: Record<string, number | string>[] = [
       {
         moduleName: '系统管理',
         parentId: 0,
