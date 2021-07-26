@@ -1,10 +1,10 @@
 import { Column, Entity, Unique, Index } from 'typeorm';
-import { PublicEntity } from '@src/modules/shared/entities/public.entity';
+import { SharedEntity } from '@src/modules/shared/entities/shared.entity';
 import { StatusEnum } from '@src/enums';
 
 @Entity('role')
 @Unique('name_deleted', ['name', 'deletedAt'])
-export class RoleEntity extends PublicEntity {
+export class RoleEntity extends SharedEntity {
   @Index()
   @Column({
     type: 'varchar',

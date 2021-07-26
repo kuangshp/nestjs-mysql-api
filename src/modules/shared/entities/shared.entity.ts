@@ -6,7 +6,7 @@ import {
   DeleteDateColumn,
 } from 'typeorm';
 
-export class PublicEntity extends BaseEntity {
+export class SharedEntity extends BaseEntity {
   @PrimaryGeneratedColumn({
     type: 'bigint',
     name: 'id',

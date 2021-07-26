@@ -1,9 +1,9 @@
 import { Column, Entity, Unique } from 'typeorm';
-import { PublicEntity } from '@src/modules/shared/entities/public.entity';
+import { SharedEntity } from '@src/modules/shared/entities/shared.entity';
 
 @Entity('account_role')
 @Unique('account_role_deleted', ['accountId', 'roleId', 'deletedAt'])
-export class AccountRoleEntity extends PublicEntity {
+export class AccountRoleEntity extends SharedEntity {
   @Column({
     type: 'int',
     nullable: false,

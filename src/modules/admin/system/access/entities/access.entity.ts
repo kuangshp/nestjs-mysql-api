@@ -1,11 +1,11 @@
 import { Column, Entity, Unique } from 'typeorm';
-import { PublicEntity } from '@src/modules/shared/entities/public.entity';
+import { SharedEntity } from '@src/modules/shared/entities/shared.entity';
 import { StatusEnum } from '@src/enums';
 
 @Entity('access')
 @Unique('module_name_delete_at', ['moduleName', 'deletedAt'])
 @Unique('action_name_delete_at', ['actionName', 'deletedAt'])
-export class AccessEntity extends PublicEntity {
+export class AccessEntity extends SharedEntity {
   @Column({
     type: 'varchar',
     nullable: true,

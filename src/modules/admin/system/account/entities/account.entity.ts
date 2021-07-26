@@ -3,7 +3,7 @@ import { Exclude } from 'class-transformer';
 import NodeAuth from 'simp-node-auth';
 import { isMobilePhone, isEmail } from 'class-validator';
 
-import { PublicEntity } from '@src/modules/shared/entities/public.entity';
+import { SharedEntity } from '@src/modules/shared/entities/shared.entity';
 import { usernameReg } from '@src/constants';
 import { PlatformEnum, StatusEnum } from '@src/enums';
 
@@ -12,7 +12,7 @@ import { PlatformEnum, StatusEnum } from '@src/enums';
 @Unique('username_deleted', ['username', 'deletedAt'])
 @Unique('email_deleted', ['email', 'deletedAt'])
 @Unique('mobile_deleted', ['mobile', 'deletedAt'])
-export class AccountEntity extends PublicEntity {
+export class AccountEntity extends SharedEntity {
   @Exclude()
   private nodeAuth: NodeAuth;
   constructor() {
