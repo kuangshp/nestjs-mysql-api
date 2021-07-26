@@ -11,15 +11,8 @@ import { AccountTokenEntity } from '../../entities/account.token.entity';
 import { ConfigService, InjectConfig } from 'nestjs-config';
 import moment from 'moment';
 import { usernameReg } from '@src/constants';
+import { ICurrentUserType } from '@src/decorators/current.user';
 
-interface IAccount {
-  id: number;
-  username: string;
-  email: string;
-  mobile: string;
-  isSuper: number;
-  platform: number;
-}
 @Injectable()
 export class LoginService {
   private logger: Logger = new Logger(LoginService.name);
@@ -45,7 +38,7 @@ export class LoginService {
   async adminLogin(loginDto: LoginDto, ipAddress: string): Promise<LoginVo> {
     try {
       const { username, password } = loginDto;
-      type TypeAccountFindResult = Extract<AccountEntity, IAccount> | undefined;
+      type TypeAccountFindResult = Extract<AccountEntity, ICurrentUserType> | undefined;
       let findAccount: TypeAccountFindResult;
       const queryBuilder = this.queryLoginBuilder;
       // 根据手机号码查询
@@ -148,10 +141,10 @@ export class LoginService {
    * @Date: 2021-07-26 10:15:17
    * @LastEditors: 水痕
    * @Description: 过来字段
-   * @param {IAccount} accountInfo
+   * @param {ICurrentUserType} accountInfo
    * @return {*}
    */
-  private filterAccountField(accountInfo: IAccount): IAccount {
+  private filterAccountField(accountInfo: ICurrentUserType): ICurrentUserType {
     const { username, mobile, email } = accountInfo;
     const _mobile = isMobilePhone(mobile, 'zh-CN') ? mobile : '';
     const _email = isEmail(email) ? email : '';

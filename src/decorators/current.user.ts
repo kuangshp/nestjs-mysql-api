@@ -14,11 +14,9 @@ export const CurrentUser = createParamDecorator((data: string, ctx: ExecutionCon
  */
 export interface ICurrentUserType {
   id: number;
-  username?: string;
-  mobile?: string;
-  email?: string;
-  isSuper?: number;
-  platform?: number;
-  iat: number;
-  exp: number;
+  username: string;
+  email: string;
+  mobile: string;
+  isSuper: number;
+  platform: number;
 }
