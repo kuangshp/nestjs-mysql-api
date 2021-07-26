@@ -1,16 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import NodeAuth from 'simp-node-auth';
-import * as jwt from 'jsonwebtoken';
 import * as uuidv4 from 'uuid';
-
-interface ITokenParams {
-  id: number;
-  username?: string;
-  mobile?: string;
-  email?: string;
-  platform?: number;
-  isSuper?: number;
-}
 
 @Injectable()
 export class ToolsService {
@@ -54,33 +44,5 @@ export class ToolsService {
    */
   public get uuidToken(): string {
     return uuidv4.v4().replace(/-/g, '');
-  }
-
-  /**
-   * @Author: 水痕
-   * @Date: 2021-03-23 12:31:53
-   * @LastEditors: 水痕
-   * @Description: 生成token的方法
-   * @param {ITokenParams} params
-   * @return {*}
-   */
-  public generateToken(params: ITokenParams): string {
-    const { id, username, mobile, email, platform, isSuper } = params;
-    const SECRET: string = process.env.SECRET as string;
-    // 生成签名
-    return jwt.sign(
-      {
-        id,
-        username,
-        mobile,
-        email,
-        platform,
-        isSuper,
-      },
-      SECRET, // 加盐
-      {
-        expiresIn: '7d', // 过期时间
-      },
-    );
   }
 }
