@@ -62,7 +62,8 @@
     "simp-node-auth": "^0.0.1",
     "superagent": "^6.1.0",
     "swagger-ui-express": "^4.1.6",
-    "typeorm": "^0.2.34"
+    "typeorm": "^0.2.34",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "@commitlint/cli": "^12.1.4",
@@ -77,6 +78,7 @@
     "@types/lodash": "^4.14.171",
     "@types/node": "^16.3.2",
     "@types/supertest": "^2.0.11",
+    "@types/uuid": "^8.3.1",
     "@typescript-eslint/eslint-plugin": "^4.28.3",
     "@typescript-eslint/parser": "^4.28.3",
     "dotenv-cli": "^4.0.0",

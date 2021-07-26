@@ -1,7 +1,7 @@
-import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import NodeAuth from 'simp-node-auth';
 import * as jwt from 'jsonwebtoken';
-import { isInt } from 'class-validator';
+import * as uuidv4 from 'uuid';
 
 interface ITokenParams {
   id: number;
@@ -46,20 +46,14 @@ export class ToolsService {
 
   /**
    * @Author: 水痕
-   * @Date: 2021-03-22 12:57:56
+   * @Date: 2021-07-26 08:54:18
    * @LastEditors: 水痕
-   * @Description: 校验分页数据
-   * @param {number} pageNumber 当前页
-   * @param {number} pageSize 一页显示多少条数据
+   * @Description: 使用uuid生成token，这里也可以传递用户id与之拼接在一起
+   * @param {*}
    * @return {*}
    */
-  public checkPage(pageNumber: number, pageSize: number): void {
-    if (!isInt(Number(pageSize)) || !isInt(Number(pageNumber))) {
-      throw new HttpException(
-        `传递的pageSize:${pageSize},pageNumber:${pageNumber}其中一个不是整数`,
-        HttpStatus.OK,
-      );
-    }
+  public get uuidToken(): string {
+    return uuidv4.v4().replace(/-/g, '');
   }
 
   /**
