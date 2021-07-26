@@ -1,3 +1,4 @@
+import { PlatformEnum } from '@src/enums';
 import { SharedEntity } from '@src/modules/shared/entities/shared.entity';
 import { Column, Entity } from 'typeorm';
 
@@ -34,7 +35,7 @@ export class AccountTokenEntity extends SharedEntity {
   @Column({
     type: 'varchar',
     nullable: true,
-    length: 110,
+    length: 11,
     name: 'mobile',
     comment: '手机号码',
   })
@@ -42,12 +43,30 @@ export class AccountTokenEntity extends SharedEntity {
 
   @Column({
     type: 'varchar',
-    nullable: false,
-    length: 30,
-    name: 'platform',
-    comment: '平台',
+    nullable: true,
+    length: 50,
+    name: 'email',
+    comment: '邮箱',
   })
-  platform: string;
+  email: string;
+
+  @Column({
+    type: 'tinyint',
+    nullable: true,
+    name: 'platform',
+    default: 0,
+    comment: '平台:0表示普通用户(没权限),1表示为运营管理,2表示入住商家',
+  })
+  platform: PlatformEnum;
+
+  @Column({
+    type: 'tinyint',
+    nullable: false,
+    default: 0,
+    name: 'is_super',
+    comment: '是否为超级管理员1表示是,0表示不是',
+  })
+  isSuper: number;
 
   @Column({
     type: 'timestamp',

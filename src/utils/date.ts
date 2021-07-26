@@ -9,14 +9,8 @@ import moment from 'moment';
  * @Date: 2019-07-31 15:27:39
  */
 export const formatDate = (dateNum: string | number, isDue = false): string => {
-  if (!dateNum) {
-    return '';
-  }
-  // if (!/^\d+$/.test(dateNum.toString())) {
-  //   throw new TypeError(`${dateNum}传递的数据格式化错误`);
-  // }
   if (isDue) {
-    return moment(dateNum).format('YYYY-MM-DD');
+    return moment(dateNum).format('YYYY-MM-DD HH:mm:ss');
   } else {
     return moment(dateNum).format('YYYY-MM-DD HH:mm:ss');
   }
