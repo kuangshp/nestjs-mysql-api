@@ -26,23 +26,30 @@ export class ApiAuthService {
    */
   public async apiAuth(user: ICurrentUserType, method: string, url: string): Promise<boolean> {
     const { isSuper, id } = user;
-    console.log(user, '11');
     // 1.如果是超级管理员就直接返回true
     if (isSuper) {
       return true;
     } else {
-      console.log(user, '222');
       // 2.根据当前账号id获取当前账号拥有的角色id
-      const authRoleList: Pick<AccountRoleEntity, 'roleId'>[] =
-        await this.accountRoleRepository.find({
+      // const authRoleList: Pick<AccountRoleEntity, 'roleId'>[] =
+      //   await this.accountRoleRepository.find({
+      //     where: { accountId: id },
+      //     select: ['roleId'],
+      //   });
+      // console.log(authRoleList, '333');
+      // const authRoleIdList: number[] = authRoleList.map(
+      //   (item: Pick<AccountRoleEntity, 'roleId'>) => item.roleId,
+      // );
+      // console.log(authRoleIdList, '授权的角色列表44');
+      // 直接根据账号id去查询中间表，减少一次查询
+      const authRoleIdList: number[] = await this.accountRoleRepository
+        .find({
           where: { accountId: id },
           select: ['roleId'],
-        });
-      console.log(authRoleList, '333');
-      const authRoleIdList: number[] = authRoleList.map(
-        (item: Pick<AccountRoleEntity, 'roleId'>) => item.roleId,
-      );
-      console.log(authRoleIdList, '授权的角色列表44');
+        })
+        .then((response: Pick<AccountRoleEntity, 'roleId'>[]) =>
+          response.map((item: Pick<AccountRoleEntity, 'roleId'>) => item.roleId),
+        );
       if (!authRoleIdList.length) {
         throw new HttpException(`当前账号没操作:${method}-${url}的权限`, HttpStatus.OK);
       }
