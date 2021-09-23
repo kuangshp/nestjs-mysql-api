@@ -62,7 +62,9 @@
     "superagent": "^6.1.0",
     "swagger-ui-express": "^4.1.6",
     "typeorm": "^0.2.34",
-    "uuid": "^8.3.2"
+    "uuid": "^8.3.2",
+    "winston": "^3.3.3",
+    "winston-daily-rotate-file": "^4.5.5"
   },
   "devDependencies": {
     "@commitlint/cli": "^12.1.4",

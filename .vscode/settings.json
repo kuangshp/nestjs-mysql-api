@@ -2,7 +2,8 @@
   "cSpell.words": [
     "Tencent",
     "metatype",
-    "prebuild"
+    "prebuild",
+    "printf"
   ],
   //全局使用保存自动格式化功能
   "editor.formatOnSave": true,

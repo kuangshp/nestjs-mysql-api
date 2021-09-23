@@ -10,10 +10,9 @@ import { TransformInterceptor } from './interceptors/transform/transform.interce
 
 const PORT = process.env.PORT || 8080;
 const PREFIX = process.env.PREFIX || '/';
-
+export const IS_DEV = process.env.NODE_ENV !== 'production';
 async function bootstrap() {
   const logger: Logger = new Logger('main.ts');
-  const IS_DEV = process.env.NODE_ENV !== 'production';
   console.log(IS_DEV, '是否为开发环境');
   const app = await NestFactory.create(AppModule, {
     // 开启日志级别打印
