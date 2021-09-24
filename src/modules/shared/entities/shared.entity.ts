@@ -1,3 +1,4 @@
+import { Transform, TransformFnParams } from 'class-transformer';
 import {
   BaseEntity,
   PrimaryGeneratedColumn,
@@ -14,6 +15,7 @@ export class SharedEntity extends BaseEntity {
   })
   id: number;
 
+  @Transform((row: TransformFnParams) => +new Date(row.value))
   @CreateDateColumn({
     type: 'timestamp',
     nullable: false,
@@ -22,6 +24,7 @@ export class SharedEntity extends BaseEntity {
   })
   createdAt: Date;
 
+  @Transform((row: TransformFnParams) => +new Date(row.value))
   @UpdateDateColumn({
     type: 'timestamp',
     nullable: false,
