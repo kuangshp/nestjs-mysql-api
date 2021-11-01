@@ -22,6 +22,8 @@ import { RoleAccessController } from './role/controllers/role-access/role-access
 import { RoleAccessService } from './role/services/role-access/role-access.service';
 import { RouterModule } from '@nestjs/core';
 import { AccountTokenEntity } from './account/entities/account.token.entity';
+import { ResourceService } from './resource/services/resource.service';
+import { ResourceEntity } from './resource/entities/resource.entity';
 
 @Module({
   imports: [
@@ -39,6 +41,7 @@ import { AccountTokenEntity } from './account/entities/account.token.entity';
       AccessEntity,
       RoleAccessEntity,
       AccountTokenEntity,
+      ResourceEntity,
     ]),
   ],
   controllers: [
@@ -58,6 +61,7 @@ import { AccountTokenEntity } from './account/entities/account.token.entity';
     AccountRoleService,
     MenusService,
     RoleAccessService,
+    ResourceService,
   ],
 })
 export class SystemModule {}
