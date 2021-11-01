@@ -12,6 +12,7 @@ import { SharedModule } from './modules/shared/shared.module';
 
 import { LoggingInterceptor } from './interceptors/logging/logging.interceptor';
 import { ValidationPipe } from './pipe/validation/validation.pipe';
+import { TransformInterceptor } from './interceptors/transform/transform.interceptor';
 
 @Module({
   imports: [
@@ -52,6 +53,10 @@ import { ValidationPipe } from './pipe/validation/validation.pipe';
   ],
   controllers: [],
   providers: [
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: TransformInterceptor,
+    },
     {
       provide: APP_INTERCEPTOR,
       useClass: LoggingInterceptor,
