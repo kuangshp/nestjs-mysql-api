@@ -15,8 +15,11 @@ import { AccountRoleService } from '../../services/account-role/account-role.ser
 import { AccountRoleListVo, RoleAccountListVo } from './vo/account.role.vo';
 import { DistributionRoleDto } from './dto/distribution.role.dto';
 import { ApiAuth } from '@src/decorators/api.auth';
+import { PermissionModule } from '@src/modules/common/collections-permission/decorators/permission.module';
+import { PermissionMeta } from '@src/modules/common/collections-permission/decorators/permission.meta';
 
 @ApiTags('后台管理系统-账号角色管理')
+@PermissionModule('账号角色管理')
 @ApiBearerAuth()
 @UseGuards(AuthGuard)
 @ApiAuth()
@@ -43,6 +46,7 @@ export class AccountRoleController {
     type: String,
     description: '给账号授权角色返回值',
   })
+  @PermissionMeta('给账号分配角色')
   @Post()
   @HttpCode(HttpStatus.CREATED)
   async distributionRole(@Body() distributionRoleDto: DistributionRoleDto): Promise<string> {

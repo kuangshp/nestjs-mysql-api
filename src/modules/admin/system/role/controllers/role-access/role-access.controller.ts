@@ -7,8 +7,11 @@ import { AllApiVo } from './vo/all.api.vo';
 import { ApiAuth } from '@src/decorators/api.auth';
 import { AllMenusVo } from './vo/all.menus.vo';
 import { RoleAccessVo } from './vo/role.access.vo';
+import { PermissionModule } from '@src/modules/common/collections-permission/decorators/permission.module';
+import { PermissionMeta } from '@src/modules/common/collections-permission/decorators/permission.meta';
 
 @ApiTags('后台管理系统-角色资源管理')
+@PermissionModule('角色资源管理')
 @ApiBearerAuth()
 @UseGuards(AuthGuard)
 @ApiAuth()
@@ -24,6 +27,7 @@ export class RoleAccessController {
     type: String,
     description: '给当前角色分配菜单或接口资源返回值',
   })
+  @PermissionMeta('给当前角色分配菜单')
   @Patch('menus/:roleId')
   async roleToAccess(
     @Param('roleId', new ParseIntPipe()) roleId: number,

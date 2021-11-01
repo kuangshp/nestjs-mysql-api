@@ -22,8 +22,11 @@ import { AccountVo, AccountListVo } from './vo/account.vo';
 import { AccountReqDto } from './dto/account.req.dto';
 import { CurrentUser, ICurrentUserType } from '@src/decorators/current.user';
 import { ApiAuth } from '@src/decorators/api.auth';
+import { PermissionModule } from '@src/modules/common/collections-permission/decorators/permission.module';
+import { PermissionMeta } from '@src/modules/common/collections-permission/decorators/permission.meta';
 
 @ApiTags('后台管理系统-账号管理')
+@PermissionModule('账号管理')
 @ApiBearerAuth()
 @UseGuards(AuthGuard)
 @ApiAuth()
@@ -40,6 +43,7 @@ export class AccountController {
     description: '创建账号返回值',
   })
   @HttpCode(HttpStatus.CREATED)
+  @PermissionMeta('创建账号')
   @Post()
   async createAccount(@Body() createAccountDto: CreateAccountDto): Promise<string> {
     return await this.accountService.createAccount(createAccountDto);
@@ -74,6 +78,7 @@ export class AccountController {
     type: String,
     description: '修改账号返回值',
   })
+  @PermissionMeta('删除账号')
   @HttpCode(HttpStatus.OK)
   @Delete(':id')
   async destroyById(@Param('id', new ParseIntPipe()) id: number): Promise<string> {
@@ -85,6 +90,7 @@ export class AccountController {
     type: String,
     description: '修改账号返回值',
   })
+  @PermissionMeta('根据id修改账号信息')
   @HttpCode(HttpStatus.OK)
   @Patch(':id')
   async modifyById(
@@ -99,6 +105,7 @@ export class AccountController {
     type: AccountVo,
     description: '查询单条账号返回值',
   })
+  @PermissionMeta('根据id查询单条账号信息')
   @HttpCode(HttpStatus.OK)
   @Get(':id')
   async accountById(@Param('id', new ParseIntPipe()) id: number): Promise<AccountVo | undefined> {
@@ -116,6 +123,7 @@ export class AccountController {
     type: AccountListVo,
     description: '分页查询账号返回值',
   })
+  @PermissionMeta('账号列表')
   @HttpCode(HttpStatus.OK)
   @Get()
   async accountList(@Query() accountReqDto: AccountReqDto): Promise<AccountListVo> {

@@ -66,10 +66,10 @@ export class CollectionsPermissionService {
             .replace('//', '/') // 去除双//
             .replace(/(.*)?\/$/, '$1') // 去除最后一个
             .replace(/\/:.*\w?/, '/*'); // 将:id全部转为*
-          console.log(
-            `模块名称: ${moduleName}-方法名:${methodName}-请求方式:${method}-路径:${url}`,
-          );
           if (moduleName && methodName && method && url) {
+            console.log(
+              `模块名称: ${moduleName}-方法名:${methodName}-请求方式:${method}-路径:${url}`,
+            );
             resourceList.push({
               moduleName,
               methodName,

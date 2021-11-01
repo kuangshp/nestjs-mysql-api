@@ -20,10 +20,13 @@ import { UpdateRoleDto } from './dto/update.role.dto';
 import { RoleListVo, RoleVo } from './vo/role.vo';
 import { RoleReqDto } from './dto/role.req.dto';
 import { ApiAuth } from '@src/decorators/api.auth';
+import { PermissionMeta } from '@src/modules/common/collections-permission/decorators/permission.meta';
+import { PermissionModule } from '@src/modules/common/collections-permission/decorators/permission.module';
 
 @ApiTags('后台管理系统-角色管理')
 @ApiBearerAuth()
 @UseGuards(AuthGuard)
+@PermissionModule('角色管理')
 @ApiAuth()
 @Controller('role')
 export class RoleController {
@@ -37,6 +40,7 @@ export class RoleController {
     type: String,
     description: '创建角色返回值',
   })
+  @PermissionMeta('创建角色')
   @HttpCode(HttpStatus.CREATED)
   @Post()
   async createRole(@Body() createRoleDto: CreateRoleDto): Promise<string> {
@@ -49,6 +53,7 @@ export class RoleController {
     description: '删除角色返回值',
   })
   @HttpCode(HttpStatus.OK)
+  @PermissionMeta('根据id删除角色')
   @Delete(':id')
   async destroyRoleById(@Param('id', new ParseIntPipe()) id: number): Promise<string> {
     return await this.roleService.destroyRoleById(id);
@@ -59,6 +64,7 @@ export class RoleController {
     type: String,
     description: '修改角色返回值',
   })
+  @PermissionMeta('根据id修改角色')
   @HttpCode(HttpStatus.OK)
   @Patch(':id')
   async modifyRoleById(
