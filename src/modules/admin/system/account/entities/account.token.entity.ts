@@ -71,7 +71,7 @@ export class AccountTokenEntity extends SharedEntity {
   @Column({
     type: 'timestamp',
     name: 'expire_time',
-    nullable: false,
+    nullable: true,
     comment: '失效时间',
   })
   expireTime: Date;
