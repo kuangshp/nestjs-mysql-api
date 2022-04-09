@@ -52,7 +52,7 @@
     "husky": ">=7",
     "lint-staged": "^11.0.1",
     "lodash": "^4.17.21",
-    "moment": "^2.29.1",
+    "moment": "^2.29.2",
     "mysql": "^2.18.1",
     "nestjs-config": "1.4.8",
     "reflect-metadata": "^0.1.13",
