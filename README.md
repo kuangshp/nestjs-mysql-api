@@ -1,6 +1,6 @@
 ## 一、项目介绍
 
-* 1、项目前端采用`react`开发的，[预览地址](http://admin.yst168.cn/)。前端项目地址
+* 1、项目前端采用`react`开发的。前端项目地址
   * [`github`地址](https://github.com/kuangshp/nestjs-mysql-api-react)
   * [码云地址](https://gitee.com/k_2021/nestjs-mysql-api-react)
   * 如果你不会`react`，你可以参考[前端vue基础项目模板](https://github.com/kuangshp/vue3-admin)来完成
@@ -75,3 +75,4 @@
   <img src="https://shuiping.oss-cn-shenzhen.aliyuncs.com/nest-mysql-api/wx.jpg" width="200" height="220" style="margin-left:0" />
 
 - 2、如果你觉得本项目对你帮助很大,**给一个赞**
+- 3、最近正在搞`Nestjs`微服务训练营，训练营后打算重构一版
