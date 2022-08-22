@@ -70,7 +70,7 @@
 
 > 本项目还在持续集成新功能进来,最后会加上前端做一个`cms`系统的`api`,后期会拉分支使用`graphql`提供`api`
 
-- 1、有关于`nestjs`的技术问题或索要关于`nestjs`的电子书可以直接加我微信(微信号:332904234)<font color="#f00">备注:nest 开发</font>
+- 1、有关于`nestjs`的技术问题或索要关于`nestjs`的电子书可以直接加我微信加入技术交流群(微信号:332904234)<font color="#f00">备注:nest 开发</font>
 
   <img src="https://shuiping.oss-cn-shenzhen.aliyuncs.com/nest-mysql-api/wx.jpg" width="200" height="220" style="margin-left:0" />
 
