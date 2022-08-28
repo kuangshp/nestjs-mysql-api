@@ -9,7 +9,7 @@ import { HttpExceptionFilter } from './filters/http-exception.filter';
 // import { TransformInterceptor } from './interceptors/transform/transform.interceptor';
 
 const PORT = process.env.PORT || 8080;
-const PREFIX = process.env.PREFIX || '/';
+const PREFIX = process.env.API_PREFIX || '/';
 export const IS_DEV = process.env.NODE_ENV !== 'production';
 async function bootstrap() {
   const logger: Logger = new Logger('main.ts');
