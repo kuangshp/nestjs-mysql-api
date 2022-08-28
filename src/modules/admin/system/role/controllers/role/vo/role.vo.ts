@@ -6,7 +6,7 @@ export class RoleVo extends QueryVo {
   @ApiProperty({ description: '角色名称' })
   name?: string;
 
-  @ApiProperty({ description: '角色描素' })
+  @ApiProperty({ description: '角色描述' })
   description?: string;
 
   @ApiProperty({ description: '1表示默认角色,0表示非默认角色' })

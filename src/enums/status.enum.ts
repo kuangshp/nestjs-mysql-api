@@ -6,7 +6,7 @@ export enum StatusEnum {
   NORMAL = 1,
 }
 
-/** 状态描素 */
+/** 状态描述 */
 export const StatusMessage = {
   0: '禁用',
   1: '正常',

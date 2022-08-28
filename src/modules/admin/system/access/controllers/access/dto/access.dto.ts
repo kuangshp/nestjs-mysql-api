@@ -47,9 +47,9 @@ export class AccessDto {
   @IsOptional()
   readonly sort?: number;
 
-  @ApiPropertyOptional({ required: false, description: '描素' })
-  @MaxLength(100, { message: '描素长度最大为100' })
-  @IsString({ message: '描素必须是字符类型' })
+  @ApiPropertyOptional({ required: false, description: '描述' })
+  @MaxLength(100, { message: '描述长度最大为100' })
+  @IsString({ message: '描述必须是字符类型' })
   @ValidateIf((o) => o.description != '')
   @IsOptional()
   readonly description?: string;

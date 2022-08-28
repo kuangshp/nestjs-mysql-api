@@ -6,7 +6,7 @@ export enum RoleEnum {
   DEFAULT = 1,
 }
 
-/** 角色描素 */
+/** 角色描述 */
 export const RoleMessage = {
   0: '正常分配的角色',
   1: '系统默认的角色',

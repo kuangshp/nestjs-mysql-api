@@ -6,7 +6,7 @@ export enum AdminIdentityEnum {
   SUPPER = 1,
 }
 
-/** 后台管理账号身份描素 */
+/** 后台管理账号身份描述 */
 export const AdminIdentityMessage = {
   0: '普通账号',
   1: '超级管理员',

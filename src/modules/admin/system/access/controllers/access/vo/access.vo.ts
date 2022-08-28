@@ -24,7 +24,7 @@ export class AccessVo extends QueryVo {
   @ApiProperty({ description: '排序' })
   sort: number;
 
-  @ApiProperty({ description: '描素' })
+  @ApiProperty({ description: '描述' })
   description?: string;
 }
 

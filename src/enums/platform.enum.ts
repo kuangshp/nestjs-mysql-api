@@ -8,7 +8,7 @@ export enum PlatformEnum {
   MERCHANT_PLATFORM = 2,
 }
 
-/** 平台文字描素 */
+/** 平台文字描述 */
 export const PlatformMessage = {
   0: '普通人员',
   1: '运营管理平台',

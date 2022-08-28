@@ -100,7 +100,7 @@ export class AccessEntity extends SharedEntity {
     nullable: true,
     length: 100,
     name: 'description',
-    comment: '描素',
+    comment: '描述',
   })
   description: string;
 }

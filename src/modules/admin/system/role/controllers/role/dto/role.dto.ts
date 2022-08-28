@@ -16,9 +16,9 @@ export class RoleDto {
   @IsOptional()
   readonly mobile?: string;
 
-  @ApiPropertyOptional({ required: false, description: '描素' })
-  @MaxLength(100, { message: '描素最长字符为100' })
-  @IsString({ message: '描素必须是字符类型' })
+  @ApiPropertyOptional({ required: false, description: '描述' })
+  @MaxLength(100, { message: '描述最长字符为100' })
+  @IsString({ message: '描述必须是字符类型' })
   @ValidateIf((o) => o.description != '')
   @IsOptional()
   readonly description?: string;
