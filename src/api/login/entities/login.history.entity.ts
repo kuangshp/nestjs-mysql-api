@@ -15,27 +15,18 @@ export class LoginHistoryEntity extends SharedEntity {
     type: 'timestamp',
     name: 'last_login_time',
     default: 'CURRENT_TIMESTAMP',
-    comment: '最后登录时间',
+    comment: '登录时间',
   })
-  lastLoginTime!: Date;
+  loginTime!: Date;
 
   @Column({
     type: 'varchar',
     length: 50,
     name: 'last_login_ip',
     nullable: true,
-    comment: '最后登录ip地址',
+    comment: '登录ip地址',
   })
-  lastLoginIp!: string;
-
-  @Column({
-    type: 'int',
-    name: 'login_total',
-    nullable: true,
-    default: '0',
-    comment: '登录次数',
-  })
-  loginTotal!: number;
+  loginIp!: string;
 
   @Column({
     type: 'varchar',

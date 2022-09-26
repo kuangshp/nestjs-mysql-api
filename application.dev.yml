@@ -9,7 +9,7 @@ datasource:
   driverName: mysql
   host: localhost
   port: 3306
-  database: beego
+  database: nestjs-mysql-api
   username: root
   password: 123456
   charset: utf8mb4

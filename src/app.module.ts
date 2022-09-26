@@ -45,9 +45,9 @@ import { SharedModule } from './shared/shared.module';
         },
       }),
     }),
+    ApiModule,
     SharedModule,
     PluginModule,
-    ApiModule,
   ],
   providers: [
     Logger,
