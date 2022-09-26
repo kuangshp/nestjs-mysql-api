@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PageEnum, StatusEnum } from '@src/enums';
 import { mapToObj } from '@src/utils';
-import { Equal, ILike, Repository } from 'typeorm';
+import { Equal, FindOperator, ILike, Repository } from 'typeorm';
 import { QueryAccountDto } from './dto/account.query.dto';
 import { AccountEntity } from './entities/account.entity';
 import { AccountListVo } from './vo/account.vo';
@@ -32,7 +32,7 @@ export class AccountService {
       mobile,
       email,
     } = queryOptions;
-    const queryMap = new Map<string, any>();
+    const queryMap = new Map<string, FindOperator<string>>();
     if (username) {
       queryMap.set('username', ILike(`%${username}%`));
     }
