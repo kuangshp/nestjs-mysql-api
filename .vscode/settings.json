@@ -1,9 +1,11 @@
 {
   "cSpell.words": [
+    "adcode",
     "aliyun",
     "datasource",
     "metatype",
     "nestjs",
+    "tinyint",
     "typeorm",
     "wechat"
   ]
