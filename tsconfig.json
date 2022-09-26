@@ -12,10 +12,24 @@
     "baseUrl": "./",
     "incremental": true,
     "skipLibCheck": true,
-    "strictNullChecks": false,
-    "noImplicitAny": false,
+    // 检查null和undefined
+    "strictNullChecks": true,
+    "esModuleInterop": true,
+    // 相当于下面两个检查noImplicitAny、strictNullChecks
+    "strict": true,
+    "noImplicitAny": true /*不能有any类型*/,
+    "noImplicitThis": true,
+    "noUnusedLocals": true /*定义未使用的时候会有提示*/,
+    "noUnusedParameters": true /*检查函数中是否有未使用的变量*/,
+    "noImplicitReturns": true /*检查函数否有返回值*/,
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
-    "noFallthroughCasesInSwitch": false
-  }
+    "noFallthroughCasesInSwitch": false,
+    "paths": {
+      /*定义别名*/ "@src/*": ["src/*"]
+    },
+    "typeRoots": [/*类型声明文件*/ "./types", "./node_modules/@types"]
+  },
+  "include": ["src", "ecosystem.config.js"],
+  "exclude": ["node_modules", "dist"]
 }

@@ -1,0 +1,11 @@
+# 配置数据库连接信息
+data_source:
+  host: 'localhost'
+  port: 3306
+  user: 'root'
+  password: '123456'
+  database: 'data-api'
+# 配置字段收取及基础类(可选，如果没有配置的话，那么就是默认每个实体类都带了相同的字段)
+data_config:
+  collect: 'id, created_at, updated_at, deleted_at'
+  base_name: 'SharedEntity'

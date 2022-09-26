@@ -1,0 +1,20 @@
+PORT: 9000
+PREFIX: api
+
+# token过期时间为7天
+tokenExpire: 7
+
+# 数据库配置
+datasource:
+  driverName: mysql
+  host: localhost
+  port: 3306
+  database: nestjs-mysql-api
+  username: root
+  password: 123456
+  charset: utf8mb4
+  loc: Asia/Shanghai
+  logging: true
+
+# 腾讯地图api
+lbsKey: LW7BZ-NB7C5-CFLI2-QNDSX-VCZVT-D7FQ4
