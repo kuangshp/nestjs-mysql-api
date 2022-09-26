@@ -5,7 +5,6 @@ import {
   HttpStatus,
   Injectable,
 } from '@nestjs/common';
-import { ICurrentUserType } from '@src/decorators';
 import { RedisService } from '@src/plugin/redis/redis.service';
 import { getUrlQuery } from '@src/utils';
 
@@ -24,7 +23,7 @@ export class AuthGuard implements CanActivate {
       const result = await this.redisService.get(token);
       if (result) {
         // 这里我们知道result数据类型就是我们定义的直接断言
-        request.user = result as unknown as ICurrentUserType;
+        request.user = result;
         return true;
       } else {
         throw new HttpException('你传递token错误', HttpStatus.FORBIDDEN);
