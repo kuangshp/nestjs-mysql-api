@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { RouterModule } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PROJECT_PREFIX } from '@src/constants';
+import { LoginHistoryEntity } from '../login/entities/login.history.entity';
 import { AccountController } from './account.controller';
 import { AccountService } from './account.service';
 import { AccountEntity } from './entities/account.entity';
@@ -14,7 +15,7 @@ import { AccountEntity } from './entities/account.entity';
         module: AccountModule,
       },
     ]),
-    TypeOrmModule.forFeature([AccountEntity]),
+    TypeOrmModule.forFeature([AccountEntity, LoginHistoryEntity]),
   ],
   controllers: [AccountController],
   providers: [AccountService],
