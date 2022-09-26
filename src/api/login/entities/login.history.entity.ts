@@ -13,7 +13,7 @@ export class LoginHistoryEntity extends SharedEntity {
 
   @Column({
     type: 'timestamp',
-    name: 'last_login_time',
+    name: 'login_time',
     default: 'CURRENT_TIMESTAMP',
     comment: '登录时间',
   })
@@ -22,7 +22,7 @@ export class LoginHistoryEntity extends SharedEntity {
   @Column({
     type: 'varchar',
     length: 50,
-    name: 'last_login_ip',
+    name: 'login_ip',
     nullable: true,
     comment: '登录ip地址',
   })
