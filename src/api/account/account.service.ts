@@ -11,7 +11,7 @@ import { AccountListVo } from './vo/account.vo';
 export class AccountService {
   constructor(
     @InjectRepository(AccountEntity)
-    private readonly accountRepository: Repository<AccountEntity>
+    private readonly accountRepository: Repository<AccountEntity> // @InjectRepository(LoginHistoryEntity) // private readonly loginHistoryRepository: Repository<LoginHistoryEntity>
   ) {}
 
   /**
@@ -45,25 +45,16 @@ export class AccountService {
     if ([StatusEnum.NORMAL, StatusEnum.FORBIDDEN].includes(+status)) {
       queryMap.set('status', Equal(status));
     }
-    const total: number = await this.accountRepository
-      .createQueryBuilder('account')
+    const [data, total] = await this.accountRepository
+      .createQueryBuilder()
+      .skip((pageNumber - 1) * pageSize)
+      .take(pageSize)
+      .orderBy({ id: 'DESC' })
+      .printSql()
       .where(mapToObj(queryMap))
-      .getCount();
-    // 1.查询账号表及关联查询到最后登录表信息
-    const accountEntity: any = await this.accountRepository
-      .createQueryBuilder('account')
-      .select('account.id', 'id')
-      .addSelect('account.username', 'username')
-      .addSelect('account.mobile', 'mobile')
-      .addSelect('account.email', 'email')
-      .addSelect('account.status', 'status')
-      .addSelect('account.isSuper', 'isSuper')
-      .addSelect('account.createdAt', 'createdAt')
-      .addSelect('account.updatedAt', 'updatedAt')
-      .where(mapToObj(queryMap))
-      .getRawMany();
+      .getManyAndCount();
     return {
-      data: accountEntity,
+      data,
       total,
       pageNumber,
       pageSize,
