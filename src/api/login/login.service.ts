@@ -24,16 +24,19 @@ export class LoginService {
       | Omit<AccountEntity, 'status' | 'created_at' | 'updated_at'>
       | null
       | undefined;
+    let usernameRep = username;
     // 根据手机号码查询
     if (isMobilePhone(username, 'zh-CN')) {
       accountEntity = await queryBuilder
         .where('(account.mobile = :mobile)', { mobile: username })
         .getRawOne();
+      usernameRep = '';
     } else if (isEmail(username)) {
       // 根据邮箱查询
       accountEntity = await queryBuilder
         .where('(account.email = :email)', { email: username })
         .getRawOne();
+      usernameRep = '';
     } else {
       // 用户名查询
       accountEntity = await queryBuilder
@@ -46,13 +49,17 @@ export class LoginService {
       return {
         token,
         id: accountEntity.id,
-        username,
+        username: usernameRep
+          ? usernameRep
+          : accountEntity.username.startsWith('_')
+          ? ''
+          : accountEntity.username,
         email: isEmail(accountEntity.email) ? accountEntity.email : '',
         mobile: isMobilePhone(accountEntity.mobile, 'zh-CN') ? accountEntity.mobile : '',
         isSuper: accountEntity.isSuper,
       };
     } else {
-      this.loggerService.error('账号密码登录错误' + loginDto);
+      this.loggerService.error(loginDto, '账号密码登录错误');
       throw new HttpException('账号密码不正确', HttpStatus.OK);
     }
   }
