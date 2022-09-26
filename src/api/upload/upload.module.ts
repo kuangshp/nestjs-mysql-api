@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { RouterModule } from '@nestjs/core';
+
 import { PROJECT_PREFIX } from '@src/constants';
 import { UploadController } from './upload.controller';
 

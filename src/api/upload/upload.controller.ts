@@ -2,7 +2,6 @@ import { Controller, Post, UploadedFile, UseInterceptors } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { UploadImgService, UploadResultType } from '@src/plugin/file/upload-img.service';
-
 @Controller('upload')
 export class UploadController {
   constructor(
