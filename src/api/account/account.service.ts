@@ -48,6 +48,30 @@ export class AccountService {
 
   /**
    * @Author: 水痕
+   * @Date: 2022-09-27 08:35:32
+   * @LastEditors:
+   * @LastEditTime:
+   * @Description: 根据id软删除账号数据
+   * @param {number} id
+   * @return {*}
+   */
+  async deleteAccountById(id: number): Promise<string> {
+    // 不能删除超级管理员
+    const accountEntity: Pick<AccountEntity, 'isSuper'> | null =
+      await this.accountRepository.findOne({ where: { id }, select: ['isSuper'] });
+    if (Object.is(accountEntity?.isSuper, 1)) {
+      throw new HttpException('超级管理员不能直接删除', HttpStatus.OK);
+    }
+    const { affected } = await this.accountRepository.softDelete(id);
+    if (affected) {
+      return '删除成功';
+    } else {
+      return '删除失败';
+    }
+  }
+
+  /**
+   * @Author: 水痕
    * @Date: 2022-09-27 08:16:35
    * @LastEditors:
    * @LastEditTime:
