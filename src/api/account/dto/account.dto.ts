@@ -1,4 +1,5 @@
 import { IsEqual } from '@src/validators';
+import { Type } from 'class-transformer';
 import {
   IsString,
   IsNotEmpty,
@@ -10,6 +11,9 @@ import {
   ArrayMinSize,
   ArrayUnique,
   IsNumber,
+  IsInt,
+  Max,
+  Min,
 } from 'class-validator';
 
 export class CreateAccountDto {
@@ -45,4 +49,20 @@ export class IdListDto {
   @ArrayMinSize(1, { message: '最小长度为1' })
   @IsNotEmpty({ message: 'id列表不能为空' })
   readonly idList!: number[];
+}
+
+export class StatusDto {
+  @IsArray()
+  @IsNumber(undefined, { each: true, message: '必须是数字' })
+  @ArrayUnique({ message: '不能重复字段' })
+  @ArrayMinSize(1, { message: '最小长度为1' })
+  @IsNotEmpty({ message: 'id列表不能为空' })
+  readonly idList!: number[];
+
+  @Max(1, { message: '状态最大值为1' })
+  @Min(0, { message: '状态最小值为0' })
+  @IsInt({ message: '状态必须是数字' })
+  @Type(() => Number)
+  @IsNotEmpty({ message: '状态不能为空' })
+  readonly status!: number;
 }

@@ -6,13 +6,14 @@ import {
   Param,
   ParseIntPipe,
   Post,
+  Put,
   Query,
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@src/guard/auth.guard';
 import { QueryOptionsDto } from '@src/shared/dto/query.options.dto';
 import { AccountService } from './account.service';
-import { CreateAccountDto, IdListDto } from './dto/account.dto';
+import { CreateAccountDto } from './dto/account.dto';
 import { QueryAccountDto } from './dto/account.query.dto';
 import { AccountListVo, LoginHistoryListVo } from './vo/account.vo';
 
@@ -26,9 +27,18 @@ export class AccountController {
     return await this.accountService.createAccount(createAccountDto);
   }
 
-  @Delete()
-  async deleteAccountById(@Body() idListDto: IdListDto): Promise<string> {
-    return await this.accountService.deleteAccountById(idListDto);
+  @Delete(':accountId')
+  async deleteAccountById(
+    @Param('accountId', new ParseIntPipe()) accountId: number
+  ): Promise<string> {
+    return await this.accountService.deleteAccountById(accountId);
+  }
+
+  @Put('status/:accountId')
+  async modifyStatusById(
+    @Param('accountId', new ParseIntPipe()) accountId: number
+  ): Promise<string> {
+    return await this.accountService.modifyStatusById(accountId);
   }
 
   @Get('loginHistory/:accountId')
