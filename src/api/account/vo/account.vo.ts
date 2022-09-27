@@ -1,9 +1,8 @@
 import { QueryListVo } from '@src/shared/vo/query.list.vo';
 import { QueryVo } from '@src/shared/vo/query.vo';
-export class LoginHistoryVo {
+export class LoginHistoryVo extends QueryVo {
   readonly loginTime!: Date; // 最后登录时间
   readonly loginIp!: string; // 最后登录ip
-  readonly loginTotal!: number; // 登录次数
   readonly nation!: string; // 国家
   readonly province!: string; // 省份
   readonly city!: string; // 城市
@@ -19,4 +18,8 @@ export class AccountVo extends QueryVo {
 
 export class AccountListVo extends QueryListVo {
   readonly data!: AccountVo[];
+}
+
+export class LoginHistoryListVo extends QueryListVo {
+  readonly data!: LoginHistoryVo[];
 }
