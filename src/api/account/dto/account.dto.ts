@@ -6,6 +6,8 @@ import {
   IsMobilePhone,
   IsOptional,
   IsEmail,
+  IsArray,
+  IsNotEmptyObject,
 } from 'class-validator';
 
 export class CreateAccountDto {
@@ -32,4 +34,10 @@ export class CreateAccountDto {
   @IsString({ message: '确认密码必须为字符类' })
   @IsNotEmpty({ message: '确认密码不能为空' })
   readonly confirmPassword!: string;
+}
+
+export class IdListDto {
+  @IsArray({ each: true })
+  @IsNotEmptyObject({ nullable: false }, { message: 'id列表不能为空' })
+  readonly idList!: number[];
 }

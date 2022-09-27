@@ -12,7 +12,7 @@ import {
 import { AuthGuard } from '@src/guard/auth.guard';
 import { QueryOptionsDto } from '@src/shared/dto/query.options.dto';
 import { AccountService } from './account.service';
-import { CreateAccountDto } from './dto/account.dto';
+import { CreateAccountDto, IdListDto } from './dto/account.dto';
 import { QueryAccountDto } from './dto/account.query.dto';
 import { AccountListVo, LoginHistoryListVo } from './vo/account.vo';
 
@@ -26,9 +26,9 @@ export class AccountController {
     return await this.accountService.createAccount(createAccountDto);
   }
 
-  @Delete(':id')
-  async deleteAccountById(@Param('id', new ParseIntPipe()) id: number): Promise<string> {
-    return await this.accountService.deleteAccountById(id);
+  @Delete()
+  async deleteAccountById(@Body() idListDto: IdListDto): Promise<string> {
+    return await this.accountService.deleteAccountById(idListDto);
   }
 
   @Get('loginHistory/:accountId')

@@ -3,9 +3,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { PageEnum, StatusEnum } from '@src/enums';
 import { QueryOptionsDto } from '@src/shared/dto/query.options.dto';
 import { mapToObj } from '@src/utils';
-import { Equal, FindOperator, ILike, Repository } from 'typeorm';
+import { Equal, FindOperator, ILike, In, Repository } from 'typeorm';
 import { LoginHistoryEntity } from '../login/entities/login.history.entity';
-import { CreateAccountDto } from './dto/account.dto';
+import { CreateAccountDto, IdListDto } from './dto/account.dto';
 import { QueryAccountDto } from './dto/account.query.dto';
 import { AccountEntity } from './entities/account.entity';
 import { AccountListVo, LoginHistoryListVo } from './vo/account.vo';
@@ -52,17 +52,20 @@ export class AccountService {
    * @LastEditors:
    * @LastEditTime:
    * @Description: 根据id软删除账号数据
-   * @param {number} id
+   * @param {IdListDto} idListDto
    * @return {*}
    */
-  async deleteAccountById(id: number): Promise<string> {
+  async deleteAccountById(idListDto: IdListDto): Promise<string> {
     // 不能删除超级管理员
     const accountEntity: Pick<AccountEntity, 'isSuper'> | null =
-      await this.accountRepository.findOne({ where: { id }, select: ['isSuper'] });
+      await this.accountRepository.findOne({
+        where: { id: In(idListDto.idList) },
+        select: ['isSuper'],
+      });
     if (Object.is(accountEntity?.isSuper, 1)) {
       throw new HttpException('超级管理员不能直接删除', HttpStatus.OK);
     }
-    const { affected } = await this.accountRepository.softDelete(id);
+    const { affected } = await this.accountRepository.softDelete(idListDto.idList);
     if (affected) {
       return '删除成功';
     } else {
