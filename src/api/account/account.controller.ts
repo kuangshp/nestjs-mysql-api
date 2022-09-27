@@ -27,7 +27,7 @@ export class AccountController {
   }
 
   @Delete(':id')
-  async deleteAccountById(@Param('id') id: number): Promise<string> {
+  async deleteAccountById(@Param('id', new ParseIntPipe()) id: number): Promise<string> {
     return await this.accountService.deleteAccountById(id);
   }
 
