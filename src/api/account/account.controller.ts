@@ -1,7 +1,8 @@
-import { Controller, Get, Param, ParseIntPipe, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, ParseIntPipe, Post, Query, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@src/guard/auth.guard';
 import { QueryOptionsDto } from '@src/shared/dto/query.options.dto';
 import { AccountService } from './account.service';
+import { CreateAccountDto } from './dto/account.dto';
 import { QueryAccountDto } from './dto/account.query.dto';
 import { AccountListVo, LoginHistoryListVo } from './vo/account.vo';
 
@@ -9,6 +10,11 @@ import { AccountListVo, LoginHistoryListVo } from './vo/account.vo';
 @Controller('account')
 export class AccountController {
   constructor(private readonly accountService: AccountService) {}
+
+  @Post()
+  async createAccount(@Body() createAccountDto: CreateAccountDto): Promise<string> {
+    return await this.accountService.createAccount(createAccountDto);
+  }
 
   @Get('loginHistory/:accountId')
   async getLoginHistoryByAccountId(

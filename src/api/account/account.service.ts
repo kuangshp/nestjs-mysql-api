@@ -1,10 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PageEnum, StatusEnum } from '@src/enums';
 import { QueryOptionsDto } from '@src/shared/dto/query.options.dto';
 import { mapToObj } from '@src/utils';
 import { Equal, FindOperator, ILike, Repository } from 'typeorm';
 import { LoginHistoryEntity } from '../login/entities/login.history.entity';
+import { CreateAccountDto } from './dto/account.dto';
 import { QueryAccountDto } from './dto/account.query.dto';
 import { AccountEntity } from './entities/account.entity';
 import { AccountListVo, LoginHistoryListVo } from './vo/account.vo';
@@ -17,6 +18,33 @@ export class AccountService {
     @InjectRepository(LoginHistoryEntity)
     private readonly loginHistoryRepository: Repository<LoginHistoryEntity>
   ) {}
+
+  /**
+   * @Author: 水痕
+   * @Date: 2022-09-27 08:27:26
+   * @LastEditors:
+   * @LastEditTime:
+   * @Description: 创建账号
+   * @param {CreateAccountDto} createAccountDto
+   * @return {*}
+   */
+  async createAccount(createAccountDto: CreateAccountDto): Promise<string> {
+    // 查询是否有相同的用户名
+    const accountResult: Pick<AccountEntity, 'id'> | null = await this.accountRepository.findOne({
+      where: [
+        { username: createAccountDto.username },
+        { mobile: createAccountDto.mobile },
+        { email: createAccountDto.email },
+      ],
+      select: ['id'],
+    });
+    if (accountResult?.id) {
+      throw new HttpException('用户名/手机号码/邮箱已经存在，不能重复创建', HttpStatus.OK);
+    }
+    const accountEntity = this.accountRepository.create(createAccountDto);
+    await this.accountRepository.save(accountEntity);
+    return '创建成功';
+  }
 
   /**
    * @Author: 水痕
