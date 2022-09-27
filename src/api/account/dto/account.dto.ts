@@ -7,7 +7,9 @@ import {
   IsOptional,
   IsEmail,
   IsArray,
-  IsNotEmptyObject,
+  ArrayMinSize,
+  ArrayUnique,
+  IsNumber,
 } from 'class-validator';
 
 export class CreateAccountDto {
@@ -37,7 +39,10 @@ export class CreateAccountDto {
 }
 
 export class IdListDto {
-  @IsArray({ each: true })
-  @IsNotEmptyObject({ nullable: false }, { message: 'id列表不能为空' })
+  @IsArray()
+  @IsNumber(undefined, { each: true, message: '必须是数字' })
+  @ArrayUnique({ message: '不能重复字段' })
+  @ArrayMinSize(1, { message: '最小长度为1' })
+  @IsNotEmpty({ message: 'id列表不能为空' })
   readonly idList!: number[];
 }
