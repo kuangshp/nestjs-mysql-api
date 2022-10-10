@@ -20,7 +20,7 @@ export class RoleEntity extends SharedEntity {
     nullable: true,
     length: 100,
     name: 'description',
-    comment: '角色描素',
+    comment: '角色描述',
   })
   description: string;
 
