@@ -7,6 +7,7 @@ import { FindOperator, ILike, Repository } from 'typeorm';
 import { RoleDto } from './dto/role.dto';
 import { QueryRoleDto } from './dto/role.query.dto';
 import { RoleEntity } from './entities/role.entity';
+import { RoleListVo, RolePageVo } from './vo/role.vo';
 
 @Injectable()
 export class RoleService {
@@ -145,6 +146,22 @@ export class RoleService {
   /**
    * @Author: 水痕
    * @Email: kuangshp@126.com
+   * @Date: 2022-10-17 22:32:36
+   * @LastEditors:
+   * @LastEditTime:
+   * @Description: 给下拉框使用获取角色列表
+   * @return {*}
+   */
+  async getRoleList(): Promise<RoleListVo[]> {
+    return await this.roleRepository.find({
+      where: { status: StatusEnum.NORMAL },
+      select: ['id', 'name'],
+      order: { id: 'desc' },
+    });
+  }
+  /**
+   * @Author: 水痕
+   * @Email: kuangshp@126.com
    * @Date: 2022-10-17 22:22:24
    * @LastEditors:
    * @LastEditTime:
@@ -152,7 +169,7 @@ export class RoleService {
    * @param {*} queryOptions
    * @return {*}
    */
-  async getRolePage(queryOptions: QueryRoleDto): Promise<any> {
+  async getRolePage(queryOptions: QueryRoleDto): Promise<RolePageVo> {
     const { pageNumber = PageEnum.PAGE_NUMBER, pageSize = PageEnum.PAGE_SIZE, name } = queryOptions;
     const queryMap = new Map<string, FindOperator<string>>();
     if (name) {

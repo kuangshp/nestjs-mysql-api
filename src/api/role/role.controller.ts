@@ -15,6 +15,7 @@ import { AuthGuard } from '@src/guard/auth.guard';
 import { RoleDto } from './dto/role.dto';
 import { QueryRoleDto } from './dto/role.query.dto';
 import { RoleService } from './role.service';
+import { RoleListVo, RolePageVo } from './vo/role.vo';
 
 @UseGuards(AuthGuard)
 @Controller('role')
@@ -44,8 +45,13 @@ export class RoleController {
     return await this.roleService.modifyRoleById(id, roleDto);
   }
 
+  @Get('list')
+  async getRoleList(): Promise<RoleListVo[]> {
+    return await this.roleService.getRoleList();
+  }
+
   @Get()
-  async getRolePage(@Query() queryOptions: QueryRoleDto): Promise<any> {
+  async getRolePage(@Query() queryOptions: QueryRoleDto): Promise<RolePageVo> {
     return await this.roleService.getRolePage(queryOptions);
   }
 }
