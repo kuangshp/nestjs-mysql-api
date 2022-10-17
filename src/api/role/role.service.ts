@@ -7,7 +7,7 @@ import { FindOperator, ILike, Repository } from 'typeorm';
 import { RoleDto } from './dto/role.dto';
 import { QueryRoleDto } from './dto/role.query.dto';
 import { RoleEntity } from './entities/role.entity';
-import { RoleListVo, RolePageVo } from './vo/role.vo';
+import { RoleListVo, RolePageVo, RoleVo } from './vo/role.vo';
 
 @Injectable()
 export class RoleService {
@@ -159,6 +159,21 @@ export class RoleService {
       order: { id: 'desc' },
     });
   }
+
+  /**
+   * @Author: 水痕
+   * @Email: kuangshp@126.com
+   * @Date: 2022-10-17 22:41:23
+   * @LastEditors:
+   * @LastEditTime:
+   * @Description: 根据角色id获取角色信息
+   * @param {number} id
+   * @return {*}
+   */
+  async getRoleById(id: number): Promise<RoleVo | null> {
+    return await this.roleRepository.findOne({ where: { id } });
+  }
+
   /**
    * @Author: 水痕
    * @Email: kuangshp@126.com

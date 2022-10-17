@@ -15,7 +15,7 @@ import { AuthGuard } from '@src/guard/auth.guard';
 import { RoleDto } from './dto/role.dto';
 import { QueryRoleDto } from './dto/role.query.dto';
 import { RoleService } from './role.service';
-import { RoleListVo, RolePageVo } from './vo/role.vo';
+import { RoleListVo, RolePageVo, RoleVo } from './vo/role.vo';
 
 @UseGuards(AuthGuard)
 @Controller('role')
@@ -48,6 +48,11 @@ export class RoleController {
   @Get('list')
   async getRoleList(): Promise<RoleListVo[]> {
     return await this.roleService.getRoleList();
+  }
+
+  @Get(':id')
+  async getRoleById(@Param('id', new ParseIntPipe()) id: number): Promise<RoleVo | null> {
+    return await this.roleService.getRoleById(id);
   }
 
   @Get()

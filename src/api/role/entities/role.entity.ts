@@ -1,5 +1,6 @@
 import { StatusEnum } from '@src/enums';
 import { SharedEntity } from '@src/shared/entities/base.entity';
+import { Expose } from 'class-transformer';
 import { Entity, Column } from 'typeorm';
 
 @Entity('role')
@@ -38,4 +39,9 @@ export class RoleEntity extends SharedEntity {
     comment: '针对后期提供注册用,1表示默认角色,0表示非默认角色',
   })
   isDefault!: number;
+
+  @Expose()
+  statusStr(): string {
+    return this.status === 0 ? '禁止' : '正常';
+  }
 }
