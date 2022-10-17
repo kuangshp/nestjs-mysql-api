@@ -1,9 +1,11 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { StatusEnum } from '@src/enums';
+import { PageEnum, StatusEnum } from '@src/enums';
 import { LoggerService } from '@src/plugin/logger/logger.service';
-import { Repository } from 'typeorm';
+import { mapToObj } from '@src/utils';
+import { FindOperator, ILike, Repository } from 'typeorm';
 import { RoleDto } from './dto/role.dto';
+import { QueryRoleDto } from './dto/role.query.dto';
 import { RoleEntity } from './entities/role.entity';
 
 @Injectable()
@@ -138,5 +140,37 @@ export class RoleService {
     } else {
       return '修改失败';
     }
+  }
+
+  /**
+   * @Author: 水痕
+   * @Email: kuangshp@126.com
+   * @Date: 2022-10-17 22:22:24
+   * @LastEditors:
+   * @LastEditTime:
+   * @Description: 分页获取角色列表
+   * @param {*} queryOptions
+   * @return {*}
+   */
+  async getRolePage(queryOptions: QueryRoleDto): Promise<any> {
+    const { pageNumber = PageEnum.PAGE_NUMBER, pageSize = PageEnum.PAGE_SIZE, name } = queryOptions;
+    const queryMap = new Map<string, FindOperator<string>>();
+    if (name) {
+      queryMap.set('name', ILike(`%${name}%`));
+    }
+    const [data, total] = await this.roleRepository
+      .createQueryBuilder()
+      .skip((pageNumber - 1) * pageSize)
+      .take(pageSize)
+      .orderBy({ id: 'DESC' })
+      .printSql()
+      .where(mapToObj(queryMap))
+      .getManyAndCount();
+    return {
+      data,
+      total,
+      pageNumber,
+      pageSize,
+    };
   }
 }

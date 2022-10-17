@@ -2,15 +2,18 @@ import {
   Body,
   Controller,
   Delete,
+  Get,
   Param,
   ParseIntPipe,
   Patch,
   Post,
   Put,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@src/guard/auth.guard';
 import { RoleDto } from './dto/role.dto';
+import { QueryRoleDto } from './dto/role.query.dto';
 import { RoleService } from './role.service';
 
 @UseGuards(AuthGuard)
@@ -39,5 +42,10 @@ export class RoleController {
     @Body() roleDto: Omit<RoleDto, 'status'>
   ): Promise<string> {
     return await this.roleService.modifyRoleById(id, roleDto);
+  }
+
+  @Get()
+  async getRolePage(@Query() queryOptions: QueryRoleDto): Promise<any> {
+    return await this.roleService.getRolePage(queryOptions);
   }
 }
