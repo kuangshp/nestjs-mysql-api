@@ -79,6 +79,9 @@ export class AccountService {
     await this.checkIsSuper(accountId);
     const accountEntity: Pick<AccountEntity, 'status'> | null =
       await this.accountRepository.findOne({ where: { id: accountId }, select: ['status'] });
+    if (!accountEntity) {
+      throw new HttpException('传递的账号id错误', HttpStatus.OK);
+    }
     const { affected } = await this.accountRepository.update(
       { id: accountId },
       {

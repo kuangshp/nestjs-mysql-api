@@ -4,6 +4,7 @@ import {
   Delete,
   Param,
   ParseIntPipe,
+  Patch,
   Post,
   Put,
   UseGuards,
@@ -25,6 +26,11 @@ export class RoleController {
   @Delete(':id')
   async deleteRoleById(@Param('id', new ParseIntPipe()) id: number): Promise<string> {
     return await this.roleService.deleteRoleById(id);
+  }
+
+  @Patch('status/:id')
+  async modifyRoleStatusById(@Param('id', new ParseIntPipe()) id: number): Promise<string> {
+    return await this.roleService.modifyRoleStatusById(id);
   }
 
   @Put(':id')

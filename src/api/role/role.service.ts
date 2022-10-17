@@ -1,5 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { StatusEnum } from '@src/enums';
 import { LoggerService } from '@src/plugin/logger/logger.service';
 import { Repository } from 'typeorm';
 import { RoleDto } from './dto/role.dto';
@@ -69,6 +70,35 @@ export class RoleService {
       return '删除成功';
     } else {
       return '删除失败';
+    }
+  }
+
+  /**
+   * @Author: 水痕
+   * @Email: kuangshp@126.com
+   * @Date: 2022-10-17 22:09:50
+   * @LastEditors:
+   * @LastEditTime:
+   * @Description: 根据id修改角色状态
+   * @param {number} id
+   * @return {*}
+   */
+  async modifyRoleStatusById(id: number): Promise<string> {
+    const roleEntity: Pick<RoleEntity, 'status'> | null = await this.roleRepository.findOne({
+      where: { id },
+      select: ['status'],
+    });
+    if (!roleEntity) {
+      throw new HttpException('传递的角色id错误', HttpStatus.OK);
+    }
+    const { affected } = await this.roleRepository.update(id, {
+      status:
+        roleEntity?.status === StatusEnum.FORBIDDEN ? StatusEnum.NORMAL : StatusEnum.FORBIDDEN,
+    });
+    if (affected) {
+      return '修改成功';
+    } else {
+      return '修改失败';
     }
   }
 
