@@ -36,3 +36,4 @@ pnpm-lock.yaml
 !.vscode/launch.json
 !.vscode/extensions.json
 
+dump.rdb

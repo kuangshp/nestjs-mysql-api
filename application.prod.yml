@@ -24,7 +24,7 @@ aliyunOss:
   accessKeyId: 'LTAI4FmwbKtoErzJdwfJmcmd'
   accessKeySecret: 'bu5UZXAG2dXQ6G75bzTDXoTN1VcALv'
   endpointUrl: 'oss-cn-shenzhen'
-  bucketUrl: 'https://wechat-data-analyse.oss-cn-shenzhen.aliyuncs.com'
+  bucketUrl: 'https://an-jia-shop.oss-cn-shenzhen.aliyuncs.com'
   bucketName: 'an-jia-shop'
   imgDefaultSize: 5
   supportImgTypes: ['.png', '.jpg', '.gif', '.jpeg']
