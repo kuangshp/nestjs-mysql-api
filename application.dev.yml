@@ -19,7 +19,7 @@ datasource:
 # 腾讯地图api
 lbsKey: LW7BZ-NB7C5--QNDSX-VCZVT-D7FQ4
 
-# 阿里oss存储
+# 阿里oss存储(可直接使用)
 aliyunOss:
   accessKeyId: 'LTAI4FmwbKtoErzJdwfJmcmd'
   accessKeySecret: 'bu5UZXAG2dXQ6G75bzTDXoTN1VcALv'
