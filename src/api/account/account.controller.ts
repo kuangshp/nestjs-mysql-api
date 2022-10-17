@@ -5,8 +5,8 @@ import {
   Get,
   Param,
   ParseIntPipe,
+  Patch,
   Post,
-  Put,
   Query,
   UseGuards,
 } from '@nestjs/common';
@@ -34,7 +34,7 @@ export class AccountController {
     return await this.accountService.deleteAccountById(accountId);
   }
 
-  @Put('status/:accountId')
+  @Patch('status/:accountId')
   async modifyStatusById(
     @Param('accountId', new ParseIntPipe()) accountId: number
   ): Promise<string> {
