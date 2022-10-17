@@ -15,8 +15,9 @@ import { ConfigService } from '@nestjs/config';
 import { IPAddress, IpToAddressService } from '@src/plugin/ip-to-address/ip-to-address.service';
 import { AccountTokenEntity } from './entities/account.token.entity';
 import { LoginHistoryEntity } from './entities/login.history.entity';
+import { StatusEnum } from '@src/enums';
 
-type findAccountType = Omit<AccountEntity, 'status' | 'created_at' | 'updated_at'>;
+type findAccountType = Omit<AccountEntity, 'created_at' | 'updated_at'>;
 @Injectable()
 export class LoginService {
   constructor(
@@ -55,6 +56,10 @@ export class LoginService {
       accountEntity = await queryBuilder
         .where('(account.username = :username)', { username })
         .getRawOne();
+    }
+    // 如果当前状态为禁止的时候直接返回
+    if (accountEntity?.status === StatusEnum.FORBIDDEN) {
+      throw new HttpException('当前账号为禁用状态，请联系管理员', HttpStatus.OK);
     }
     if (accountEntity?.id && this.toolsService.checkPassword(password, accountEntity.password)) {
       // 生成token存储到token表中并且返回给前端
@@ -97,6 +102,7 @@ export class LoginService {
       .addSelect('account.username', 'username')
       .addSelect('account.mobile', 'mobile')
       .addSelect('account.email', 'email')
+      .addSelect('account.status', 'status')
       .addSelect('account.isSuper', 'isSuper')
       .addSelect('account.password', 'password');
   }
