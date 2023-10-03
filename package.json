@@ -79,7 +79,11 @@
   "lint-staged": {
     "src/**/*.{js,ts}": [
       "eslint --fix",
+      "prettier --config .prettierrc --write",
       "git add"
     ]
+  },
+  "gitHooks": {
+    "pre-commit": "lint-staged"
   }
 }
