@@ -82,6 +82,33 @@ export class AccountService {
 
   /**
    * @Author: 水痕
+   * @Date: 2023-10-07 20:56:57
+   * @LastEditors: 水痕
+   * @Description: 根据id修改状态
+   * @param {number} id
+   * @return {*}
+   */
+  async modifyAccountStatusByIdApi(id: number): Promise<string> {
+    const accountEntity: Pick<AccountEntity, 'status'> | null =
+      await this.accountRepository.findOne({
+        where: { id },
+        select: ['status'],
+      });
+    if (!accountEntity) {
+      throw new HttpException('传递的id错误', HttpStatus.OK);
+    }
+    const { affected } = await this.accountRepository.update(id, {
+      status:
+        accountEntity?.status == StatusEnum.FORBIDDEN ? StatusEnum.NORMAL : StatusEnum.FORBIDDEN,
+    });
+    if (affected) {
+      return '修改成功';
+    } else {
+      return '修改失败';
+    }
+  }
+  /**
+   * @Author: 水痕
    * @Date: 2023-10-07 19:19:29
    * @LastEditors: 水痕
    * @Description: 根据id修改账号数据

@@ -37,6 +37,11 @@ export class AccountController {
     return await this.accountService.deleteAccountByIdApi(id);
   }
 
+  @Put('/status/:id')
+  async modifyAccountStatusByIdApi(@Param('id', new ParseIntPipe()) id: number): Promise<string> {
+    return await this.accountService.modifyAccountStatusByIdApi(id);
+  }
+
   @Put(':id')
   async modifyAccountByIdApi(
     @Param('id', new ParseIntPipe()) id: number,

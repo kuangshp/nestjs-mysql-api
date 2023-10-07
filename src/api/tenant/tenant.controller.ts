@@ -28,6 +28,11 @@ export class TenantController {
     return await this.tenantService.deleteTenantByIdApi(id);
   }
 
+  @Put('/status/:id')
+  async modifyTenantStatusByIdApi(@Param('id', new ParseIntPipe()) id: number): Promise<string> {
+    return await this.tenantService.modifyTenantStatusByIdApi(id);
+  }
+
   @Put(':id')
   async modifyTenantByIdApi(
     @Param('id', new ParseIntPipe()) id: number,

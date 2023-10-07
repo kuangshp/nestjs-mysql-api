@@ -5,7 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Equal, FindOperator, ILike, Repository, SelectQueryBuilder } from 'typeorm';
 import { TenantDto } from './dto/tenant.dto';
 import { QueryTenantDto } from './dto/tenant.query';
-import { PageEnum } from '@src/enums';
+import { PageEnum, StatusEnum } from '@src/enums';
 import { TenantPageVo, TenantVo } from './vo/tenant.vo';
 import { AreaEntity } from '../area/entities/area.entity';
 import { mapToObj } from '@src/utils';
@@ -53,6 +53,33 @@ export class TenantService {
       return '删除成功';
     } else {
       return '删除失败';
+    }
+  }
+
+  /**
+   * @Author: 水痕
+   * @Date: 2023-10-07 20:51:30
+   * @LastEditors: 水痕
+   * @Description: 根据id修改状态
+   * @param {number} id
+   * @return {*}
+   */
+  async modifyTenantStatusByIdApi(id: number): Promise<string> {
+    const tenantEntity: Pick<TenantEntity, 'status'> | null = await this.tenantRepository.findOne({
+      where: { id },
+      select: ['status'],
+    });
+    if (!tenantEntity) {
+      throw new HttpException('传递的id错误', HttpStatus.OK);
+    }
+    const { affected } = await this.tenantRepository.update(id, {
+      status:
+        tenantEntity?.status == StatusEnum.FORBIDDEN ? StatusEnum.NORMAL : StatusEnum.FORBIDDEN,
+    });
+    if (affected) {
+      return '修改成功';
+    } else {
+      return '修改失败';
     }
   }
 
