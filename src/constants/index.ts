@@ -1,5 +1,5 @@
 /**项目前缀 */
-export const PROJECT_PREFIX = 'admin';
+export const ADMIN_PREFIX = 'admin';
 
 export * from './redis.cache';
 export * from './redis.limit';

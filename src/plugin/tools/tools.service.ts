@@ -1,29 +1,35 @@
 import { Injectable } from '@nestjs/common';
 import { Request } from 'express';
 import { v4 as uuidv4 } from 'uuid';
-import NodeAuth from 'simp-node-auth';
+import { getRandomNum, randomString, strToMd5 } from '@src/utils';
 
 @Injectable()
 export class ToolsService {
-  private nodeAuth: NodeAuth;
-  constructor() {
-    this.nodeAuth = new NodeAuth();
-  }
-
   /**
    * @Author: 水痕
-   * @Date: 2022-08-11 11:11:46
+   * @Date: 2023-10-07 19:00:34
    * @LastEditors: 水痕
    * @Description: 创建一个生成uuid的方法
    * @return {*}
    */
-  public get uuidToken(): string {
+  get uuidToken(): string {
     return uuidv4().replace(/-/g, '');
   }
 
   /**
    * @Author: 水痕
-   * @Date: 2022-08-13 11:16:18
+   * @Date: 2023-10-07 19:00:08
+   * @LastEditors: 水痕
+   * @Description: 随机生成加密盐
+   * @return {*}
+   */
+  get getRandomSalt(): string {
+    return randomString(getRandomNum(10, 20));
+  }
+
+  /**
+   * @Author: 水痕
+   * @Date: 2023-10-07 19:00:19
    * @LastEditors: 水痕
    * @Description: 获取当前ip地址
    * @param {Request} req
@@ -45,26 +51,14 @@ export class ToolsService {
 
   /**
    * @Author: 水痕
-   * @Date: 2022-08-20 17:02:23
+   * @Date: 2023-10-07 19:10:17
    * @LastEditors: 水痕
-   * @Description: 密码加密的方法
-   * @param {string} password 密码
+   * @Description: 密码加密
+   * @param {string} password 原始密码
+   * @param {string} salt 盐
    * @return {*}
    */
-  makePassword(password: string): string {
-    return this.nodeAuth.makePassword(password);
-  }
-
-  /**
-   * @Author: 水痕
-   * @Date: 2022-08-20 12:58:27
-   * @LastEditors: 水痕
-   * @Description: 校验密码
-   * @param {string} password 未加密的密码
-   * @param {string} sqlPassword 加密后的密码
-   * @return {*}
-   */
-  checkPassword(password: string, sqlPassword: string): boolean {
-    return this.nodeAuth.checkPassword(password, sqlPassword);
+  makePassword(password: string, salt: string): string {
+    return strToMd5(`${password}_${salt}`);
   }
 }

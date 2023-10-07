@@ -16,7 +16,7 @@ CREATE TABLE `tenant` (
    `area_id` int(11) DEFAULT null comment '地区id',
    `address` varchar(200) DEFAULT null comment '具体地址',
    `sort` int(11) DEFAULT 1 COMMENT '排序',
-   `description` varchar(255)  DEFAULT NULL COMMENT '描素',
+   `description` varchar(255)  DEFAULT NULL COMMENT '描述',
    `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
    `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
    `deleted_at` timestamp NULL DEFAULT NULL COMMENT '软删除时间',
@@ -50,13 +50,17 @@ CREATE TABLE `account` (
    `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY key COMMENT '主键id',
    `username` varchar(50)  DEFAULT NULL COMMENT '账号',
    `password` varchar(100) NOT null COMMENT '密码',
-   `is_super` tinyint(4) DEFAULT 0 COMMENT '是否为超级管理员:0否,1是',
-   `is_primary` tinyint(4) NULL DEFAULT 0 COMMENT '是否为主账号,0表示不是,1表示是',
+   `account_type` tinyint(4) DEFAULT 0 COMMENT '账号类型:0普通账号,1是主账号,2是超管',
    `tenant_id` int(11)  NOT NULL COMMENT '关联到tenant表主键id',
    `parent_id` int(11) default "-1" COMMENT '自关联主键id',
    `sort` int(11) DEFAULT 1 COMMENT '排序',
    `status` tinyint(4) DEFAULT 0 COMMENT '状态0是正常,1是禁用',
    `last_login_ip` varchar(30) COMMENT '最后登录ip地址',
+   `last_login_nation` varchar(100) COMMENT '最后登录国家',
+   `last_login_province` varchar(100) COMMENT '最后登录省份',
+   `last_login_city` varchar(100) COMMENT '最后登录城市',
+   `last_login_district` varchar(100) COMMENT '最后登录地区',
+   `last_login_adcode` varchar(100) COMMENT '最后登录行政区划代码',
    `last_login_date` timestamp(6) COMMENT '最后登录时间',
    `salt` varchar(30) COMMENT '密码盐',
    `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
@@ -64,7 +68,6 @@ CREATE TABLE `account` (
    `deleted_at` timestamp NULL DEFAULT NULL COMMENT '软删除时间',
    UNIQUE KEY `UK_username_deleted_at` (`username`,`deleted_at`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='商户下账号表';
-
 
 -- ----------------------------
 -- 账号和角色中间表
