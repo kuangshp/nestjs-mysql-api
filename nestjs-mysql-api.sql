@@ -30,11 +30,11 @@ DROP TABLE IF EXISTS `role`;
 CREATE TABLE `role` (
    `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY key COMMENT '主键id',
    `name` varchar(50) UNIQUE NOT NULL COMMENT '角色名称',
-   `description` varchar(255)  DEFAULT NULL COMMENT '描素',
+   `description` varchar(255)  DEFAULT NULL COMMENT '描述',
    `status` tinyint(4) DEFAULT 0 COMMENT '状态0是正常,1是禁用',
    `sort` int(11) DEFAULT 1 COMMENT '排序',
    `tenant_id`  int(11) default -1 COMMENT '关联到tenant表主键id',
-   `parent_id` int(11) default -1 COMMENT '自关联主键id',
+   `account_id` int(11) default -1 COMMENT '关联account表主键id',
    `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
    `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
    `deleted_at` timestamp NULL DEFAULT NULL COMMENT '软删除时间',
@@ -96,7 +96,7 @@ CREATE TABLE `resources`  (
   `parent_id` int(11) NOT NULL DEFAULT -1 COMMENT '上一级id',
   `sort` int(11) DEFAULT 1 COMMENT '菜单,或按钮排序',
   `status` tinyint(4) DEFAULT 0 COMMENT '状态0是正常,1是禁用',
-  `description` varchar(200)  DEFAULT NULL COMMENT '描素',
+  `description` varchar(200)  DEFAULT NULL COMMENT '描述',
   `created_at` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) COMMENT '创建时间',
   `updated_at` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6) COMMENT '更新时间',
   `deleted_at` timestamp(6) NULL DEFAULT NULL COMMENT '软删除时间'

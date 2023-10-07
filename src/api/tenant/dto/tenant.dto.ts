@@ -43,7 +43,7 @@ export class TenantDto {
   @Min(1, { message: '排序最小值为1' })
   @IsInt({ message: '排序必须是整数' })
   @Type(() => Number)
-  @IsOptional({ message: '排序id' })
+  @IsOptional({ message: '排序' })
   sort!: number;
 
   @MaxLength(255, { message: '描述最大长度为255' })
