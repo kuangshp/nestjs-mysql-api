@@ -64,7 +64,7 @@ export class LoginService {
       return await this.generateToken(redisDataObj.userInfo);
     } else {
       throw new HttpException(
-        JSON.stringify({ code: 10024, message: '你还没登录,请先登录' }),
+        JSON.stringify({ code: 10025, message: '你还没登录,请先登录' }),
         HttpStatus.OK
       );
     }

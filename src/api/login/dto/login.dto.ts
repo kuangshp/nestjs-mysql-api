@@ -12,4 +12,7 @@ export class LoginDto {
 
   @IsNotEmpty({ message: '验证码不能空' })
   readonly captcha!: string;
+
+  @IsNotEmpty({ message: '验证码不能为空' })
+  readonly codeText!: string;
 }
