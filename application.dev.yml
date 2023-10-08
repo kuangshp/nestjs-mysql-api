@@ -1,8 +1,10 @@
 PORT: 9000
 PREFIX: api
 
-# token过期时间为7天
-tokenExpire: 7
+# 正常token2小时
+tokenExpire: 2
+# 刷新过期时间为7天
+refreshTokenExpire: 7
 
 # 默认密码
 defaultPassword: 123456

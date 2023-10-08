@@ -26,10 +26,16 @@ export class AuthGuard implements CanActivate {
         request.user = result;
         return true;
       } else {
-        throw new HttpException('你传递token错误', HttpStatus.FORBIDDEN);
+        throw new HttpException(
+          JSON.stringify({ code: 10024, message: '你还没登录,请先登录' }),
+          HttpStatus.OK
+        );
       }
     } else {
-      throw new HttpException('请传递token', HttpStatus.FORBIDDEN);
+      throw new HttpException(
+        JSON.stringify({ code: 10024, message: '你还没登录,请先登录' }),
+        HttpStatus.OK
+      );
     }
   }
 }

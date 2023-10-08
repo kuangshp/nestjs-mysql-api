@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Request } from 'express';
 import { v4 as uuidv4 } from 'uuid';
 import { getRandomNum, randomString, strToMd5 } from '@src/utils';
+import { TOKEN_PREFIX, TOKEN_REFRESH_PREFIX } from '@src/constants';
 
 @Injectable()
 export class ToolsService {
@@ -60,5 +61,28 @@ export class ToolsService {
    */
   makePassword(password: string, salt: string): string {
     return strToMd5(`${password}_${salt}`);
+  }
+
+  /**
+   * @Author: 水痕
+   * @Date: 2023-10-08 09:16:32
+   * @LastEditors: 水痕
+   * @Description: 登录token的key
+   * @param {number} accountId
+   * @return {*}
+   */
+  generateLoginTokenKey(accountId: number): string {
+    return `${TOKEN_PREFIX}_${accountId}`;
+  }
+  /**
+   * @Author: 水痕
+   * @Date: 2023-10-08 09:16:45
+   * @LastEditors: 水痕
+   * @Description: 刷新token的key
+   * @param {number} accountId
+   * @return {*}
+   */
+  generateLoginRefreshTokenKey(accountId: number): string {
+    return `${TOKEN_REFRESH_PREFIX}_${accountId}`;
   }
 }
