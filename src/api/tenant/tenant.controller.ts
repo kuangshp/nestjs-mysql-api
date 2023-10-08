@@ -8,12 +8,14 @@ import {
   Param,
   ParseIntPipe,
   Query,
+  UseGuards,
 } from '@nestjs/common';
+import { AuthGuard } from '@src/guard/auth.guard';
 import { TenantDto } from './dto/tenant.dto';
 import { QueryTenantDto } from './dto/tenant.query';
 import { TenantService } from './tenant.service';
 import { TenantPageVo, TenantVo } from './vo/tenant.vo';
-
+@UseGuards(AuthGuard)
 @Controller('tenant')
 export class TenantController {
   constructor(private readonly tenantService: TenantService) {}
