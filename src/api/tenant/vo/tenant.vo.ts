@@ -16,6 +16,7 @@ export class TenantVo extends QueryVo {
   readonly address!: string; // 具体地址
   readonly sort!: number; // 排序
   readonly description!: string; // 描述
+  readonly accountTotal?: number; // 账号数量
 }
 
 export class TenantPageVo extends QueryListVo {

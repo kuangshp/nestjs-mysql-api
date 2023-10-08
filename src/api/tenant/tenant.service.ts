@@ -2,19 +2,22 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { TenantEntity } from './entities/tenant.entity';
 
 import { InjectRepository } from '@nestjs/typeorm';
-import { Equal, FindOperator, ILike, Repository, SelectQueryBuilder } from 'typeorm';
+import { Equal, FindOperator, ILike, In, Repository, SelectQueryBuilder } from 'typeorm';
 import { TenantDto } from './dto/tenant.dto';
 import { QueryTenantDto } from './dto/tenant.query';
 import { PageEnum, StatusEnum } from '@src/enums';
 import { TenantPageVo, TenantVo } from './vo/tenant.vo';
 import { AreaEntity } from '../area/entities/area.entity';
 import { mapToObj } from '@src/utils';
+import { AccountEntity } from '../account/entities/account.entity';
 
 @Injectable()
 export class TenantService {
   constructor(
     @InjectRepository(TenantEntity)
-    private readonly tenantRepository: Repository<TenantEntity>
+    private readonly tenantRepository: Repository<TenantEntity>,
+    @InjectRepository(AccountEntity)
+    private readonly accountRepository: Repository<AccountEntity>
   ) {}
 
   /**
@@ -149,8 +152,29 @@ export class TenantService {
       .createQueryBuilder('tenant')
       .where(mapToObj(query))
       .getCount();
+    // 根据商户id去查询account表数据
+    const tenantIdList = data.map((item) => item.id);
+    const accountTotalList = await this.accountRepository
+      .createQueryBuilder('account')
+      .select('account.tenantId', 'tenantId')
+      .addSelect('count(*)', 'total')
+      .where({ tenantId: In(tenantIdList) })
+      .groupBy('account.tenantId')
+      .getRawMany();
+    // 将accountTotalList -> map[tenantId] = total
+    const accountTotalMap = new Map();
+    for (const item of accountTotalList) {
+      accountTotalMap.set(item.tenantId, item.total);
+    }
+    const resultData: TenantVo[] = [];
+    for (const item of data) {
+      resultData.push({
+        ...item,
+        accountTotal: +accountTotalMap.get(item.id),
+      });
+    }
     return {
-      data,
+      data: resultData,
       total,
       pageNumber,
       pageSize,
