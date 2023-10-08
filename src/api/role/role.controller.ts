@@ -8,13 +8,16 @@ import {
   Param,
   ParseIntPipe,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { CurrentUser, ICurrentUserType } from '@src/decorators';
+import { AuthGuard } from '@src/guard/auth.guard';
 import { RoleDto } from './dto/role.dto';
 import { QueryRoleDto } from './dto/role.query';
 import { RoleService } from './role.service';
 import { RolePageVo, RoleVo } from './vo/role.vo';
 
+@UseGuards(AuthGuard)
 @Controller('role')
 export class RoleController {
   constructor(private readonly roleService: RoleService) {}

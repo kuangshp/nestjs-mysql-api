@@ -88,10 +88,12 @@ CREATE TABLE `account_role`  (
 -- ----------------------------
 DROP TABLE IF EXISTS `resources`;
 CREATE TABLE `resources`  (
-   `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY key COMMENT '主键id',
+  `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY key COMMENT '主键id',
   `title` varchar(50)  NOT NULL COMMENT '按钮标题,或菜单标题',
   `url` varchar(100) NOT NULL COMMENT '按钮请求url,或菜单路由',
+  `method` varchar(50) DEFAULT NULL COMMENT '接口的请求方式',
   `icon` varchar(100) DEFAULT NULL COMMENT '菜单小图标',
+  `resources_type` tinyint(4) DEFAULT 0 COMMENT '0目录,1菜单,2接口',
   `type` tinyint(4) NULL DEFAULT 0 COMMENT '是否为模块:0,菜单:1,按钮(接口):2',
   `parent_id` int(11) NOT NULL DEFAULT -1 COMMENT '上一级id',
   `sort` int(11) DEFAULT 1 COMMENT '菜单,或按钮排序',
@@ -101,6 +103,7 @@ CREATE TABLE `resources`  (
   `updated_at` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6) COMMENT '更新时间',
   `deleted_at` timestamp(6) NULL DEFAULT NULL COMMENT '软删除时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT = '资源表' ;
+
 
 -- ----------------------------
 -- 角色和资源中间表

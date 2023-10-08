@@ -19,6 +19,7 @@ export class AccountEntity extends SharedEntity {
     length: 100,
     name: 'password',
     comment: '密码',
+    select: false,
   })
   password!: string;
 
