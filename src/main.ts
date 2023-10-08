@@ -1,7 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { VersioningType } from '@nestjs/common/enums';
 import { Logger } from '@nestjs/common/services';
-import session from 'express-session';
 import { AppModule } from './app.module';
 import { getConfig, IS_DEV } from './utils';
 
@@ -17,12 +16,6 @@ async function bootstrap() {
   });
   //允许跨域请求
   app.enableCors();
-  app.use(
-    session({
-      secret: 'code', //生成服务端session 签名
-      rolling: true, //在每次请求时强行设置 cookie
-    })
-  );
   // 启动版本管理
   app.enableVersioning({
     defaultVersion: '1', // 不指定默认版本为v1

@@ -9,7 +9,7 @@ import {
 
 export class SharedEntity extends BaseEntity {
   @PrimaryGeneratedColumn({
-    type: 'bigint',
+    type: 'int',
     name: 'id',
     comment: '主键id',
   })

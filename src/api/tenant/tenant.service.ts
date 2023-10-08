@@ -192,7 +192,6 @@ export class TenantService {
       .addSelect('tenant.areaId', 'areaId')
       .addSelect('tenant.address', 'address')
       .addSelect('tenant.sort', 'sort')
-      .addSelect('tenant.type', 'type')
       .addSelect('tenant.description', 'description')
       .addSelect('tenant.createdAt', 'createdAt')
       .addSelect('tenant.updatedAt', 'updatedAt')
@@ -204,7 +203,7 @@ export class TenantService {
             .addSelect('area.name', 'provinceName')
             .from(AreaEntity, 'area'),
         'area',
-        'tenant.provinceId=area.id'
+        'tenant.provinceId=area.provinceId'
       )
       .leftJoinAndMapOne(
         'xx',
@@ -214,7 +213,7 @@ export class TenantService {
             .addSelect('area1.name', 'cityName')
             .from(AreaEntity, 'area1'),
         'area1',
-        'tenant.cityId=area1.id'
+        'tenant.cityId=area1.cityId'
       )
       .leftJoinAndMapOne(
         'xx',
@@ -224,7 +223,7 @@ export class TenantService {
             .addSelect('area2.name', 'areaName')
             .from(AreaEntity, 'area2'),
         'area2',
-        'tenant.cityId=area2.id'
+        'tenant.areaId=area2.areaId'
       );
   }
 }

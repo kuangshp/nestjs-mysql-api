@@ -3,7 +3,7 @@ import { Entity, Column, BaseEntity, PrimaryGeneratedColumn } from 'typeorm';
 @Entity('area')
 export class AreaEntity extends BaseEntity {
   @PrimaryGeneratedColumn({
-    type: 'bigint',
+    type: 'int',
     name: 'id',
     comment: '主键id',
   })
