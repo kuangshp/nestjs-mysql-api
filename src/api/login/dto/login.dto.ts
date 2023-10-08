@@ -9,4 +9,7 @@ export class LoginDto {
   @Length(6, 12, { message: '密码长度必须是6-12位的' })
   @IsNotEmpty({ message: '密码不能为空' })
   readonly password!: string;
+
+  @IsNotEmpty({ message: '验证码不能空' })
+  readonly captcha!: string;
 }
