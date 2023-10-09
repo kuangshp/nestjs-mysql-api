@@ -11,7 +11,7 @@ export class TenantDto {
   @IsOptional({ message: '商户联系人' })
   username!: string;
 
-  @IsMobilePhone('zh-CN', { strictMode: true }, { message: '手机号码格式错误' })
+  @IsMobilePhone('zh-CN', { strictMode: false }, { message: '手机号码格式错误' })
   @IsOptional({ message: '手机号码' })
   mobile!: string;
 

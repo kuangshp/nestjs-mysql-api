@@ -21,6 +21,7 @@ export class AuthGuard implements CanActivate {
     if (token) {
       // 如果传递了token的话就要从redis中查询是否有该token
       const result = await this.redisService.get(token);
+      console.log(result, '当前数据--->');
       if (result) {
         // 这里我们知道result数据类型就是我们定义的直接断言
         request.user = result;

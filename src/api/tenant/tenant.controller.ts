@@ -10,6 +10,7 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
+import { CurrentUser, ICurrentUserType } from '@src/decorators';
 import { AuthGuard } from '@src/guard/auth.guard';
 import { TenantDto } from './dto/tenant.dto';
 import { QueryTenantDto } from './dto/tenant.query';
@@ -25,14 +26,36 @@ export class TenantController {
     return await this.tenantService.createTenantApi(req);
   }
 
+  @Post('delete')
+  async batchDeleteTenantByIdListApi(
+    @Body() idList: number[],
+    @CurrentUser('userInfo') currentUser: ICurrentUserType
+  ): Promise<string> {
+    return await this.tenantService.batchDeleteTenantByIdListApi(idList, currentUser);
+  }
+
   @Delete(':id')
-  async deleteTenantByIdApi(@Param('id', new ParseIntPipe()) id: number): Promise<string> {
-    return await this.tenantService.deleteTenantByIdApi(id);
+  async deleteTenantByIdApi(
+    @Param('id', new ParseIntPipe()) id: number,
+    @CurrentUser('userInfo') currentUser: ICurrentUserType
+  ): Promise<string> {
+    return await this.tenantService.deleteTenantByIdApi(id, currentUser);
+  }
+
+  @Post('/batchStatus')
+  async batchModifyTenantStatusByIdApi(
+    @Body() idList: number[],
+    @CurrentUser('userInfo') currentUser: ICurrentUserType
+  ): Promise<string> {
+    return await this.tenantService.batchModifyTenantStatusByIdApi(idList, currentUser);
   }
 
   @Put('/status/:id')
-  async modifyTenantStatusByIdApi(@Param('id', new ParseIntPipe()) id: number): Promise<string> {
-    return await this.tenantService.modifyTenantStatusByIdApi(id);
+  async modifyTenantStatusByIdApi(
+    @Param('id', new ParseIntPipe()) id: number,
+    @CurrentUser('userInfo') currentUser: ICurrentUserType
+  ): Promise<string> {
+    return await this.tenantService.modifyTenantStatusByIdApi(id, currentUser);
   }
 
   @Put(':id')

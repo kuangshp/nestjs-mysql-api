@@ -82,6 +82,7 @@ export class LoginService {
       .createQueryBuilder('account')
       .select('account.id', 'id')
       .addSelect('account.username', 'username')
+      .addSelect('account.tenantId', 'tenantId')
       .addSelect('account.status', 'status')
       .addSelect('account.accountType', 'accountType')
       .addSelect('account.password', 'password')

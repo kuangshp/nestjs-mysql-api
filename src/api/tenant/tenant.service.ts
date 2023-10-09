@@ -10,6 +10,7 @@ import { TenantPageVo, TenantVo } from './vo/tenant.vo';
 import { AreaEntity } from '../area/entities/area.entity';
 import { mapToObj } from '@src/utils';
 import { AccountEntity } from '../account/entities/account.entity';
+import { ICurrentUserType } from '@src/decorators';
 
 @Injectable()
 export class TenantService {
@@ -44,13 +45,43 @@ export class TenantService {
 
   /**
    * @Author: 水痕
+   * @Date: 2023-10-09 20:58:51
+   * @LastEditors: 水痕
+   * @Description: 根据id列表批量删除
+   * @param {number} idList
+   * @return {*}
+   */
+  async batchDeleteTenantByIdListApi(
+    idList: number[],
+    currentUser: ICurrentUserType
+  ): Promise<string> {
+    console.log(idList, '获取到的数据', currentUser);
+    const { tenantId } = currentUser;
+    console.log(tenantId, idList.includes(tenantId), '???');
+    if (idList.includes(tenantId)) {
+      throw new HttpException('自己不能删除自己', HttpStatus.OK);
+    }
+    const { affected } = await this.tenantRepository.softDelete(idList);
+    if (affected) {
+      return '删除成功';
+    } else {
+      return '删除成功';
+    }
+  }
+
+  /**
+   * @Author: 水痕
    * @Date: 2023-10-07 10:50:10
    * @LastEditors: 水痕
    * @Description: 根据id删除商户
    * @param {number} id
    * @return {*}
    */
-  async deleteTenantByIdApi(id: number): Promise<string> {
+  async deleteTenantByIdApi(id: number, currentUser: ICurrentUserType): Promise<string> {
+    const { tenantId } = currentUser;
+    if (tenantId == id) {
+      throw new HttpException('自己不能删除自己', HttpStatus.OK);
+    }
     const { affected } = await this.tenantRepository.softDelete(id);
     if (affected) {
       return '删除成功';
@@ -61,13 +92,51 @@ export class TenantService {
 
   /**
    * @Author: 水痕
+   * @Date: 2023-10-09 22:06:30
+   * @LastEditors: 水痕
+   * @Description: 批量修改状态
+   * @return {*}
+   */
+  async batchModifyTenantStatusByIdApi(
+    idList: number[],
+    currentUser: ICurrentUserType
+  ): Promise<string> {
+    const { tenantId } = currentUser;
+    if (idList.includes(tenantId)) {
+      throw new HttpException('自己不能修改自己', HttpStatus.OK);
+    }
+    const tenantEntityList: Pick<TenantEntity, 'status'>[] = await this.tenantRepository.find({
+      where: { id: In(idList) },
+      select: ['status'],
+    });
+    if ([...new Set(tenantEntityList.map((item) => item.status))].length > 1) {
+      throw new HttpException('当前状态不统一,不能批量修改', HttpStatus.OK);
+    }
+    const { affected } = await this.tenantRepository.update(idList, {
+      status:
+        tenantEntityList[0]?.status == StatusEnum.FORBIDDEN
+          ? StatusEnum.NORMAL
+          : StatusEnum.FORBIDDEN,
+    });
+    if (affected) {
+      return '修改成功';
+    } else {
+      return '修改失败';
+    }
+  }
+  /**
+   * @Author: 水痕
    * @Date: 2023-10-07 20:51:30
    * @LastEditors: 水痕
    * @Description: 根据id修改状态
    * @param {number} id
    * @return {*}
    */
-  async modifyTenantStatusByIdApi(id: number): Promise<string> {
+  async modifyTenantStatusByIdApi(id: number, currentUser: ICurrentUserType): Promise<string> {
+    const { tenantId } = currentUser;
+    if (tenantId == id) {
+      throw new HttpException('自己不能修改自己', HttpStatus.OK);
+    }
     const tenantEntity: Pick<TenantEntity, 'status'> | null = await this.tenantRepository.findOne({
       where: { id },
       select: ['status'],
