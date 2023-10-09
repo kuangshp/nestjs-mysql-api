@@ -2,8 +2,16 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { TenantEntity } from './entities/tenant.entity';
 
 import { InjectRepository } from '@nestjs/typeorm';
-import { Equal, FindOperator, ILike, In, Repository, SelectQueryBuilder } from 'typeorm';
-import { TenantDto } from './dto/tenant.dto';
+import {
+  DataSource,
+  Equal,
+  FindOperator,
+  ILike,
+  In,
+  Repository,
+  SelectQueryBuilder,
+} from 'typeorm';
+import { RechargeDto, TenantDto } from './dto/tenant.dto';
 import { QueryTenantDto } from './dto/tenant.query';
 import { PageEnum, StatusEnum } from '@src/enums';
 import { TenantPageVo, TenantVo } from './vo/tenant.vo';
@@ -18,7 +26,8 @@ export class TenantService {
     @InjectRepository(TenantEntity)
     private readonly tenantRepository: Repository<TenantEntity>,
     @InjectRepository(AccountEntity)
-    private readonly accountRepository: Repository<AccountEntity>
+    private readonly accountRepository: Repository<AccountEntity>,
+    private readonly dataSource: DataSource
   ) {}
 
   /**
@@ -45,32 +54,6 @@ export class TenantService {
 
   /**
    * @Author: 水痕
-   * @Date: 2023-10-09 20:58:51
-   * @LastEditors: 水痕
-   * @Description: 根据id列表批量删除
-   * @param {number} idList
-   * @return {*}
-   */
-  async batchDeleteTenantByIdListApi(
-    idList: number[],
-    currentUser: ICurrentUserType
-  ): Promise<string> {
-    console.log(idList, '获取到的数据', currentUser);
-    const { tenantId } = currentUser;
-    console.log(tenantId, idList.includes(tenantId), '???');
-    if (idList.includes(tenantId)) {
-      throw new HttpException('自己不能删除自己', HttpStatus.OK);
-    }
-    const { affected } = await this.tenantRepository.softDelete(idList);
-    if (affected) {
-      return '删除成功';
-    } else {
-      return '删除成功';
-    }
-  }
-
-  /**
-   * @Author: 水痕
    * @Date: 2023-10-07 10:50:10
    * @LastEditors: 水痕
    * @Description: 根据id删除商户
@@ -90,40 +73,6 @@ export class TenantService {
     }
   }
 
-  /**
-   * @Author: 水痕
-   * @Date: 2023-10-09 22:06:30
-   * @LastEditors: 水痕
-   * @Description: 批量修改状态
-   * @return {*}
-   */
-  async batchModifyTenantStatusByIdApi(
-    idList: number[],
-    currentUser: ICurrentUserType
-  ): Promise<string> {
-    const { tenantId } = currentUser;
-    if (idList.includes(tenantId)) {
-      throw new HttpException('自己不能修改自己', HttpStatus.OK);
-    }
-    const tenantEntityList: Pick<TenantEntity, 'status'>[] = await this.tenantRepository.find({
-      where: { id: In(idList) },
-      select: ['status'],
-    });
-    if ([...new Set(tenantEntityList.map((item) => item.status))].length > 1) {
-      throw new HttpException('当前状态不统一,不能批量修改', HttpStatus.OK);
-    }
-    const { affected } = await this.tenantRepository.update(idList, {
-      status:
-        tenantEntityList[0]?.status == StatusEnum.FORBIDDEN
-          ? StatusEnum.NORMAL
-          : StatusEnum.FORBIDDEN,
-    });
-    if (affected) {
-      return '修改成功';
-    } else {
-      return '修改失败';
-    }
-  }
   /**
    * @Author: 水痕
    * @Date: 2023-10-07 20:51:30
@@ -263,6 +212,103 @@ export class TenantService {
     return await queryBuilder.where('tenant.id = :id', { id }).getRawOne();
   }
 
+  /**
+   * @Author: 水痕
+   * @Date: 2023-10-09 20:58:51
+   * @LastEditors: 水痕
+   * @Description: 根据id列表批量删除
+   * @param {number} idList
+   * @return {*}
+   */
+  async batchDeleteTenantByIdListApi(
+    idList: number[],
+    currentUser: ICurrentUserType
+  ): Promise<string> {
+    console.log(idList, '获取到的数据', currentUser);
+    const { tenantId } = currentUser;
+    console.log(tenantId, idList.includes(tenantId), '???');
+    if (idList.includes(tenantId)) {
+      throw new HttpException('自己不能删除自己', HttpStatus.OK);
+    }
+    const { affected } = await this.tenantRepository.softDelete(idList);
+    if (affected) {
+      return '删除成功';
+    } else {
+      return '删除成功';
+    }
+  }
+
+  /**
+   * @Author: 水痕
+   * @Date: 2023-10-09 22:06:30
+   * @LastEditors: 水痕
+   * @Description: 批量修改状态
+   * @return {*}
+   */
+  async batchModifyTenantStatusByIdApi(
+    idList: number[],
+    currentUser: ICurrentUserType
+  ): Promise<string> {
+    const { tenantId } = currentUser;
+    if (idList.includes(tenantId)) {
+      throw new HttpException('自己不能修改自己', HttpStatus.OK);
+    }
+    const tenantEntityList: Pick<TenantEntity, 'status'>[] = await this.tenantRepository.find({
+      where: { id: In(idList) },
+      select: ['status'],
+    });
+    if ([...new Set(tenantEntityList.map((item) => item.status))].length > 1) {
+      throw new HttpException('当前状态不统一,不能批量修改', HttpStatus.OK);
+    }
+    const { affected } = await this.tenantRepository.update(idList, {
+      status:
+        tenantEntityList[0]?.status == StatusEnum.FORBIDDEN
+          ? StatusEnum.NORMAL
+          : StatusEnum.FORBIDDEN,
+    });
+    if (affected) {
+      return '修改成功';
+    } else {
+      return '修改失败';
+    }
+  }
+
+  /**
+   * @Author: 水痕
+   * @Date: 2023-10-09 22:36:34
+   * @LastEditors: 水痕
+   * @Description: 给商户充值
+   * @param {RechargeDto} req
+   * @return {*}
+   */
+  async rechargeTenantApi(req: RechargeDto): Promise<string> {
+    // 1.当前的要添加
+    // 2.充值记录中要添加
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction(); // 开启事物
+    try {
+      const { tenantId, amount } = req;
+      // 1.插入video表中
+      const tenant = queryRunner.manager.increment<TenantEntity>(
+        TenantEntity,
+        { id: Equal(tenantId) },
+        'balance',
+        amount
+      );
+      // TODO 记录表中插入数据
+      console.log(tenant);
+      await queryRunner.commitTransaction(); // 提交事务
+      return '创建成功';
+    } catch (err) {
+      console.log(err, '创建失败');
+      await queryRunner.rollbackTransaction(); // 回滚操作
+      throw new HttpException('创建失败', HttpStatus.OK);
+    } finally {
+      // 最后你需要释放一个手动实例化的queryRunner
+      await queryRunner.release();
+    }
+  }
   /**
    * @Author: 水痕
    * @Date: 2023-10-07 11:05:41

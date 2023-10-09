@@ -12,7 +12,7 @@ import {
 } from '@nestjs/common';
 import { CurrentUser, ICurrentUserType } from '@src/decorators';
 import { AuthGuard } from '@src/guard/auth.guard';
-import { TenantDto } from './dto/tenant.dto';
+import { RechargeDto, TenantDto } from './dto/tenant.dto';
 import { QueryTenantDto } from './dto/tenant.query';
 import { TenantService } from './tenant.service';
 import { TenantPageVo, TenantVo } from './vo/tenant.vo';
@@ -26,28 +26,12 @@ export class TenantController {
     return await this.tenantService.createTenantApi(req);
   }
 
-  @Post('delete')
-  async batchDeleteTenantByIdListApi(
-    @Body() idList: number[],
-    @CurrentUser('userInfo') currentUser: ICurrentUserType
-  ): Promise<string> {
-    return await this.tenantService.batchDeleteTenantByIdListApi(idList, currentUser);
-  }
-
   @Delete(':id')
   async deleteTenantByIdApi(
     @Param('id', new ParseIntPipe()) id: number,
     @CurrentUser('userInfo') currentUser: ICurrentUserType
   ): Promise<string> {
     return await this.tenantService.deleteTenantByIdApi(id, currentUser);
-  }
-
-  @Post('/batchStatus')
-  async batchModifyTenantStatusByIdApi(
-    @Body() idList: number[],
-    @CurrentUser('userInfo') currentUser: ICurrentUserType
-  ): Promise<string> {
-    return await this.tenantService.batchModifyTenantStatusByIdApi(idList, currentUser);
   }
 
   @Put('/status/:id')
@@ -76,5 +60,26 @@ export class TenantController {
     @Param('id', new ParseIntPipe()) id: number
   ): Promise<TenantVo | undefined> {
     return await this.tenantService.getTenantByIdApi(id);
+  }
+
+  @Post('delete')
+  async batchDeleteTenantByIdListApi(
+    @Body() idList: number[],
+    @CurrentUser('userInfo') currentUser: ICurrentUserType
+  ): Promise<string> {
+    return await this.tenantService.batchDeleteTenantByIdListApi(idList, currentUser);
+  }
+
+  @Post('/batchStatus')
+  async batchModifyTenantStatusByIdApi(
+    @Body() idList: number[],
+    @CurrentUser('userInfo') currentUser: ICurrentUserType
+  ): Promise<string> {
+    return await this.tenantService.batchModifyTenantStatusByIdApi(idList, currentUser);
+  }
+
+  @Post('recharge')
+  async rechargeTenantApi(@Body() req: RechargeDto): Promise<string> {
+    return await this.tenantService.rechargeTenantApi(req);
   }
 }

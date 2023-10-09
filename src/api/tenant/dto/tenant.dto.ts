@@ -50,3 +50,14 @@ export class TenantDto {
   @IsOptional({ message: '描述' })
   description!: string;
 }
+
+export class RechargeDto {
+  @Min(1, { message: '排序最小值为1' })
+  @IsInt({ message: '排序必须是整数' })
+  @Type(() => Number)
+  @IsNotEmpty({ message: '商户id不能为空' })
+  tenantId!: number;
+
+  @IsNotEmpty({ message: '充值金额不能为空' })
+  amount!: number;
+}
