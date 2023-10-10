@@ -33,8 +33,11 @@ export class AccountController {
   }
 
   @Delete(':id')
-  async deleteAccountByIdApi(@Param('id', new ParseIntPipe()) id: number): Promise<string> {
-    return await this.accountService.deleteAccountByIdApi(id);
+  async deleteAccountByIdApi(
+    @Param('id', new ParseIntPipe()) id: number,
+    @CurrentUser('userInfo') currentUser: ICurrentUserType
+  ): Promise<string> {
+    return await this.accountService.deleteAccountByIdApi(id, currentUser);
   }
 
   @Put('/status/:id')
@@ -63,5 +66,21 @@ export class AccountController {
     @Param('id', new ParseIntPipe()) id: number
   ): Promise<AccountVo | undefined> {
     return await this.accountService.getAccountByIdApi(id);
+  }
+
+  @Post('delete')
+  async batchDeleteAccountByIdListApi(
+    @Body() idList: number[],
+    @CurrentUser('userInfo') currentUser: ICurrentUserType
+  ): Promise<string> {
+    return await this.accountService.batchDeleteAccountByIdListApi(idList, currentUser);
+  }
+
+  @Post('/batchStatus')
+  async batchModifyAccountStatusByIdApi(
+    @Body() idList: number[],
+    @CurrentUser('userInfo') currentUser: ICurrentUserType
+  ): Promise<string> {
+    return await this.accountService.batchModifyAccountStatusByIdApi(idList, currentUser);
   }
 }

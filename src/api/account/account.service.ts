@@ -2,7 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { AccountEntity } from './entities/account.entity';
 import { Request } from 'express';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Equal, FindOperator, ILike, Repository, SelectQueryBuilder } from 'typeorm';
+import { Equal, FindOperator, ILike, In, Repository, SelectQueryBuilder } from 'typeorm';
 import { AccountDto } from './dto/account.dto';
 import { ICurrentUserType } from '@src/decorators';
 import { ToolsService } from '@src/plugin/tools/tools.service';
@@ -70,8 +70,25 @@ export class AccountService {
    * @param {number} id
    * @return {*}
    */
-  async deleteAccountByIdApi(id: number): Promise<string> {
+  async deleteAccountByIdApi(id: number, currentUser: ICurrentUserType): Promise<string> {
+    const { accountId } = currentUser;
     // TODO 判断不能删除自己及下面有账号的
+    if (Object.is(id, accountId)) {
+      throw new HttpException('自己不能删除自己', HttpStatus.OK);
+    }
+    const accountEntity: Pick<AccountEntity, 'id'> | null = await this.accountRepository.findOne({
+      where: { parentId: id },
+      select: ['id'],
+    });
+    if (accountEntity?.id) {
+      throw new HttpException('下面有子账号不能直接删除', HttpStatus.OK);
+    }
+    // 超管不能被删除
+    const accountEntity1: Pick<AccountEntity, 'accountType'> | null =
+      await this.accountRepository.findOne({ where: { id }, select: ['accountType'] });
+    if (accountEntity1 && accountEntity1.accountType == AccountTypeEnum.SUPER_ACCOUNT) {
+      throw new HttpException('超管不能被删除', HttpStatus.OK);
+    }
     const { affected } = await this.accountRepository.softDelete(id);
     if (affected) {
       return '删除成功';
@@ -194,6 +211,80 @@ export class AccountService {
     return await this.queryAccountBuilder.where('account.id = :id', { id }).getRawOne();
   }
 
+  /**
+   * @Author: 水痕
+   * @Date: 2023-10-10 15:42:14
+   * @LastEditors: 水痕
+   * @Description: 批量删除
+   * @return {*}
+   */
+  async batchDeleteAccountByIdListApi(
+    idList: number[],
+    currentUser: ICurrentUserType
+  ): Promise<string> {
+    const { accountId } = currentUser;
+    // TODO 判断不能删除自己及下面有账号的
+    if (idList.includes(accountId)) {
+      throw new HttpException('自己不能删除自己', HttpStatus.OK);
+    }
+    const accountEntityList: Pick<AccountEntity, 'id'>[] = await this.accountRepository.find({
+      where: { parentId: In(idList) },
+      select: ['id'],
+    });
+    if (accountEntityList.length) {
+      throw new HttpException('下面有子账号不能直接删除', HttpStatus.OK);
+    }
+    // 超管不能被删除
+    const accountEntityList1: Pick<AccountEntity, 'accountType'>[] =
+      await this.accountRepository.find({ where: { id: In(idList) }, select: ['accountType'] });
+    if (
+      accountEntityList1.length &&
+      accountEntityList1
+        .map((item) => item.accountType)
+        .some((item) => item == AccountTypeEnum.SUPER_ACCOUNT)
+    ) {
+      throw new HttpException('超管不能被删除', HttpStatus.OK);
+    }
+    const { affected } = await this.accountRepository.softDelete(idList);
+    if (affected) {
+      return '删除成功';
+    } else {
+      return '删除失败';
+    }
+  }
+
+  /**
+   * @Author: 水痕
+   * @Date: 2023-10-10 15:43:23
+   * @LastEditors: 水痕
+   * @Description: 批量修改状态
+   * @return {*}
+   */
+  async batchModifyAccountStatusByIdApi(
+    idList: number[],
+    currentUser: ICurrentUserType
+  ): Promise<string> {
+    const { accountId } = currentUser;
+    if (idList.includes(accountId)) {
+      throw new HttpException('自己不能修改自己', HttpStatus.OK);
+    }
+    const accountEntityList: Pick<AccountEntity, 'status'>[] = await this.accountRepository.find({
+      where: { id: In(idList) },
+      select: ['status'],
+    });
+    const statusList = accountEntityList.map((item) => item.status);
+    if ([...new Set(statusList)].length > 1) {
+      throw new HttpException('当前传递的数据状态不统一,不能批量操作', HttpStatus.OK);
+    }
+    const { affected } = await this.accountRepository.update(idList, {
+      status: statusList[0] == StatusEnum.FORBIDDEN ? StatusEnum.NORMAL : StatusEnum.FORBIDDEN,
+    });
+    if (affected) {
+      return '修改成功';
+    } else {
+      return '修改失败';
+    }
+  }
   /**
    * @Author: 水痕
    * @Date: 2023-10-07 20:28:53
