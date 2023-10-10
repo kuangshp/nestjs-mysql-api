@@ -29,7 +29,7 @@ CREATE TABLE `tenant` (
 DROP TABLE IF EXISTS `role`;
 CREATE TABLE `role` (
    `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY key COMMENT '主键id',
-   `name` varchar(50) UNIQUE NOT NULL COMMENT '角色名称',
+   `name` varchar(50)  NOT NULL COMMENT '角色名称',
    `description` varchar(255)  DEFAULT NULL COMMENT '描述',
    `status` tinyint(4) DEFAULT 0 COMMENT '状态0是正常,1是禁用',
    `sort` int(11) DEFAULT 1 COMMENT '排序',
@@ -38,7 +38,7 @@ CREATE TABLE `role` (
    `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
    `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
    `deleted_at` timestamp NULL DEFAULT NULL COMMENT '软删除时间',
-   UNIQUE KEY `UK_name_deleted_at` (`name`,`deleted_at`)
+   UNIQUE KEY `UK_name_account_id_deleted_at` (`name`,`account_id`,`deleted_at`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='角色表(也可以当部门表)';
 
 

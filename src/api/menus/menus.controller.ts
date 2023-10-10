@@ -22,7 +22,7 @@ export class MenusController {
 
   @Get('/btnList/:id')
   async getBtnByMenusIdApi(
-    @CurrentUser() userInfo: ICurrentUserType,
+    @CurrentUser('userInfo') userInfo: ICurrentUserType,
     @Param('id', new ParseIntPipe()) id: number
   ): Promise<ResourcesEntity[]> {
     return await this.menusService.getBtnByMenusIdApi(id, userInfo);

@@ -25,7 +25,7 @@ export class RoleController {
   @Post()
   async createRoleApi(
     @Body() req: RoleDto,
-    @CurrentUser() currentInfo: ICurrentUserType
+    @CurrentUser('userInfo') currentInfo: ICurrentUserType
   ): Promise<string> {
     return await this.roleService.createRoleApi(req, currentInfo);
   }
@@ -51,7 +51,7 @@ export class RoleController {
   @Get()
   async getRolePageApi(
     @Query() queryOption: QueryRoleDto,
-    @CurrentUser() currentInfo: ICurrentUserType
+    @CurrentUser('userInfo') currentInfo: ICurrentUserType
   ): Promise<RolePageVo> {
     return await this.roleService.getRolePageApi(queryOption, currentInfo);
   }
@@ -59,5 +59,15 @@ export class RoleController {
   @Get(':id')
   async getRoleByIdApi(@Param('id', new ParseIntPipe()) id: number): Promise<RoleVo | undefined> {
     return await this.roleService.getRoleByIdApi(id);
+  }
+
+  @Post('delete')
+  async batchDeleteRoleByIdListApi(@Body() idList: number[]): Promise<string> {
+    return await this.roleService.batchDeleteRoleByIdListApi(idList);
+  }
+
+  @Post('/batchStatus')
+  async batchModifyRoleStatusByIdApi(@Body() idList: number[]): Promise<string> {
+    return await this.roleService.batchModifyRoleStatusByIdApi(idList);
   }
 }

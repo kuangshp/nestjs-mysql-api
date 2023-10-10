@@ -2,7 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { RoleEntity } from './entities/role.entity';
 
 import { InjectRepository } from '@nestjs/typeorm';
-import { Equal, FindOperator, ILike, Repository, SelectQueryBuilder } from 'typeorm';
+import { Equal, FindOperator, ILike, In, Repository, SelectQueryBuilder } from 'typeorm';
 import { ICurrentUserType } from '@src/decorators';
 import { RoleDto } from './dto/role.dto';
 import { PageEnum, StatusEnum } from '@src/enums';
@@ -33,7 +33,7 @@ export class RoleService {
     const { id, tenantId } = currentInfo;
     // 1.判断当前账号下角色是否存在
     const roleEntity: Pick<RoleEntity, 'id'> | null = await this.roleRepository.findOne({
-      where: { name: req.name, tenantId: tenantId },
+      where: { name: req.name, accountId: id },
       select: ['id'],
     });
     if (roleEntity?.id) {
@@ -103,6 +103,14 @@ export class RoleService {
    * @return {*}
    */
   async modifyRoleByIdApi(id: number, req: RoleDto): Promise<string> {
+    // 判断名字是否重复
+    const roleEntity: Pick<RoleEntity, 'id'> | null = await this.roleRepository.findOne({
+      where: { name: req.name },
+      select: ['id'],
+    });
+    if (roleEntity && roleEntity.id != id) {
+      throw new HttpException(`[${req.name}]可能重复`, HttpStatus.OK);
+    }
     const { affected } = await this.roleRepository.update(id, req);
     if (affected) {
       return '修改成功';
@@ -176,6 +184,50 @@ export class RoleService {
     return await this.queryRoleBuilder.where('role.id = :id', { id }).getRawOne();
   }
 
+  /**
+   * @Author: 水痕
+   * @Date: 2023-10-10 20:39:04
+   * @LastEditors: 水痕
+   * @Description: 根据角色id批量删除
+   * @param {number} idList
+   * @return {*}
+   */
+  async batchDeleteRoleByIdListApi(idList: number[]): Promise<string> {
+    const { affected } = await this.roleRepository.softDelete(idList);
+    if (affected) {
+      return '删除成功';
+    } else {
+      return '删除失败';
+    }
+  }
+
+  /**
+   * @Author: 水痕
+   * @Date: 2023-10-10 20:41:14
+   * @LastEditors: 水痕
+   * @Description: 根据id批量修改状态
+   * @param {number} idList
+   * @return {*}
+   */
+  async batchModifyRoleStatusByIdApi(idList: number[]): Promise<string> {
+    const roleEntityList: Pick<RoleEntity, 'status'>[] = await this.roleRepository.find({
+      where: { id: In(idList) },
+      select: ['status'],
+    });
+    const statusList = roleEntityList.map((item) => item.status);
+    if ([...new Set(statusList)].length > 1) {
+      throw new HttpException('当前传递的数据状态不统一,不能批量操作', HttpStatus.OK);
+    }
+    const { affected } = await this.roleRepository.update(idList, {
+      status: statusList[0] == StatusEnum.FORBIDDEN ? StatusEnum.NORMAL : StatusEnum.FORBIDDEN,
+    });
+    if (affected) {
+      return '修改成功';
+    } else {
+      return '修改失败';
+    }
+  }
+
   get queryRoleBuilder(): SelectQueryBuilder<RoleEntity> {
     return this.roleRepository
       .createQueryBuilder('role')
@@ -196,7 +248,7 @@ export class RoleService {
             .addSelect('account.username', 'accountUsername')
             .from(AccountEntity, 'account'),
         'account',
-        'role.accountId=account.id'
+        'role.accountId=account.accountId'
       )
       .leftJoinAndMapOne(
         'xx',
@@ -206,7 +258,7 @@ export class RoleService {
             .addSelect('tenant.name', 'tenantName')
             .from(TenantEntity, 'tenant'),
         'tenant',
-        'role.tenantId=tenant.id'
+        'role.tenantId=tenant.tenantId'
       );
   }
 }
