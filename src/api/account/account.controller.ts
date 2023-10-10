@@ -26,7 +26,7 @@ export class AccountController {
   @Post()
   async createAccountApi(
     @Body() req: AccountDto,
-    @CurrentUser() currentInfo: ICurrentUserType,
+    @CurrentUser('userInfo') currentInfo: ICurrentUserType,
     request: Request
   ): Promise<string> {
     return await this.accountService.createAccountApi(req, request, currentInfo);
@@ -41,8 +41,11 @@ export class AccountController {
   }
 
   @Put('/status/:id')
-  async modifyAccountStatusByIdApi(@Param('id', new ParseIntPipe()) id: number): Promise<string> {
-    return await this.accountService.modifyAccountStatusByIdApi(id);
+  async modifyAccountStatusByIdApi(
+    @Param('id', new ParseIntPipe()) id: number,
+    @CurrentUser('userInfo') currentUser: ICurrentUserType
+  ): Promise<string> {
+    return await this.accountService.modifyAccountStatusByIdApi(id, currentUser);
   }
 
   @Put(':id')
@@ -56,7 +59,7 @@ export class AccountController {
   @Get()
   async getAccountPageApi(
     @Query() queryOption: QueryAccountDto,
-    @CurrentUser() currentInfo: ICurrentUserType
+    @CurrentUser('userInfo') currentInfo: ICurrentUserType
   ): Promise<AccountPageVo> {
     return await this.accountService.getAccountPageApi(queryOption, currentInfo);
   }

@@ -80,7 +80,7 @@ export class LoginService {
   private get queryLoginBuilder(): SelectQueryBuilder<LoginAccountVo> {
     return this.accountRepository
       .createQueryBuilder('account')
-      .select('account.id', 'id')
+      .addSelect('account.id', 'id')
       .addSelect('account.username', 'username')
       .addSelect('account.tenantId', 'tenantId')
       .addSelect('account.status', 'status')

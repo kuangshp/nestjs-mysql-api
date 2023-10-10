@@ -61,3 +61,17 @@ export class RechargeDto {
   @IsNotEmpty({ message: '充值金额不能为空' })
   amount!: number;
 }
+
+export class CreateDefaultAccountDto {
+  @IsNotEmpty({ message: '账号名不能为空' })
+  username!: string;
+
+  @IsNotEmpty({ message: '商户id不能为空' })
+  tenantId!: number;
+
+  @Min(1, { message: '排序最小值为1' })
+  @IsInt({ message: '排序必须是整数' })
+  @Type(() => Number)
+  @IsOptional({ message: '排序' })
+  sort!: number;
+}

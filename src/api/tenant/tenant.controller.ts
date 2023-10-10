@@ -12,7 +12,7 @@ import {
 } from '@nestjs/common';
 import { CurrentUser, ICurrentUserType } from '@src/decorators';
 import { AuthGuard } from '@src/guard/auth.guard';
-import { RechargeDto, TenantDto } from './dto/tenant.dto';
+import { CreateDefaultAccountDto, RechargeDto, TenantDto } from './dto/tenant.dto';
 import { QueryTenantDto } from './dto/tenant.query';
 import { TenantService } from './tenant.service';
 import { TenantPageVo, TenantVo } from './vo/tenant.vo';
@@ -81,5 +81,10 @@ export class TenantController {
   @Post('recharge')
   async rechargeTenantApi(@Body() req: RechargeDto): Promise<string> {
     return await this.tenantService.rechargeTenantApi(req);
+  }
+
+  @Post('defaultAccount')
+  async createDefaultAccount(@Body() req: CreateDefaultAccountDto): Promise<string> {
+    return await this.tenantService.createDefaultAccount(req);
   }
 }

@@ -11,7 +11,7 @@ import {
   Repository,
   SelectQueryBuilder,
 } from 'typeorm';
-import { RechargeDto, TenantDto } from './dto/tenant.dto';
+import { CreateDefaultAccountDto, RechargeDto, TenantDto } from './dto/tenant.dto';
 import { QueryTenantDto } from './dto/tenant.query';
 import { PageEnum, StatusEnum } from '@src/enums';
 import { TenantPageVo, TenantVo } from './vo/tenant.vo';
@@ -19,6 +19,9 @@ import { AreaEntity } from '../area/entities/area.entity';
 import { mapToObj } from '@src/utils';
 import { AccountEntity } from '../account/entities/account.entity';
 import { ICurrentUserType } from '@src/decorators';
+import { ToolsService } from '@src/plugin/tools/tools.service';
+import { ConfigService } from '@nestjs/config';
+import { AccountTypeEnum } from '@src/enums/account.type.enum';
 
 @Injectable()
 export class TenantService {
@@ -27,6 +30,8 @@ export class TenantService {
     private readonly tenantRepository: Repository<TenantEntity>,
     @InjectRepository(AccountEntity)
     private readonly accountRepository: Repository<AccountEntity>,
+    private readonly toolsService: ToolsService,
+    private readonly configService: ConfigService,
     private readonly dataSource: DataSource
   ) {}
 
@@ -308,6 +313,42 @@ export class TenantService {
       // 最后你需要释放一个手动实例化的queryRunner
       await queryRunner.release();
     }
+  }
+
+  /**
+   * @Author: 水痕
+   * @Date: 2023-10-10 17:23:46
+   * @LastEditors: 水痕
+   * @Description: 创建默认商户登录账号
+   * @param {CreateDefaultAccountDto} req
+   * @return {*}
+   */
+  async createDefaultAccount(req: CreateDefaultAccountDto): Promise<string> {
+    // 1.判断当前商户下是否已经存在该账号
+    const accountEntity: Pick<AccountEntity, 'id'> | null = await this.accountRepository.findOne({
+      where: { username: req.username, tenantId: req.tenantId },
+      select: ['id'],
+    });
+    if (accountEntity?.id) {
+      throw new HttpException(`[${req.username}]可能已经存在,请先检查`, HttpStatus.OK);
+    }
+    // 默认密码加密
+    const salt = this.toolsService.getRandomSalt;
+    const defaultPassword: string = this.configService.get('defaultPassword') ?? '123456';
+    const password = this.toolsService.makePassword(defaultPassword, salt);
+    // 创建数据
+    const data = this.accountRepository.create({
+      username: req.username,
+      sort: req.sort,
+      password: password,
+      tenantId: req.tenantId,
+      parentId: -1,
+      salt: salt,
+      accountType: AccountTypeEnum.PRIMARY_ACCOUNT, // 主账号
+      lastLoginDate: new Date(),
+    });
+    await this.accountRepository.save(data);
+    return '创建成功';
   }
   /**
    * @Author: 水痕

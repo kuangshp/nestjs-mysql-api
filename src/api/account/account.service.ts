@@ -35,6 +35,7 @@ export class AccountService {
     request: Request,
     currentInfo: ICurrentUserType
   ): Promise<string> {
+    console.log(request);
     // 1.判断当前商户下是否已经存在该账号
     const accountEntity: Pick<AccountEntity, 'id'> | null = await this.accountRepository.findOne({
       where: { username: req.username, tenantId: currentInfo.tenantId },
@@ -71,7 +72,7 @@ export class AccountService {
    * @return {*}
    */
   async deleteAccountByIdApi(id: number, currentUser: ICurrentUserType): Promise<string> {
-    const { accountId } = currentUser;
+    const { id: accountId } = currentUser;
     // TODO 判断不能删除自己及下面有账号的
     if (Object.is(id, accountId)) {
       throw new HttpException('自己不能删除自己', HttpStatus.OK);
@@ -105,7 +106,11 @@ export class AccountService {
    * @param {number} id
    * @return {*}
    */
-  async modifyAccountStatusByIdApi(id: number): Promise<string> {
+  async modifyAccountStatusByIdApi(id: number, currentUser: ICurrentUserType): Promise<string> {
+    const { id: accountId } = currentUser;
+    if (Object.is(id, accountId)) {
+      throw new HttpException('自己不能修改自己', HttpStatus.OK);
+    }
     const accountEntity: Pick<AccountEntity, 'status'> | null =
       await this.accountRepository.findOne({
         where: { id },
@@ -134,6 +139,14 @@ export class AccountService {
    * @return {*}
    */
   async modifyAccountByIdApi(id: number, req: AccountDto): Promise<string> {
+    // 判断当前的用户名之前是否有
+    const accountEntity: Pick<AccountEntity, 'id'> | null = await this.accountRepository.findOne({
+      where: { username: req.username },
+      select: ['id'],
+    });
+    if (accountEntity && accountEntity.id != id) {
+      throw new HttpException(`[${req.username}]可能已经存在`, HttpStatus.OK);
+    }
     const { affected } = await this.accountRepository.update(id, req);
     if (affected) {
       return '修改成功';
@@ -156,6 +169,7 @@ export class AccountService {
     const {
       status,
       username,
+      tenantId: queryTenantId,
       pageNumber = PageEnum.PAGE_NUMBER,
       pageSize = PageEnum.PAGE_SIZE,
     } = queryOption;
@@ -172,13 +186,19 @@ export class AccountService {
      * 2.如果不是超管,是主账号的时候查询下面全部的账号
      * 3.如果都不是,只能查询账号下的数据
      */
-    if (accountType == AccountTypeEnum.SUPER_ACCOUNT) {
-      console.log('超管不需要');
-    } else if (accountType == AccountTypeEnum.PRIMARY_ACCOUNT) {
-      query.set('tenantId', Equal(tenantId + ''));
-    } else if (accountType == AccountTypeEnum.NORMAL_ACCOUNT) {
-      query.set('parentId', Equal(accountId + ''));
+    if (queryTenantId) {
+      query.set('tenantId', Equal(queryTenantId + ''));
+    } else {
+      if (accountType == AccountTypeEnum.SUPER_ACCOUNT) {
+        console.log('超管不需要');
+      } else if (accountType == AccountTypeEnum.PRIMARY_ACCOUNT) {
+        query.set('tenantId', Equal(tenantId + ''));
+      } else if (accountType == AccountTypeEnum.NORMAL_ACCOUNT) {
+        query.set('parentId', Equal(accountId + ''));
+      }
     }
+
+    console.log(mapToObj(query), '???????????????????');
     const total = await this.accountRepository
       .createQueryBuilder('account')
       .where(mapToObj(query))
@@ -189,7 +209,6 @@ export class AccountService {
       .orderBy({ id: 'DESC' })
       .offset((pageNumber - 1) * pageSize)
       .limit(pageSize)
-      .printSql()
       .getRawMany();
     return {
       data,
@@ -222,7 +241,7 @@ export class AccountService {
     idList: number[],
     currentUser: ICurrentUserType
   ): Promise<string> {
-    const { accountId } = currentUser;
+    const { id: accountId } = currentUser;
     // TODO 判断不能删除自己及下面有账号的
     if (idList.includes(accountId)) {
       throw new HttpException('自己不能删除自己', HttpStatus.OK);
@@ -264,7 +283,8 @@ export class AccountService {
     idList: number[],
     currentUser: ICurrentUserType
   ): Promise<string> {
-    const { accountId } = currentUser;
+    const { id: accountId } = currentUser;
+    console.log(idList, accountId, '????==============');
     if (idList.includes(accountId)) {
       throw new HttpException('自己不能修改自己', HttpStatus.OK);
     }
@@ -319,7 +339,7 @@ export class AccountService {
             .addSelect('account1.username', 'parentName')
             .from(AccountEntity, 'account1'),
         'account1',
-        'account.parentId=account1.id'
+        'account.parentId=account1.parentId'
       )
       .leftJoinAndMapOne(
         'xx',
@@ -329,7 +349,7 @@ export class AccountService {
             .addSelect('tenant.name', 'tenantName')
             .from(TenantEntity, 'tenant'),
         'tenant',
-        'account.tenantId=tenant.id'
+        'account.tenantId=tenant.tenantId'
       );
   }
 }
