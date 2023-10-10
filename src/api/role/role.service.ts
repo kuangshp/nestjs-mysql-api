@@ -30,7 +30,7 @@ export class RoleService {
    * @return {*}
    */
   async createRoleApi(req: RoleDto, currentInfo: ICurrentUserType): Promise<string> {
-    const { accountId, tenantId } = currentInfo;
+    const { id, tenantId } = currentInfo;
     // 1.判断当前账号下角色是否存在
     const roleEntity: Pick<RoleEntity, 'id'> | null = await this.roleRepository.findOne({
       where: { name: req.name, tenantId: tenantId },
@@ -42,7 +42,7 @@ export class RoleService {
     const roleData = this.roleRepository.create({
       name: req.name,
       tenantId,
-      accountId,
+      accountId: id,
       sort: req.sort,
       description: req.description,
     });
@@ -129,7 +129,7 @@ export class RoleService {
       pageNumber = PageEnum.PAGE_NUMBER,
       pageSize = PageEnum.PAGE_SIZE,
     } = queryOption;
-    const { accountType, accountId, tenantId } = currentInfo;
+    const { accountType, id, tenantId } = currentInfo;
     const query = new Map<string, FindOperator<string>>();
     if (name) {
       query.set('name', ILike(`%${name}%`));
@@ -142,7 +142,7 @@ export class RoleService {
     } else if (accountType == AccountTypeEnum.PRIMARY_ACCOUNT) {
       query.set('tenantId', Equal(tenantId + ''));
     } else if (accountType == AccountTypeEnum.NORMAL_ACCOUNT) {
-      query.set('accountId', Equal(accountId + ''));
+      query.set('accountId', Equal(id + ''));
     }
     const queryBuilder = this.queryRoleBuilder;
     const data = await queryBuilder

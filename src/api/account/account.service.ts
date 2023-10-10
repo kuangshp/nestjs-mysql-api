@@ -35,7 +35,7 @@ export class AccountService {
     request: Request,
     currentInfo: ICurrentUserType
   ): Promise<string> {
-    console.log(request);
+    console.log('进来了------------------》》', request);
     // 1.判断当前商户下是否已经存在该账号
     const accountEntity: Pick<AccountEntity, 'id'> | null = await this.accountRepository.findOne({
       where: { username: req.username, tenantId: currentInfo.tenantId },
@@ -54,9 +54,9 @@ export class AccountService {
       sort: req.sort,
       password: password,
       tenantId: currentInfo.tenantId,
-      parentId: currentInfo.accountId,
+      parentId: req.parentId ? req.parentId : currentInfo.id,
       salt: salt,
-      lastLoginIp: this.toolsService.getReqIP(request),
+      // lastLoginIp: this.toolsService.getReqIP(request),
       lastLoginDate: new Date(),
     });
     await this.accountRepository.save(data);
@@ -180,7 +180,7 @@ export class AccountService {
     if ([StatusEnum.NORMAL, StatusEnum.FORBIDDEN].includes(status)) {
       query.set('status', Equal(status + ''));
     }
-    const { accountType, accountId, tenantId } = currentInfo;
+    const { accountType, id, tenantId } = currentInfo;
     /**
      * 1.如果是超管,查询到全部的账号
      * 2.如果不是超管,是主账号的时候查询下面全部的账号
@@ -194,11 +194,10 @@ export class AccountService {
       } else if (accountType == AccountTypeEnum.PRIMARY_ACCOUNT) {
         query.set('tenantId', Equal(tenantId + ''));
       } else if (accountType == AccountTypeEnum.NORMAL_ACCOUNT) {
-        query.set('parentId', Equal(accountId + ''));
+        query.set('parentId', Equal(id + ''));
       }
     }
 
-    console.log(mapToObj(query), '???????????????????');
     const total = await this.accountRepository
       .createQueryBuilder('account')
       .where(mapToObj(query))
@@ -206,7 +205,7 @@ export class AccountService {
     const queryBuilder = this.queryAccountBuilder;
     const data = await queryBuilder
       .where(mapToObj(query))
-      .orderBy({ id: 'DESC' })
+      .orderBy({ accountType: 'DESC', id: 'DESC' })
       .offset((pageNumber - 1) * pageSize)
       .limit(pageSize)
       .getRawMany();
@@ -218,6 +217,37 @@ export class AccountService {
     };
   }
 
+  /**
+   * @Author: 水痕
+   * @Date: 2023-10-10 18:56:27
+   * @LastEditors: 水痕
+   * @Description: 获取当前账号下的子账号
+   * @param {ICurrentUserType} currentInfo
+   * @param {number} status
+   * @return {*}
+   */
+  async getAccountListApi(
+    currentInfo: ICurrentUserType,
+    status: number
+  ): Promise<Pick<AccountEntity, 'id' | 'username'>[]> {
+    const { id, accountType } = currentInfo;
+    console.log(status, '状态');
+    const query = new Map<string, FindOperator<string>>();
+    if (Object.is(accountType, AccountTypeEnum.SUPER_ACCOUNT)) {
+      query.set('parentId', Equal(-1 + ''));
+    } else {
+      query.set('parentId', Equal(id + ''));
+    }
+    if ([StatusEnum.FORBIDDEN, StatusEnum.NORMAL].includes(status)) {
+      query.set('status', Equal(status + ''));
+    }
+    const accountEntity: Pick<AccountEntity, 'id' | 'username'>[] =
+      await this.accountRepository.find({
+        where: mapToObj(query),
+        select: ['id', 'username'],
+      });
+    return accountEntity;
+  }
   /**
    * @Author: 水痕
    * @Date: 2023-10-07 20:28:16

@@ -17,6 +17,7 @@ import { CurrentUser, ICurrentUserType } from '@src/decorators';
 import { Request } from 'express';
 import { AccountPageVo, AccountVo } from './vo/account.vo';
 import { QueryAccountDto } from './dto/account.query';
+import { AccountEntity } from './entities/account.entity';
 
 @UseGuards(AuthGuard)
 @Controller('account')
@@ -62,6 +63,14 @@ export class AccountController {
     @CurrentUser('userInfo') currentInfo: ICurrentUserType
   ): Promise<AccountPageVo> {
     return await this.accountService.getAccountPageApi(queryOption, currentInfo);
+  }
+
+  @Get('list')
+  async getAccountListApi(
+    @CurrentUser('userInfo') currentInfo: ICurrentUserType,
+    @Query('status') status: number
+  ): Promise<Pick<AccountEntity, 'id' | 'username'>[]> {
+    return await this.accountService.getAccountListApi(currentInfo, status);
   }
 
   @Get(':id')
