@@ -1,4 +1,3 @@
-import { StatusEnum } from '@src/enums';
 import { MethodEnum } from '@src/enums/method.enum';
 import { IsIncludes } from '@src/validators';
 import { Type } from 'class-transformer';
@@ -36,16 +35,11 @@ export class ResourcesDto {
   @Min(0, { message: '0目录,1菜单,2接口' })
   @IsInt({ message: '类型必须是数字' })
   @Type(() => Number)
+  @IsNotEmpty({ message: '类型不能为空' })
   resourcesType!: number;
 
   @IsInt({ message: '上一级id' })
   @Type(() => Number)
+  @IsOptional({ message: '父级' })
   parentId!: number;
-
-  @Max(1, { message: '状态最大值为1' })
-  @Min(0, { message: '状态最小值为0' })
-  @IsInt({ message: '状态必须是数字' })
-  @Type(() => Number)
-  @IsNotEmpty({ message: '状态不能为空' })
-  status!: StatusEnum;
 }

@@ -9,6 +9,7 @@ export class ResourcesVo extends QueryVo {
   readonly resourcesType!: number; // 0目录,1菜单,2接口
   readonly parentId!: number; // 上一级id
   readonly status!: number; // 状态:0是正常,1是禁止
+  readonly hasChildren?: boolean; // 是否有子节点
 }
 
 export class ResourcesListVo extends QueryListVo {

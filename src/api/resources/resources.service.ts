@@ -77,7 +77,7 @@ export class ResourcesService {
       pageNumber = PageEnum.PAGE_NUMBER,
       pageSize = PageEnum.PAGE_SIZE,
       title,
-      type,
+      resourcesType,
       parentId,
       status,
     } = queryResourcesDto;
@@ -88,12 +88,14 @@ export class ResourcesService {
     if ([(StatusEnum.NORMAL, StatusEnum.FORBIDDEN)].includes(status)) {
       queryMap.set('status', Equal(status + ''));
     }
-    if ([0, 1, 2].includes(type)) {
-      queryMap.set('type', Equal(type + ''));
+    if ([0, 1, 2].includes(resourcesType)) {
+      queryMap.set('resourcesType', Equal(resourcesType + ''));
     }
 
     if (parentId) {
       queryMap.set('parentId', Equal(parentId + ''));
+    } else {
+      queryMap.set('parentId', Equal('-1'));
     }
     const [data, total] = await this.resourcesRepository
       .createQueryBuilder()
@@ -103,8 +105,27 @@ export class ResourcesService {
       .printSql()
       .where(mapToObj(queryMap))
       .getManyAndCount();
+    // 抽取全部的id
+    const resourcesIdList = data.map((item) => item.id);
+    const resourcesEntityList: Pick<ResourcesEntity, 'parentId'>[] =
+      await this.resourcesRepository.find({
+        where: { parentId: In(resourcesIdList) },
+        select: ['parentId'],
+      });
+    // 组成map[parentId] = true
+    const resourcesMap = new Map<number, boolean>();
+    for (const item of resourcesEntityList) {
+      resourcesMap.set(item.parentId, true);
+    }
+    const result: ResourcesVo[] = [];
+    for (const item of data) {
+      result.push({
+        ...item,
+        hasChildren: resourcesMap.get(item.id),
+      });
+    }
     return {
-      data,
+      data: result,
       total,
       pageNumber: +pageNumber,
       pageSize: +pageSize,
@@ -115,7 +136,7 @@ export class ResourcesService {
    * @Author: 水痕
    * @Date: 2023-10-08 08:07:30
    * @LastEditors: 水痕
-   * @Description: 根据资源目录
+   * @Description: 根据资源模块
    * @return {*}
    */
   async getResourceCatalogApi(): Promise<SimplenessResourceVo[]> {
