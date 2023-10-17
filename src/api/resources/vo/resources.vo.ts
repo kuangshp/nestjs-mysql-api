@@ -19,4 +19,5 @@ export class ResourcesListVo extends QueryListVo {
 export class SimplenessResourceVo {
   id!: number;
   title!: string;
+  parentId!: number;
 }

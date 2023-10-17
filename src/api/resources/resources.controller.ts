@@ -47,8 +47,10 @@ export class ResourcesController {
   }
 
   @Get('catalog')
-  async getResourceCatalogApi(): Promise<SimplenessResourceVo[]> {
-    return await this.resourcesService.getResourceCatalogApi();
+  async getResourceCatalogApi(
+    @Query('catalogType') catalogType: number
+  ): Promise<SimplenessResourceVo[]> {
+    return await this.resourcesService.getResourceCatalogApi(catalogType);
   }
 
   @Get('menusList')

@@ -101,7 +101,7 @@ export class ResourcesService {
       .createQueryBuilder()
       .skip((pageNumber - 1) * pageSize)
       .take(pageSize)
-      .orderBy({ id: 'DESC' })
+      .orderBy({ sort: 'ASC', id: 'DESC' })
       .printSql()
       .where(mapToObj(queryMap))
       .getManyAndCount();
@@ -134,15 +134,23 @@ export class ResourcesService {
 
   /**
    * @Author: 水痕
-   * @Date: 2023-10-08 08:07:30
+   * @Date: 2023-10-11 12:05:30
    * @LastEditors: 水痕
    * @Description: 根据资源模块
+   * @param {number} catalogType 0的时候只查询出模块,1的时候查询出模块和菜单2,的时候查询模块、菜单、按钮
    * @return {*}
    */
-  async getResourceCatalogApi(): Promise<SimplenessResourceVo[]> {
+  async getResourceCatalogApi(catalogType: number): Promise<SimplenessResourceVo[]> {
+    console.log(catalogType, '111---->');
+    const queryMap = new Map<string, FindOperator<string>>();
+    if (catalogType == 2) {
+      queryMap.set('resourcesType', In([0, 1]));
+    } else {
+      queryMap.set('resourcesType', In([0]));
+    }
     return await this.resourcesRepository.find({
-      where: { resourcesType: 0 },
-      select: ['id', 'title'],
+      where: mapToObj(queryMap),
+      select: ['id', 'title', 'parentId'],
     });
   }
 
@@ -154,7 +162,7 @@ export class ResourcesService {
    * @return {*}
    */
   async getMenusListApi(): Promise<ResourcesVo[]> {
-    return await this.resourcesRepository.find({ where: { type: In([0, 1]) } });
+    return await this.resourcesRepository.find({ where: { resourcesType: In([0, 1]) } });
   }
   /**
    * @Author: 水痕
