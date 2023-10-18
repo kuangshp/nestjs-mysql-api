@@ -24,7 +24,7 @@ CREATE TABLE `tenant` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='商户表';
 
 -- ----------------------------
--- 角色表(也可以当部门表)
+-- 角色表
 -- ----------------------------
 DROP TABLE IF EXISTS `role`;
 CREATE TABLE `role` (
@@ -43,6 +43,27 @@ CREATE TABLE `role` (
 
 
 -- ----------------------------
+-- 部门表
+-- ----------------------------
+DROP TABLE IF EXISTS `department`;
+CREATE TABLE `department` (
+   `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY key COMMENT '主键id',
+   `title` varchar(50)  NOT NULL COMMENT '部门名称',
+   `name` varchar(50)  DEFAULT NULL COMMENT '部门负责人',
+   `mobile` varchar(50)  DEFAULT NULL COMMENT '联系手机号码',
+   `email` varchar(50)  DEFAULT NULL COMMENT '电邮地址',
+   `description` varchar(255)  DEFAULT NULL COMMENT '描述',
+   `status` tinyint(4) DEFAULT 0 COMMENT '状态0是正常,1是禁用',
+   `sort` int(11) DEFAULT 1 COMMENT '排序',
+   `tenant_id`  int(11) default -1 COMMENT '关联到tenant表主键id',
+   `parent_id` int(11) default -1 COMMENT '自己关联主键id',
+   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+   `deleted_at` timestamp NULL DEFAULT NULL COMMENT '软删除时间',
+   UNIQUE KEY `UK_title_parent_id_deleted_at` (`title`,`parent_id`,`deleted_at`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='部门表';
+
+-- ----------------------------
 -- 商户下账号表
 -- ----------------------------
 DROP TABLE IF EXISTS `account`;
@@ -53,6 +74,7 @@ CREATE TABLE `account` (
    `account_type` tinyint(4) DEFAULT 0 COMMENT '账号类型:0普通账号,1是主账号,2是超管',
    `tenant_id` int(11)  NOT NULL COMMENT '关联到tenant表主键id',
    `parent_id` int(11) default "-1" COMMENT '自关联主键id',
+   `department_id` int(11) default "-1" COMMENT '部门名称',
    `sort` int(11) DEFAULT 1 COMMENT '排序',
    `status` tinyint(4) DEFAULT 0 COMMENT '状态0是正常,1是禁用',
    `last_login_ip` varchar(30) COMMENT '最后登录ip地址',

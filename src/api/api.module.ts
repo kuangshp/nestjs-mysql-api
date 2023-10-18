@@ -8,6 +8,7 @@ import { LoginModule } from './login/login.module';
 import { MenusModule } from './menus/menus.module';
 import { ResourcesModule } from './resources/resources.module';
 import { RoleResourcesModule } from './roleResources/role.resources.module';
+import { DepartmentModule } from './department/department.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { RoleResourcesModule } from './roleResources/role.resources.module';
     MenusModule,
     ResourcesModule,
     RoleResourcesModule,
+    DepartmentModule,
   ],
 })
 export class ApiModule {}
