@@ -17,4 +17,10 @@ export class AccountDto {
   @Type(() => Number)
   @IsOptional({ message: '父节点id' })
   parentId!: number;
+
+  @Min(1, { message: '部门节点id最小值为1' })
+  @IsInt({ message: '部门节点id必须是整数' })
+  @Type(() => Number)
+  @IsOptional({ message: '部门节点id' })
+  departmentId!: number;
 }

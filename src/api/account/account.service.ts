@@ -58,6 +58,7 @@ export class AccountService {
       salt: salt,
       // lastLoginIp: this.toolsService.getReqIP(request),
       lastLoginDate: new Date(),
+      departmentId: req.departmentId,
     });
     await this.accountRepository.save(data);
     return '创建成功';

@@ -1,5 +1,4 @@
 import { SharedEntity } from '@src/shared/entities/base.entity';
-import { Transform, TransformFnParams } from 'class-transformer';
 import { Entity, Column, Index } from 'typeorm';
 
 @Entity('account')
@@ -19,7 +18,6 @@ export class AccountEntity extends SharedEntity {
     length: 100,
     name: 'password',
     comment: '密码',
-    select: false,
   })
   password!: string;
 
@@ -47,6 +45,15 @@ export class AccountEntity extends SharedEntity {
     comment: '自关联主键id',
   })
   parentId!: number;
+
+  @Column({
+    type: 'int',
+    name: 'department_id',
+    nullable: true,
+    default: '-1',
+    comment: '部门名称',
+  })
+  departmentId!: number;
 
   @Column({
     type: 'int',
@@ -120,7 +127,6 @@ export class AccountEntity extends SharedEntity {
   })
   lastLoginAdcode!: string;
 
-  @Transform((row: TransformFnParams) => +new Date(row.value))
   @Column({
     type: 'timestamp',
     name: 'last_login_date',
