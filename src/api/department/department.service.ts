@@ -12,6 +12,7 @@ import { QueryDepartmentDto } from './dto/department.query';
 import { PageEnum, StatusEnum } from '@src/enums';
 import { mapToObj } from '@src/utils';
 import { AccountTypeEnum } from '@src/enums/account.type.enum';
+import { AccountEntity } from '../account/entities/account.entity';
 
 @Injectable()
 export class DepartmentService {
@@ -32,14 +33,14 @@ export class DepartmentService {
   async createDepartmentApi(req: DepartmentDto, currentUser: ICurrentUserType): Promise<string> {
     // 1.判断部门存在吗
     const { tenantId } = currentUser;
-    const departmentEntity: Pick<DepartmentEntity, 'id'> | null =
-      await this.departmentRepository.findOne({
-        where: { tenantId, title: req.title },
-        select: ['id'],
-      });
-    if (departmentEntity?.id) {
-      throw new HttpException(`${req.title}已经存在`, HttpStatusCode.Ok);
-    }
+    // const departmentEntity: Pick<DepartmentEntity, 'id'> | null =
+    //   await this.departmentRepository.findOne({
+    //     where: { tenantId, title: req.title },
+    //     select: ['id'],
+    //   });
+    // if (departmentEntity?.id) {
+    //   throw new HttpException(`${req.title}已经存在`, HttpStatusCode.Ok);
+    // }
     const data = this.departmentRepository.create({ ...req, tenantId });
     await this.departmentRepository.save(data);
     return '创建成功';
@@ -290,9 +291,9 @@ export class DepartmentService {
       .createQueryBuilder('department')
       .select('department.id', 'id')
       .addSelect('department.title', 'title')
-      .addSelect('department.name', 'name')
       .addSelect('department.mobile', 'mobile')
       .addSelect('department.email', 'email')
+      .addSelect('department.accountId', 'accountId')
       .addSelect('department.tenantId', 'tenantId')
       .addSelect('department.parentId', 'parentId')
       .addSelect('department.sort', 'sort')
@@ -318,6 +319,16 @@ export class DepartmentService {
             .from(TenantEntity, 'tenant'),
         'tenant',
         'department.tenantId=tenant.tenantId'
+      )
+      .leftJoinAndMapOne(
+        'xx',
+        (qb) =>
+          qb
+            .select('account.id', 'accountId')
+            .addSelect('account.username', 'name')
+            .from(AccountEntity, 'account'),
+        'account',
+        'department.accountId=account.accountId'
       );
   }
 }

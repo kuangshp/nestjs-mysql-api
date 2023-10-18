@@ -6,9 +6,11 @@ export class DepartmentDto {
   @IsNotEmpty({ message: '部门名称不能为空' })
   title!: string;
 
-  @MaxLength(50, { message: '部门负责人最大长度为50' })
+  @Min(1, { message: '部门负责人最小值为1' })
+  @IsInt({ message: '部门负责人必须是整数' })
+  @Type(() => Number)
   @IsOptional({ message: '部门负责人' })
-  name!: string;
+  accountId!: number;
 
   @IsOptional({ message: '联系手机号码' })
   mobile!: string;

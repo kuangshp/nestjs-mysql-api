@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { RouterModule } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ADMIN_PREFIX } from '@src/constants';
+import { AccountEntity } from '../account/entities/account.entity';
 import { TenantEntity } from '../tenant/entities/tenant.entity';
 import { DepartmentController } from './department.controller';
 import { DepartmentService } from './department.service';
@@ -15,7 +16,7 @@ import { DepartmentEntity } from './entities/department.entity';
         module: DepartmentModule,
       },
     ]),
-    TypeOrmModule.forFeature([DepartmentEntity, TenantEntity]),
+    TypeOrmModule.forFeature([DepartmentEntity, TenantEntity, AccountEntity]),
   ],
   controllers: [DepartmentController],
   providers: [DepartmentService],

@@ -1,5 +1,5 @@
 import { SharedEntity } from '@src/shared/entities/base.entity';
-import { Entity, Column, Index } from 'typeorm';
+import { Entity, Column } from 'typeorm';
 
 @Entity('department')
 export class DepartmentEntity extends SharedEntity {
@@ -11,15 +11,12 @@ export class DepartmentEntity extends SharedEntity {
   })
   title!: string;
 
-  @Index()
   @Column({
-    type: 'varchar',
-    length: 50,
-    name: 'name',
-    nullable: true,
-    comment: '部门负责人',
+    type: 'int',
+    name: 'account_id',
+    comment: '部门负责人,关联到account表主键id',
   })
-  name!: string;
+  accountId!: number;
 
   @Column({
     type: 'varchar',

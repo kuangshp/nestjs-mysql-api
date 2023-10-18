@@ -3,6 +3,7 @@ import { QueryVo } from '@src/shared/vo/query.vo';
 
 export class DepartmentVo extends QueryVo {
   readonly title!: string; // 部门名称
+  readonly accountId!: number; // 部门负责人
   readonly name!: string; // 部门负责人
   readonly mobile!: string; // 联系手机号码
   readonly email!: string; // 电邮地址

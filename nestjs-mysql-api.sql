@@ -49,7 +49,7 @@ DROP TABLE IF EXISTS `department`;
 CREATE TABLE `department` (
    `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY key COMMENT '主键id',
    `title` varchar(50)  NOT NULL COMMENT '部门名称',
-   `name` varchar(50)  DEFAULT NULL COMMENT '部门负责人',
+   `account_id` int(11)  DEFAULT NULL COMMENT '部门负责人,关联到account表主键id',
    `mobile` varchar(50)  DEFAULT NULL COMMENT '联系手机号码',
    `email` varchar(50)  DEFAULT NULL COMMENT '电邮地址',
    `description` varchar(255)  DEFAULT NULL COMMENT '描述',
