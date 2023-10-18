@@ -133,12 +133,12 @@ export class DepartmentService {
    * @LastEditors: 水痕
    * @Description: 分页获取部门
    * @param {QueryDepartmentDto} queryOption
-   * @param {ICurrentUserType} currentInfo
+   * @param {ICurrentUserType} currentUser
    * @return {*}
    */
   async getDepartmentPageApi(
     queryOption: QueryDepartmentDto,
-    currentInfo: ICurrentUserType
+    currentUser: ICurrentUserType
   ): Promise<DepartmentPageVo> {
     const {
       status,
@@ -154,7 +154,7 @@ export class DepartmentService {
     if ([StatusEnum.NORMAL, StatusEnum.FORBIDDEN].includes(status)) {
       query.set('status', Equal(status + ''));
     }
-    const { accountType, id, tenantId } = currentInfo;
+    const { accountType, id, tenantId } = currentUser;
     /**
      * 1.如果是超管,查询到全部的账号
      * 2.如果不是超管,是主账号的时候查询下面全部的账号
@@ -172,13 +172,13 @@ export class DepartmentService {
       }
     }
     const total = await this.departmentRepository
-      .createQueryBuilder('account')
+      .createQueryBuilder('department')
       .where(mapToObj(query))
       .getCount();
     const queryBuilder = this.queryDepartmentBuilder;
     const data = await queryBuilder
       .where(mapToObj(query))
-      .orderBy({ accountType: 'DESC', id: 'DESC' })
+      .orderBy({ id: 'DESC' })
       .offset((pageNumber - 1) * pageSize)
       .limit(pageSize)
       .getRawMany();
@@ -266,14 +266,14 @@ export class DepartmentService {
       .addSelect('department.parentId', 'parentId')
       .addSelect('department.sort', 'sort')
       .addSelect('department.status', 'status')
-      .addSelect('account.createdAt', 'createdAt')
-      .addSelect('account.updatedAt', 'updatedAt')
+      .addSelect('department.createdAt', 'createdAt')
+      .addSelect('department.updatedAt', 'updatedAt')
       .leftJoinAndMapOne(
         'xx',
         (qb) =>
           qb
-            .select('department.id', 'parentId')
-            .addSelect('department.title', 'parentTitle')
+            .select('department1.id', 'parentId')
+            .addSelect('department1.title', 'parentTitle')
             .from(DepartmentEntity, 'department1'),
         'department1',
         'department.parentId=department1.parentId'

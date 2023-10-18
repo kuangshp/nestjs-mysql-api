@@ -8,13 +8,15 @@ import {
   Param,
   ParseIntPipe,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { DepartmentService } from './department.service';
 import { DepartmentDto } from './dto/department.dto';
 import { CurrentUser, ICurrentUserType } from '@src/decorators';
 import { DepartmentPageVo, DepartmentVo } from './vo/department.vo';
 import { QueryDepartmentDto } from './dto/department.query';
-
+import { AuthGuard } from '@src/guard/auth.guard';
+@UseGuards(AuthGuard)
 @Controller('department')
 export class DepartmentController {
   constructor(private readonly departmentService: DepartmentService) {}
