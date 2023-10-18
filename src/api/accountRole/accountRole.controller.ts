@@ -5,7 +5,7 @@ import { AccountRoleService } from './accountRole.service';
 import { AccountRoleDto } from './dto/account.role.dto';
 
 @UseGuards(AuthGuard)
-@Controller('account_role')
+@Controller('accountRole')
 export class AccountRoleController {
   constructor(private readonly accountRoleService: AccountRoleService) {}
 
@@ -22,7 +22,7 @@ export class AccountRoleController {
   }
 
   @Get()
-  async getAllRolesApi(@Query('status', new ParseIntPipe()) status: number): Promise<RoleEntity[]> {
+  async getAllRolesApi(@Query('status') status: number): Promise<RoleEntity[]> {
     return await this.accountRoleService.getAllRolesApi(status);
   }
 }

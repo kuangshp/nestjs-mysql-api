@@ -11,7 +11,7 @@ export class MenusController {
   constructor(private readonly menusService: MenusService) {}
 
   @Get()
-  async getAllMenusApi(@CurrentUser() userInfo: ICurrentUserType): Promise<MenusVo[]> {
+  async getAllMenusApi(@CurrentUser('userInfo') userInfo: ICurrentUserType): Promise<MenusVo[]> {
     return await this.menusService.getAllMenusApi(userInfo);
   }
 

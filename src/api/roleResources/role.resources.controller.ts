@@ -5,7 +5,7 @@ import { RoleResourcesDto } from './dto/role.resources.dto';
 import { RoleResourcesService } from './role.resources.service';
 
 @UseGuards(AuthGuard)
-@Controller('role_resources')
+@Controller('roleResources')
 export class RoleResourcesController {
   constructor(private readonly roleResourcesService: RoleResourcesService) {}
 

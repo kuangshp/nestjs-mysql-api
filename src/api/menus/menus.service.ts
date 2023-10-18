@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ICurrentUserType } from '@src/decorators';
 import { StatusEnum } from '@src/enums';
+import { AccountTypeEnum } from '@src/enums/account.type.enum';
 import { mapToObj } from '@src/utils';
 import { FindOperator, In, Repository } from 'typeorm';
 import { AccountRoleEntity } from '../accountRole/entities/account.role.entity';
@@ -29,13 +30,16 @@ export class MenusService {
    * @return {*}
    */
   async getAllMenusApi(userInfo: ICurrentUserType): Promise<MenusVo[]> {
-    // 如果是超级管理员就全部返回
+    const { accountType } = userInfo;
     const query = new Map<string, FindOperator<string>>();
     query.set('status', StatusEnum.NORMAL as any);
-    // if (userInfo.isSuper !== SuperAdminEnum.IS_SUPER) {
-    //   const resourcesId = await this.getResourcesIdList(userInfo);
-    //   query.set('id', In(resourcesId));
-    // }
+    query.set('resourcesType', In([0, 1]));
+    // 如果是不是超级管理员就返回角色下的资源
+    if (accountType !== AccountTypeEnum.SUPER_ACCOUNT) {
+      const resourcesIdList = await this.getResourcesIdList(userInfo);
+      console.log(resourcesIdList, '资源');
+      query.set('id', In(resourcesIdList));
+    }
     console.log(userInfo);
     return await this.resourcesRepository
       .createQueryBuilder('resources')
@@ -89,7 +93,7 @@ export class MenusService {
    * @Author:
    * @Date: 2023-05-20 19:52:18
    * @LastEditors:
-   * @Description: 根据资源id获取咨询
+   * @Description: 根据资源id获取资源
    * @param {ICurrentUserType} userInfo
    * @return {*}
    */
