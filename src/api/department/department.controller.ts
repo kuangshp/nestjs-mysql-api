@@ -13,7 +13,7 @@ import {
 import { DepartmentService } from './department.service';
 import { DepartmentDto } from './dto/department.dto';
 import { CurrentUser, ICurrentUserType } from '@src/decorators';
-import { DepartmentPageVo, DepartmentVo } from './vo/department.vo';
+import { DepartmentPageVo, DepartmentVo, SimplenessDepartmentVo } from './vo/department.vo';
 import { QueryDepartmentDto } from './dto/department.query';
 import { AuthGuard } from '@src/guard/auth.guard';
 @UseGuards(AuthGuard)
@@ -56,6 +56,13 @@ export class DepartmentController {
     @CurrentUser('userInfo') currentUser: ICurrentUserType
   ): Promise<DepartmentPageVo> {
     return await this.departmentService.getDepartmentPageApi(queryOption, currentUser);
+  }
+
+  @Get('list')
+  async getDepartmentListApi(
+    @CurrentUser('userInfo') currentUser: ICurrentUserType
+  ): Promise<SimplenessDepartmentVo[]> {
+    return await this.departmentService.getDepartmentListApi(currentUser);
   }
 
   @Get(':id')

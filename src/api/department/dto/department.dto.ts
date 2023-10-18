@@ -27,7 +27,6 @@ export class DepartmentDto {
   @IsOptional({ message: '排序' })
   sort!: number;
 
-  @Min(1, { message: '自己关联主键id最小值为1' })
   @IsInt({ message: '自己关联主键id必须是整数' })
   @Type(() => Number)
   parentId!: number;

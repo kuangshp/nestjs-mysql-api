@@ -79,7 +79,7 @@ export class DepartmentEntity extends SharedEntity {
     type: 'int',
     name: 'parent_id',
     nullable: true,
-    default: '-1',
+    default: -1,
     comment: '自己关联主键id',
   })
   parentId!: number;

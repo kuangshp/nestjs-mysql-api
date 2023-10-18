@@ -6,7 +6,7 @@ import { Equal, FindOperator, ILike, In, Repository, SelectQueryBuilder } from '
 import { DepartmentDto } from './dto/department.dto';
 import { ICurrentUserType } from '@src/decorators';
 import { HttpStatusCode } from 'axios';
-import { DepartmentPageVo, DepartmentVo } from './vo/department.vo';
+import { DepartmentPageVo, DepartmentVo, SimplenessDepartmentVo } from './vo/department.vo';
 import { TenantEntity } from '../tenant/entities/tenant.entity';
 import { QueryDepartmentDto } from './dto/department.query';
 import { PageEnum, StatusEnum } from '@src/enums';
@@ -182,6 +182,7 @@ export class DepartmentService {
       .offset((pageNumber - 1) * pageSize)
       .limit(pageSize)
       .getRawMany();
+    console.log(data, '????????????????');
     return {
       data,
       total,
@@ -190,6 +191,26 @@ export class DepartmentService {
     };
   }
 
+  /**
+   * @Author: 水痕
+   * @Date: 2023-10-18 20:27:28
+   * @LastEditors: 水痕
+   * @Description: 获取当前商户下的部门
+   * @param {ICurrentUserType} currentUser
+   * @return {*}
+   */
+  async getDepartmentListApi(currentUser: ICurrentUserType): Promise<SimplenessDepartmentVo[]> {
+    const { id, tenantId, accountType } = currentUser;
+    const query = new Map<string, FindOperator<string>>();
+    query.set('tenantId', Equal(tenantId + ''));
+    if (accountType != AccountTypeEnum.SUPER_ACCOUNT) {
+      query.set('parentId', Equal(id + ''));
+    }
+    return await this.departmentRepository.find({
+      where: mapToObj(query),
+      select: ['id', 'title', 'parentId'],
+    });
+  }
   /**
    * @Author: 水痕
    * @Date: 2023-10-18 15:21:30
@@ -206,11 +227,43 @@ export class DepartmentService {
    * @Author: 水痕
    * @Date: 2023-10-18 15:52:37
    * @LastEditors: 水痕
-   * @Description: 根据id列表修改状态
+   * @Description: 批量删除部门
    * @param {number} idList
    * @return {*}
    */
   async batchDeleteDepartmentByIdListApi(idList: number[]): Promise<string> {
+    const departmentEntityList: Pick<DepartmentEntity, 'parentId'>[] =
+      await this.departmentRepository.find({
+        where: { parentId: In(idList) },
+        select: ['parentId', 'id'],
+      });
+    if (departmentEntityList.length > 0) {
+      throw new HttpException('当前部门有子部门,不能直接删除', HttpStatusCode.Ok);
+    }
+    const departmentEntityList1: Pick<DepartmentEntity, 'parentId'>[] =
+      await this.departmentRepository.find({
+        where: { id: In(idList) },
+        select: ['parentId'],
+      });
+    if (departmentEntityList1.map((item) => item.parentId).includes(-1)) {
+      throw new HttpException('当前部门有子部门,不能直接删除', HttpStatusCode.Ok);
+    }
+    const { affected } = await this.departmentRepository.softDelete({ id: In(idList) });
+    if (affected) {
+      return '删除成功';
+    } else {
+      return '删除失败';
+    }
+  }
+  /**
+   * @Author: 水痕
+   * @Date: 2023-10-18 15:58:14
+   * @LastEditors: 水痕
+   * @Description:根据id列表修改状态
+   * @param {number} idList
+   * @return {*}
+   */
+  async batchModifyDepartmentStatusByIdApi(idList: number[]): Promise<string> {
     const departmentEntityList: Pick<DepartmentEntity, 'status'>[] =
       await this.departmentRepository.find({ where: { id: In(idList) }, select: ['status'] });
     const statusList = departmentEntityList.map((item) => item.status);
@@ -223,28 +276,6 @@ export class DepartmentService {
       return '修改成功';
     } else {
       return '修改失败';
-    }
-  }
-  /**
-   * @Author: 水痕
-   * @Date: 2023-10-18 15:58:14
-   * @LastEditors: 水痕
-   * @Description: 批量删除部门
-   * @param {number} idList
-   * @return {*}
-   */
-  async batchModifyDepartmentStatusByIdApi(idList: number[]): Promise<string> {
-    const departmentEntityList: Pick<DepartmentEntity, 'status'>[] =
-      await this.departmentRepository.find({ where: { id: In(idList) }, select: ['status'] });
-    const statusList = departmentEntityList.map((item) => item.status);
-    if ([...new Set(statusList)].length > 1) {
-      throw new HttpException('当前部门多个状态,不能批量操作', HttpStatusCode.Ok);
-    }
-    const { affected } = await this.departmentRepository.softDelete({ id: In(idList) });
-    if (affected) {
-      return '删除成功';
-    } else {
-      return '删除失败';
     }
   }
   /**
