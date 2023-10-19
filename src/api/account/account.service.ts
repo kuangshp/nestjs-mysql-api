@@ -230,22 +230,22 @@ export class AccountService {
   async getAccountListApi(
     currentInfo: ICurrentUserType,
     status: number
-  ): Promise<Pick<AccountEntity, 'id' | 'username'>[]> {
+  ): Promise<Pick<AccountEntity, 'id' | 'username' | 'parentId'>[]> {
     const { id, accountType } = currentInfo;
     console.log(status, '状态');
     const query = new Map<string, FindOperator<string>>();
     if (Object.is(accountType, AccountTypeEnum.SUPER_ACCOUNT)) {
-      query.set('parentId', Equal(-1 + ''));
+      query.set('parentId', In([-1, id]));
     } else {
       query.set('parentId', Equal(id + ''));
     }
     if ([StatusEnum.FORBIDDEN, StatusEnum.NORMAL].includes(status)) {
       query.set('status', Equal(status + ''));
     }
-    const accountEntity: Pick<AccountEntity, 'id' | 'username'>[] =
+    const accountEntity: Pick<AccountEntity, 'id' | 'username' | 'parentId'>[] =
       await this.accountRepository.find({
         where: mapToObj(query),
-        select: ['id', 'username'],
+        select: ['id', 'username', 'parentId'],
       });
     return accountEntity;
   }

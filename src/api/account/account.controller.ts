@@ -69,7 +69,7 @@ export class AccountController {
   async getAccountListApi(
     @CurrentUser('userInfo') currentInfo: ICurrentUserType,
     @Query('status') status: number
-  ): Promise<Pick<AccountEntity, 'id' | 'username'>[]> {
+  ): Promise<Pick<AccountEntity, 'id' | 'username' | 'parentId'>[]> {
     return await this.accountService.getAccountListApi(currentInfo, status);
   }
 

@@ -204,7 +204,9 @@ export class DepartmentService {
     const { id, tenantId, accountType } = currentUser;
     const query = new Map<string, FindOperator<string>>();
     query.set('tenantId', Equal(tenantId + ''));
-    if (accountType != AccountTypeEnum.SUPER_ACCOUNT) {
+    if (accountType == AccountTypeEnum.SUPER_ACCOUNT) {
+      query.set('parentId', In([-1, id]));
+    } else {
       query.set('parentId', Equal(id + ''));
     }
     return await this.departmentRepository.find({
