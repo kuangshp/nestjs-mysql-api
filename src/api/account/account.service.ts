@@ -13,6 +13,7 @@ import { AccountTypeEnum } from '@src/enums/account.type.enum';
 import { PageEnum, StatusEnum } from '@src/enums';
 import { mapToObj } from '@src/utils';
 import { TenantEntity } from '../tenant/entities/tenant.entity';
+import { DepartmentEntity } from '../department/entities/department.entity';
 
 @Injectable()
 export class AccountService {
@@ -351,6 +352,7 @@ export class AccountService {
       .addSelect('account.accountType', 'accountType')
       .addSelect('account.tenantId', 'tenantId')
       .addSelect('account.parentId', 'parentId')
+      .addSelect('account.departmentId', 'departmentId')
       .addSelect('account.sort', 'sort')
       .addSelect('account.status', 'status')
       .addSelect('account.lastLoginIp', 'lastLoginIp')
@@ -381,6 +383,16 @@ export class AccountService {
             .from(TenantEntity, 'tenant'),
         'tenant',
         'account.tenantId=tenant.tenantId'
+      )
+      .leftJoinAndMapOne(
+        'xx',
+        (qb) =>
+          qb
+            .select('department.id', 'departmentId')
+            .addSelect('department.title', 'departmentTitle')
+            .from(DepartmentEntity, 'department'),
+        'department',
+        'account.departmentId=department.departmentId'
       );
   }
 }

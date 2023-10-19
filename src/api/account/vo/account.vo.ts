@@ -8,6 +8,8 @@ export class AccountVo extends QueryVo {
   readonly tenantName!: string; // 关联到tenant表名称
   readonly parentId!: number; // 自关联主键id
   readonly parentName!: number; // 自关联主键id
+  readonly departmentId!: number; // 关联到部门表主键id
+  readonly departmentTitle!: string; // 关联到部门表主键id
   readonly sort!: number; // 排序
   readonly status!: number; // 状态0是正常,1是禁用
   readonly lastLoginIp!: string; // 最后登录ip地址
