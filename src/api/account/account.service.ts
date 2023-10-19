@@ -233,7 +233,7 @@ export class AccountService {
     status: number
   ): Promise<Pick<AccountEntity, 'id' | 'username' | 'parentId'>[]> {
     const { id, accountType } = currentInfo;
-    console.log(status, '状态');
+    console.log(status, '状态', id, accountType);
     const query = new Map<string, FindOperator<string>>();
     if (Object.is(accountType, AccountTypeEnum.SUPER_ACCOUNT)) {
       query.set('parentId', In([-1, id]));
