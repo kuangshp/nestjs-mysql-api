@@ -14,7 +14,7 @@ import { AuthGuard } from '@src/guard/auth.guard';
 import { ResourcesDto } from './dto/resources.dto';
 import { QueryResourcesDto } from './dto/resources.query.dto';
 import { ResourcesService } from './resources.service';
-import { ResourcesListVo, ResourcesVo, SimplenessResourceVo } from './vo/resources.vo';
+import { ResourcesListVo, SimplenessResourceVo } from './vo/resources.vo';
 
 @UseGuards(AuthGuard)
 @Controller('resources')
@@ -53,9 +53,9 @@ export class ResourcesController {
     return await this.resourcesService.getResourceCatalogApi(catalogType);
   }
 
-  @Get('menusList')
-  async getMenusListApi(): Promise<ResourcesVo[]> {
-    return await this.resourcesService.getMenusListApi();
+  @Get('list')
+  async getResourcesListApi(@Query('type') type: number): Promise<SimplenessResourceVo[]> {
+    return await this.resourcesService.getResourcesListApi(type);
   }
 
   @Get('menus/:id')

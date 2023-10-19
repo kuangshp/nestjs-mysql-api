@@ -17,4 +17,12 @@ export class RoleResourcesEntity extends SharedEntity {
     comment: '关联到role表主键id',
   })
   roleId!: number;
+
+  @Column({
+    type: 'tinyint',
+    name: 'type',
+    default: '0',
+    comment: '类型,0表示菜单1表示按钮',
+  })
+  type!: number;
 }

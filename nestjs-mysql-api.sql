@@ -135,10 +135,11 @@ CREATE TABLE `role_resources`  (
   `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY key COMMENT '主键id',
   `resources_id` int(11) NOT NULL COMMENT '关联到resources表主键id',
   `role_id` int(11) NOT NULL COMMENT '关联到role表主键id',
+  `type` tinyint(4) not null DEFAULT 0 comment '类型,0表示菜单1表示按钮',
   `created_at` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) COMMENT '创建时间',
   `updated_at` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6) COMMENT '更新时间',
   `deleted_at` timestamp(6) NULL DEFAULT NULL COMMENT '软删除时间',
-  UNIQUE INDEX `UK_resources_role`(`resources_id`, `role_id`) 
+  UNIQUE INDEX `UK_resources_role_type`(`resources_id`, `role_id`,`type`) 
 ) ENGINE = InnoDB  DEFAULT CHARSET=utf8mb4 COMMENT = '角色和资源中间表';
 
 

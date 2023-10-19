@@ -24,16 +24,16 @@ export class RoleResourcesService {
    * @return {*}
    */
   async dispatchResourcesApi(req: RoleResourcesDto): Promise<string> {
-    const { roleId } = req;
+    const { roleId, type } = req;
     // 处理如果没传递的时候直接清空
     if (!req.resourceList.length) {
-      await this.roleResourcesRepository.delete({ roleId });
+      await this.roleResourcesRepository.delete({ roleId, type });
       return '分配资源成功';
     }
     // 根据当前角色查询之前的资源
     const roleResourcesEntity: Pick<RoleResourcesEntity, 'resourcesId'>[] =
       await this.roleResourcesRepository.find({
-        where: { roleId },
+        where: { roleId, type },
         select: ['resourcesId'],
       });
     if (roleResourcesEntity.length) {
@@ -53,6 +53,7 @@ export class RoleResourcesService {
             where: {
               roleId: req.roleId,
               resourcesId: In(roleResourceDeleteList),
+              type,
             },
             select: ['id'],
           });
@@ -68,6 +69,7 @@ export class RoleResourcesService {
             return {
               resourcesId: item,
               roleId: req.roleId,
+              type,
             };
           });
           // 创建
@@ -92,6 +94,7 @@ export class RoleResourcesService {
         return {
           roleId: req.roleId,
           resourcesId: item,
+          type,
         };
       });
       const data1 = this.roleResourcesRepository.create(data);
@@ -106,12 +109,13 @@ export class RoleResourcesService {
    * @LastEditors: 水痕
    * @Description: 根据角色获取授权的资源
    * @param {number} roleId
+   * @param {number} type
    * @return {*}
    */
-  async getResourceByRoleIdApi(roleId: number): Promise<ResourcesEntity[]> {
+  async getResourceByRoleIdApi(roleId: number, type: number): Promise<ResourcesEntity[]> {
     const roleResourcesEntity: Pick<RoleResourcesEntity, 'resourcesId'>[] =
       await this.roleResourcesRepository.find({
-        where: { roleId },
+        where: { roleId, type },
         select: ['resourcesId'],
       });
     const resourceIdList: number[] = roleResourcesEntity.map((item) => item.resourcesId);

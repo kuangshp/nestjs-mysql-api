@@ -158,11 +158,20 @@ export class ResourcesService {
    * @Author: 水痕
    * @Date: 2023-10-08 08:07:50
    * @LastEditors: 水痕
-   * @Description: 获取一级和二级下的菜单
+   * @Description: type=0表示菜单,1表示按钮
    * @return {*}
    */
-  async getMenusListApi(): Promise<ResourcesVo[]> {
-    return await this.resourcesRepository.find({ where: { resourcesType: In([0, 1]) } });
+  async getResourcesListApi(type: number): Promise<SimplenessResourceVo[]> {
+    let resourcesType: any = [];
+    if (type == 0) {
+      resourcesType = [0, 1];
+    } else if (type == 1) {
+      resourcesType = [0, 1, 2];
+    }
+    return await this.resourcesRepository.find({
+      where: { resourcesType: In(resourcesType), status: StatusEnum.NORMAL },
+      select: ['id', 'title', 'parentId'],
+    });
   }
   /**
    * @Author: 水痕
