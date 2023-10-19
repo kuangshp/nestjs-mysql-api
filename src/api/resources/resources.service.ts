@@ -170,7 +170,7 @@ export class ResourcesService {
     }
     return await this.resourcesRepository.find({
       where: { resourcesType: In(resourcesType), status: StatusEnum.NORMAL },
-      select: ['id', 'title', 'parentId'],
+      select: ['id', 'title', 'parentId', 'resourcesType'],
     });
   }
   /**
