@@ -6,6 +6,7 @@ import { AccountRoleEntity } from '../accountRole/entities/account.role.entity';
 import { ResourcesEntity } from '../resources/entities/resources.entity';
 import { RoleResourcesEntity } from '../roleResources/entities/role.resources.entity';
 import { MenusController } from './menus.controller';
+import { MenusRepository } from './menus.repository';
 import { MenusService } from './menus.service';
 
 @Module({
@@ -19,7 +20,7 @@ import { MenusService } from './menus.service';
     TypeOrmModule.forFeature([ResourcesEntity, AccountRoleEntity, RoleResourcesEntity]),
   ],
   controllers: [MenusController],
-  providers: [MenusService],
-  exports: [MenusService],
+  providers: [MenusService, MenusRepository],
+  exports: [MenusRepository],
 })
 export class MenusModule {}

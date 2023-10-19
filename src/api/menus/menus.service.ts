@@ -5,20 +5,16 @@ import { StatusEnum } from '@src/enums';
 import { AccountTypeEnum } from '@src/enums/account.type.enum';
 import { mapToObj } from '@src/utils';
 import { FindOperator, In, Repository } from 'typeorm';
-import { AccountRoleEntity } from '../accountRole/entities/account.role.entity';
 import { ResourcesEntity } from '../resources/entities/resources.entity';
-import { RoleResourcesEntity } from '../roleResources/entities/role.resources.entity';
+import { MenusRepository } from './menus.repository';
 import { ApiVo, MenusVo } from './vo/menus.vo';
 
 @Injectable()
 export class MenusService {
   constructor(
-    @InjectRepository(AccountRoleEntity)
-    private readonly accountRoleRepository: Repository<AccountRoleEntity>,
-    @InjectRepository(RoleResourcesEntity)
-    private readonly roleResourcesRepository: Repository<RoleResourcesEntity>,
     @InjectRepository(ResourcesEntity)
-    private readonly resourcesRepository: Repository<ResourcesEntity>
+    private readonly resourcesRepository: Repository<ResourcesEntity>,
+    private readonly menusRepository: MenusRepository
   ) {}
 
   /**
@@ -36,7 +32,7 @@ export class MenusService {
     query.set('resourcesType', In([0, 1]));
     // 如果是不是超级管理员就返回角色下的资源
     if (accountType !== AccountTypeEnum.SUPER_ACCOUNT) {
-      const resourcesIdList = await this.getResourcesIdList(userInfo);
+      const resourcesIdList = await this.menusRepository.getResourcesIdList(userInfo);
       console.log(resourcesIdList, '资源');
       query.set('id', In(resourcesIdList));
     }
@@ -68,7 +64,7 @@ export class MenusService {
       return [];
     }
     // 获取授权的资源id
-    const resourcesId = await this.getResourcesIdList(userInfo);
+    const resourcesId = await this.menusRepository.getResourcesIdList(userInfo);
     console.log(resourcesId, '全部资源');
     return await this.resourcesRepository.find({
       where: {
@@ -91,48 +87,9 @@ export class MenusService {
    * @return {*}
    */
   async getResourcesList(userInfo: ICurrentUserType): Promise<ResourcesEntity[]> {
-    const resourcesId = await this.getResourcesIdList(userInfo);
+    const resourcesId = await this.menusRepository.getResourcesIdList(userInfo);
     return await this.resourcesRepository.find({
       where: { id: In(resourcesId) },
     });
-  }
-  /**
-   * @Author:
-   * @Date: 2023-05-20 17:08:22
-   * @LastEditors:
-   * @Description: 内部使用,根据当前用户获取授权的资源id
-   * @param {ICurrentUserType} userInfo
-   * @return {*}
-   */
-  private async getResourcesIdList(userInfo: ICurrentUserType): Promise<number[]> {
-    const { accountType } = userInfo;
-    if (accountType == AccountTypeEnum.SUPER_ACCOUNT) {
-      const resourcesEntity: Pick<ResourcesEntity, 'id'>[] = await this.resourcesRepository.find({
-        select: ['id'],
-      });
-      return resourcesEntity.map((item: Pick<ResourcesEntity, 'id'>) => item.id);
-    } else {
-      const query = new Map<string, FindOperator<string>>();
-      // 1.查询当前用户授权的角色
-      const accountRoleEntity: Pick<AccountRoleEntity, 'roleId'>[] =
-        await this.accountRoleRepository.find({
-          where: { accountId: userInfo.id },
-          select: ['roleId'],
-        });
-      if (!accountRoleEntity.length) {
-        return [];
-      }
-      query.set('roleId', In(accountRoleEntity.map((item) => item.roleId)));
-      // 2.根据角色查询授权的资源
-      const roleResourcesEntity: Pick<RoleResourcesEntity, 'resourcesId'>[] =
-        await this.roleResourcesRepository.find({
-          where: mapToObj(query),
-          select: ['resourcesId'],
-        });
-      if (!roleResourcesEntity.length) {
-        return [];
-      }
-      return roleResourcesEntity.map((item) => item.resourcesId);
-    }
   }
 }

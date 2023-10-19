@@ -10,6 +10,7 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
+import { CurrentUser, ICurrentUserType } from '@src/decorators';
 import { AuthGuard } from '@src/guard/auth.guard';
 import { ResourcesDto } from './dto/resources.dto';
 import { QueryResourcesDto } from './dto/resources.query.dto';
@@ -54,8 +55,11 @@ export class ResourcesController {
   }
 
   @Get('list')
-  async getResourcesListApi(@Query('type') type: number): Promise<SimplenessResourceVo[]> {
-    return await this.resourcesService.getResourcesListApi(type);
+  async getResourcesListApi(
+    @Query('type') type: number,
+    @CurrentUser('userInfo') currentInfo: ICurrentUserType
+  ): Promise<SimplenessResourceVo[]> {
+    return await this.resourcesService.getResourcesListApi(type, currentInfo);
   }
 
   @Get('menus/:id')

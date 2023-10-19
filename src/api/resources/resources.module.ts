@@ -2,6 +2,10 @@ import { Module } from '@nestjs/common';
 import { RouterModule } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ADMIN_PREFIX } from '@src/constants';
+import { AccountEntity } from '../account/entities/account.entity';
+import { AccountRoleEntity } from '../accountRole/entities/account.role.entity';
+import { MenusRepository } from '../menus/menus.repository';
+import { RoleResourcesEntity } from '../roleResources/entities/role.resources.entity';
 import { ResourcesEntity } from './entities/resources.entity';
 import { ResourcesController } from './resources.controller';
 import { ResourcesService } from './resources.service';
@@ -14,9 +18,14 @@ import { ResourcesService } from './resources.service';
         module: ResourcesModule,
       },
     ]),
-    TypeOrmModule.forFeature([ResourcesEntity]),
+    TypeOrmModule.forFeature([
+      ResourcesEntity,
+      AccountEntity,
+      RoleResourcesEntity,
+      AccountRoleEntity,
+    ]),
   ],
   controllers: [ResourcesController],
-  providers: [ResourcesService],
+  providers: [ResourcesService, MenusRepository],
 })
 export class ResourcesModule {}

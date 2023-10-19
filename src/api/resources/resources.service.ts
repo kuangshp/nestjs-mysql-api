@@ -1,8 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { ICurrentUserType } from '@src/decorators';
 import { PageEnum, StatusEnum } from '@src/enums';
 import { mapToObj } from '@src/utils';
 import { Equal, FindOperator, ILike, In, Repository } from 'typeorm';
+import { MenusRepository } from '../menus/menus.repository';
 import { ResourcesDto } from './dto/resources.dto';
 import { QueryResourcesDto } from './dto/resources.query.dto';
 import { ResourcesEntity } from './entities/resources.entity';
@@ -12,7 +14,8 @@ import { ResourcesListVo, ResourcesVo, SimplenessResourceVo } from './vo/resourc
 export class ResourcesService {
   constructor(
     @InjectRepository(ResourcesEntity)
-    private readonly resourcesRepository: Repository<ResourcesEntity>
+    private readonly resourcesRepository: Repository<ResourcesEntity>,
+    private readonly menusRepository: MenusRepository
   ) {}
 
   /**
@@ -161,15 +164,24 @@ export class ResourcesService {
    * @Description: type=0表示菜单,1表示按钮
    * @return {*}
    */
-  async getResourcesListApi(type: number): Promise<SimplenessResourceVo[]> {
+  async getResourcesListApi(
+    type: number,
+    currentInfo: ICurrentUserType
+  ): Promise<SimplenessResourceVo[]> {
+    console.log(currentInfo, '当前用户');
     let resourcesType: any = [];
     if (type == 0) {
       resourcesType = [0, 1];
     } else if (type == 1) {
       resourcesType = [0, 1, 2];
     }
+    const resourcesIdList = await this.menusRepository.getResourcesIdList(currentInfo);
     return await this.resourcesRepository.find({
-      where: { resourcesType: In(resourcesType), status: StatusEnum.NORMAL },
+      where: {
+        id: In(resourcesIdList),
+        resourcesType: In(resourcesType),
+        status: StatusEnum.NORMAL,
+      },
       select: ['id', 'title', 'parentId', 'resourcesType'],
     });
   }
