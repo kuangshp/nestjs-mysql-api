@@ -11,3 +11,8 @@ export class MenusVo {
   parentId!: number; // 上一级id
   status!: number; // 状态:0是正常,1是禁止
 }
+
+export class ApiVo {
+  id!: number;
+  title!: string; // 接口标题,或菜单标题
+}

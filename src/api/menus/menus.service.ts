@@ -8,7 +8,7 @@ import { FindOperator, In, Repository } from 'typeorm';
 import { AccountRoleEntity } from '../accountRole/entities/account.role.entity';
 import { ResourcesEntity } from '../resources/entities/resources.entity';
 import { RoleResourcesEntity } from '../roleResources/entities/role.resources.entity';
-import { MenusVo } from './vo/menus.vo';
+import { ApiVo, MenusVo } from './vo/menus.vo';
 
 @Injectable()
 export class MenusService {
@@ -50,42 +50,35 @@ export class MenusService {
 
   /**
    * @Author:
-   * @Date: 2023-05-20 17:19:02
-   * @LastEditors:
-   * @Description: 根据菜单url获取菜单id
-   * @param {string} urlName
-   * @return {*}
-   */
-  async getMenusIdByNameApi(urlName: string): Promise<number | undefined> {
-    const resourcesEntity = await this.resourcesRepository.findOne({
-      where: { url: urlName },
-      select: ['id'],
-    });
-    return resourcesEntity?.id ?? 0;
-  }
-
-  /**
-   * @Author:
    * @Date: 2023-05-20 17:02:48
    * @LastEditors:
    * @Description: 根据菜单id获取授权的按钮
-   * @param {number} id
+   * @param {string} urlName
+   * @param {ICurrentUserType} userInfo
    * @return {*}
    */
-  async getBtnByMenusIdApi(id: number, userInfo: ICurrentUserType): Promise<ResourcesEntity[]> {
-    // if (Object.is(userInfo.isSuper, SuperAdminEnum.IS_SUPER)) {
-    //   return await this.resourcesRepository.find({
-    //     where: { parentId: id, resourcesType: 1 },
-    //     order: { sort: 'DESC', id: 'DESC' },
-    //   });
-    // } else {
-
-    // }
+  async getBtnByMenusUrlApi(urlName: string, userInfo: ICurrentUserType): Promise<ApiVo[]> {
+    const resourcesEntity: Pick<ResourcesEntity, 'id'> | null =
+      await this.resourcesRepository.findOne({
+        where: { url: urlName },
+        select: ['id'],
+      });
+    console.log(resourcesEntity, '????');
+    if (!resourcesEntity?.id) {
+      return [];
+    }
     // 获取授权的资源id
     const resourcesId = await this.getResourcesIdList(userInfo);
+    console.log(resourcesId, '全部资源');
     return await this.resourcesRepository.find({
-      where: { id: In(resourcesId), resourcesType: 1, parentId: id },
-      order: { sort: 'DESC', id: 'DESC' },
+      where: {
+        id: In(resourcesId),
+        resourcesType: 2,
+        parentId: resourcesEntity?.id,
+        status: StatusEnum.NORMAL,
+      },
+      order: { sort: 'ASC', id: 'DESC' },
+      select: ['id', 'title'],
     });
   }
 
@@ -112,24 +105,34 @@ export class MenusService {
    * @return {*}
    */
   private async getResourcesIdList(userInfo: ICurrentUserType): Promise<number[]> {
-    // 1.查询当前用户授权的角色
-    const accountRoleEntity: Pick<AccountRoleEntity, 'roleId'>[] =
-      await this.accountRoleRepository.find({
-        where: { accountId: userInfo.id },
-        select: ['roleId'],
+    const { accountType } = userInfo;
+    if (accountType == AccountTypeEnum.SUPER_ACCOUNT) {
+      const resourcesEntity: Pick<ResourcesEntity, 'id'>[] = await this.resourcesRepository.find({
+        select: ['id'],
       });
-    if (!accountRoleEntity.length) {
-      return [];
+      return resourcesEntity.map((item: Pick<ResourcesEntity, 'id'>) => item.id);
+    } else {
+      const query = new Map<string, FindOperator<string>>();
+      // 1.查询当前用户授权的角色
+      const accountRoleEntity: Pick<AccountRoleEntity, 'roleId'>[] =
+        await this.accountRoleRepository.find({
+          where: { accountId: userInfo.id },
+          select: ['roleId'],
+        });
+      if (!accountRoleEntity.length) {
+        return [];
+      }
+      query.set('roleId', In(accountRoleEntity.map((item) => item.roleId)));
+      // 2.根据角色查询授权的资源
+      const roleResourcesEntity: Pick<RoleResourcesEntity, 'resourcesId'>[] =
+        await this.roleResourcesRepository.find({
+          where: mapToObj(query),
+          select: ['resourcesId'],
+        });
+      if (!roleResourcesEntity.length) {
+        return [];
+      }
+      return roleResourcesEntity.map((item) => item.resourcesId);
     }
-    // 2.根据角色查询授权的资源
-    const roleResourcesEntity: Pick<RoleResourcesEntity, 'resourcesId'>[] =
-      await this.roleResourcesRepository.find({
-        where: { roleId: In(accountRoleEntity.map((item) => item.roleId)) },
-        select: ['resourcesId'],
-      });
-    if (!roleResourcesEntity.length) {
-      return [];
-    }
-    return roleResourcesEntity.map((item) => item.resourcesId);
   }
 }
