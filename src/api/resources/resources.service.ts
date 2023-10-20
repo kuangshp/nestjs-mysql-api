@@ -175,7 +175,7 @@ export class ResourcesService {
     } else if (type == 1) {
       resourcesType = [0, 1, 2];
     }
-    const resourcesIdList = await this.menusRepository.getResourcesIdList(currentInfo);
+    const resourcesIdList = await this.menusRepository.getResourcesIdList(currentInfo, type);
     return await this.resourcesRepository.find({
       where: {
         id: In(resourcesIdList),

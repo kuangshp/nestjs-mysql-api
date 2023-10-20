@@ -7,6 +7,7 @@ import { RoleEntity } from '../role/entities/role.entity';
 import { AccountRoleDto } from './dto/account.role.dto';
 import { StatusEnum } from '@src/enums';
 import { getC, getJ } from '@src/utils';
+import { ICurrentUserType } from '@src/decorators';
 
 @Injectable()
 export class AccountRoleService {
@@ -138,13 +139,14 @@ export class AccountRoleService {
    * @LastEditors: 水痕
    * @Description: 获取全部角色
    * @param {number} status
+   * @param {ICurrentUserType} currentInfo
    * @return {*}
    */
-  async getAllRolesApi(status: number): Promise<RoleEntity[]> {
+  async getAllRolesApi(status: number, currentInfo: ICurrentUserType): Promise<RoleEntity[]> {
     if ([StatusEnum.NORMAL, StatusEnum.FORBIDDEN].includes(+status)) {
-      return this.roleRepository.find({ where: { status } });
+      return this.roleRepository.find({ where: { status, accountId: currentInfo.id } });
     } else {
-      return this.roleRepository.find();
+      return this.roleRepository.find({ where: { accountId: currentInfo.id } });
     }
   }
 }

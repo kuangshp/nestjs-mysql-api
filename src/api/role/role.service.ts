@@ -11,7 +11,6 @@ import { QueryRoleDto } from './dto/role.query';
 import { mapToObj } from '@src/utils';
 import { AccountEntity } from '../account/entities/account.entity';
 import { TenantEntity } from '../tenant/entities/tenant.entity';
-import { AccountTypeEnum } from '@src/enums/account.type.enum';
 
 @Injectable()
 export class RoleService {
@@ -137,7 +136,7 @@ export class RoleService {
       pageNumber = PageEnum.PAGE_NUMBER,
       pageSize = PageEnum.PAGE_SIZE,
     } = queryOption;
-    const { accountType, id, tenantId } = currentInfo;
+    const { id } = currentInfo;
     const query = new Map<string, FindOperator<string>>();
     if (name) {
       query.set('name', ILike(`%${name}%`));
@@ -145,13 +144,14 @@ export class RoleService {
     if (status >= 0) {
       query.set('status', Equal(status + ''));
     }
-    if (accountType == AccountTypeEnum.SUPER_ACCOUNT) {
-      console.log('超管');
-    } else if (accountType == AccountTypeEnum.PRIMARY_ACCOUNT) {
-      query.set('tenantId', Equal(tenantId + ''));
-    } else if (accountType == AccountTypeEnum.NORMAL_ACCOUNT) {
-      query.set('accountId', Equal(id + ''));
-    }
+    query.set('accountId', Equal(id + ''));
+    // if (accountType == AccountTypeEnum.SUPER_ACCOUNT) {
+    //   console.log('超管');
+    // } else if (accountType == AccountTypeEnum.PRIMARY_ACCOUNT) {
+    //   query.set('tenantId', Equal(tenantId + ''));
+    // } else if (accountType == AccountTypeEnum.NORMAL_ACCOUNT) {
+    //   query.set('accountId', Equal(id + ''));
+    // }
     const queryBuilder = this.queryRoleBuilder;
     const data = await queryBuilder
       .where(mapToObj(query))

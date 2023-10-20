@@ -1,4 +1,5 @@
 import { Controller, Get, Post, Body, Param, ParseIntPipe, Query, UseGuards } from '@nestjs/common';
+import { CurrentUser, ICurrentUserType } from '@src/decorators';
 import { AuthGuard } from '@src/guard/auth.guard';
 import { RoleEntity } from '../role/entities/role.entity';
 import { AccountRoleService } from './accountRole.service';
@@ -22,7 +23,10 @@ export class AccountRoleController {
   }
 
   @Get()
-  async getAllRolesApi(@Query('status') status: number): Promise<RoleEntity[]> {
-    return await this.accountRoleService.getAllRolesApi(status);
+  async getAllRolesApi(
+    @Query('status') status: number,
+    @CurrentUser('userInfo') currentInfo: ICurrentUserType
+  ): Promise<RoleEntity[]> {
+    return await this.accountRoleService.getAllRolesApi(status, currentInfo);
   }
 }

@@ -32,7 +32,7 @@ export class MenusService {
     query.set('resourcesType', In([0, 1]));
     // 如果是不是超级管理员就返回角色下的资源
     if (accountType !== AccountTypeEnum.SUPER_ACCOUNT) {
-      const resourcesIdList = await this.menusRepository.getResourcesIdList(userInfo);
+      const resourcesIdList = await this.menusRepository.getResourcesIdList(userInfo, 0);
       console.log(resourcesIdList, '资源');
       query.set('id', In(resourcesIdList));
     }
@@ -59,12 +59,11 @@ export class MenusService {
         where: { url: urlName },
         select: ['id'],
       });
-    console.log(resourcesEntity, '????');
     if (!resourcesEntity?.id) {
       return [];
     }
     // 获取授权的资源id
-    const resourcesId = await this.menusRepository.getResourcesIdList(userInfo);
+    const resourcesId = await this.menusRepository.getResourcesIdList(userInfo, 1);
     console.log(resourcesId, '全部资源');
     return await this.resourcesRepository.find({
       where: {
@@ -87,7 +86,7 @@ export class MenusService {
    * @return {*}
    */
   async getResourcesList(userInfo: ICurrentUserType): Promise<ResourcesEntity[]> {
-    const resourcesId = await this.menusRepository.getResourcesIdList(userInfo);
+    const resourcesId = await this.menusRepository.getResourcesIdList(userInfo, 0);
     return await this.resourcesRepository.find({
       where: { id: In(resourcesId) },
     });

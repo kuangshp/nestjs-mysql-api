@@ -171,7 +171,6 @@ export class AccountService {
     const {
       status,
       username,
-      tenantId: queryTenantId,
       pageNumber = PageEnum.PAGE_NUMBER,
       pageSize = PageEnum.PAGE_SIZE,
     } = queryOption;
@@ -182,31 +181,32 @@ export class AccountService {
     if ([StatusEnum.NORMAL, StatusEnum.FORBIDDEN].includes(status)) {
       query.set('status', Equal(status + ''));
     }
-    const { accountType, id, tenantId } = currentInfo;
+    const { id } = currentInfo;
     /**
      * 1.如果是超管,查询到全部的账号
      * 2.如果不是超管,是主账号的时候查询下面全部的账号
      * 3.如果都不是,只能查询账号下的数据
      */
-    if (queryTenantId) {
-      query.set('tenantId', Equal(queryTenantId + ''));
-    } else {
-      if (accountType == AccountTypeEnum.SUPER_ACCOUNT) {
-        console.log('超管不需要');
-      } else if (accountType == AccountTypeEnum.PRIMARY_ACCOUNT) {
-        query.set('tenantId', Equal(tenantId + ''));
-      } else if (accountType == AccountTypeEnum.NORMAL_ACCOUNT) {
-        query.set('parentId', Equal(id + ''));
-      }
-    }
+    // if (queryTenantId) {
+    //   query.set('tenantId', Equal(queryTenantId + ''));
+    // } else {
+    //   if (accountType == AccountTypeEnum.SUPER_ACCOUNT) {
+    //     console.log('超管不需要');
+    //   } else if (accountType == AccountTypeEnum.PRIMARY_ACCOUNT) {
+    //     query.set('tenantId', Equal(tenantId + ''));
+    //   } else if (accountType == AccountTypeEnum.NORMAL_ACCOUNT) {
+    //     query.set('parentId', Equal(id + ''));
+    //   }
+    // }
+    query.set('parentId', Equal(id + ''));
 
     const total = await this.accountRepository
       .createQueryBuilder('account')
-      .where(mapToObj(query))
+      .where([mapToObj(query), { id: id }])
       .getCount();
     const queryBuilder = this.queryAccountBuilder;
     const data = await queryBuilder
-      .where(mapToObj(query))
+      .where([mapToObj(query), { id: id }])
       .orderBy({ accountType: 'DESC', id: 'DESC' })
       .offset((pageNumber - 1) * pageSize)
       .limit(pageSize)

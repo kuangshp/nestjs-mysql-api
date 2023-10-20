@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { ICurrentUserType } from '@src/decorators';
 import { AccountTypeEnum } from '@src/enums/account.type.enum';
 import { mapToObj } from '@src/utils';
-import { Repository, FindOperator, In } from 'typeorm';
+import { Repository, FindOperator, In, Equal } from 'typeorm';
 import { AccountRoleEntity } from '../accountRole/entities/account.role.entity';
 import { ResourcesEntity } from '../resources/entities/resources.entity';
 import { RoleResourcesEntity } from '../roleResources/entities/role.resources.entity';
@@ -25,9 +25,10 @@ export class MenusRepository {
    * @LastEditors:
    * @Description: 内部使用,根据当前用户获取授权的资源id
    * @param {ICurrentUserType} userInfo
+   * @param {number} type 类型,0表示菜单1表示按钮
    * @return {*}
    */
-  async getResourcesIdList(userInfo: ICurrentUserType): Promise<number[]> {
+  async getResourcesIdList(userInfo: ICurrentUserType, type: number): Promise<number[]> {
     const { accountType } = userInfo;
     if (accountType == AccountTypeEnum.SUPER_ACCOUNT) {
       const resourcesEntity: Pick<ResourcesEntity, 'id'>[] = await this.resourcesRepository.find({
@@ -45,7 +46,9 @@ export class MenusRepository {
       if (!accountRoleEntity.length) {
         return [];
       }
+      console.log('全部的角色', accountRoleEntity);
       query.set('roleId', In(accountRoleEntity.map((item) => item.roleId)));
+      query.set('type', Equal(type + ''));
       // 2.根据角色查询授权的资源
       const roleResourcesEntity: Pick<RoleResourcesEntity, 'resourcesId'>[] =
         await this.roleResourcesRepository.find({
