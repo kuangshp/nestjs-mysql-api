@@ -11,7 +11,7 @@
  Target Server Version : 80032 (8.0.32)
  File Encoding         : 65001
 
- Date: 18/10/2023 09:11:55
+ Date: 22/10/2023 11:30:13
 */
 
 SET NAMES utf8mb4;
@@ -28,6 +28,7 @@ CREATE TABLE `account`  (
   `account_type` tinyint NULL DEFAULT 0 COMMENT '账号类型:0普通账号,1是主账号,2是超管',
   `tenant_id` int NOT NULL COMMENT '关联到tenant表主键id',
   `parent_id` int NULL DEFAULT -1 COMMENT '自关联主键id',
+  `department_id` int NULL DEFAULT -1 COMMENT '部门名称',
   `sort` int NULL DEFAULT 1 COMMENT '排序',
   `status` tinyint NULL DEFAULT 0 COMMENT '状态0是正常,1是禁用',
   `last_login_ip` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '最后登录ip地址',
@@ -43,16 +44,14 @@ CREATE TABLE `account`  (
   `deleted_at` timestamp NULL DEFAULT NULL COMMENT '软删除时间',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `UK_username_deleted_at`(`username` ASC, `deleted_at` ASC) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 9 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '商户下账号表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '商户下账号表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of account
 -- ----------------------------
-INSERT INTO `account` VALUES (3, 'admin', 'e1b7f78293b6d340913c669d67d975e0', 2, 3, -1, 1, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '18aac0d8dbe', '2023-10-09 21:54:01', '2023-10-10 17:04:46', NULL);
-INSERT INTO `account` VALUES (5, 'fdff', '22054278219523bb3f155a181fed5730', 0, 3, -1, 13, 0, NULL, NULL, NULL, NULL, NULL, NULL, '2023-10-10 17:19:43.044000', '9003508ab4ffc16d5', '2023-10-10 17:19:43', '2023-10-10 17:19:43', NULL);
-INSERT INTO `account` VALUES (6, '李四', '9cf850186e7e19b85af4b6b95829a02a', 1, 6, -1, 20, 0, NULL, NULL, NULL, NULL, NULL, NULL, '2023-10-10 17:38:21.687000', '5cad3ee82d3', '2023-10-10 17:38:21', '2023-10-10 17:38:21', NULL);
-INSERT INTO `account` VALUES (7, '233', '4c11ebf4044bac4839540220d105ddbe', 0, 5, 3, 334, 0, NULL, NULL, NULL, NULL, NULL, NULL, '2023-10-10 19:21:00.811000', '593e38b2c2d4', '2023-10-10 19:21:00', '2023-10-10 19:32:01', NULL);
-INSERT INTO `account` VALUES (8, '1333', 'bbd6ea2048ab4573f67a74322759ca34', 0, 3, 5, 12, 1, NULL, NULL, NULL, NULL, NULL, NULL, '2023-10-10 19:21:14.292000', 'c255854b9946d76d733', '2023-10-10 19:21:14', '2023-10-10 19:33:28', NULL);
+INSERT INTO `account` VALUES (1, 'admin', 'c48612a075b829a2277eacd4454fad54', 2, 1, -1, -1, 1, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '4ab4364918', '2023-10-18 14:27:38', '2023-10-18 14:27:38', NULL);
+INSERT INTO `account` VALUES (2, '李四', '44a8b4ea49dcaa30078bdaa79142ec4c', 0, 1, 1, 1, 12, 0, NULL, NULL, NULL, NULL, NULL, NULL, '2023-10-18 22:03:47.101000', '20da6f55f09', '2023-10-18 22:03:47', '2023-10-18 22:03:47', NULL);
+INSERT INTO `account` VALUES (3, '王五', '88cadcd1df640db61ab08be67f341e28', 0, 1, 2, -1, 1, 0, NULL, NULL, NULL, NULL, NULL, NULL, '2023-10-19 22:32:36.213000', '0cf47197d2ac3151a80', '2023-10-19 22:32:36', '2023-10-19 22:32:36', NULL);
 
 -- ----------------------------
 -- Table structure for account_login_record
@@ -89,15 +88,13 @@ CREATE TABLE `account_role`  (
   `deleted_at` timestamp(6) NULL DEFAULT NULL COMMENT '软删除时间',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `UK_account_role`(`account_id` ASC, `role_id` ASC) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '账号和角色中间表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '账号和角色中间表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of account_role
 -- ----------------------------
-INSERT INTO `account_role` VALUES (1, 3, 12, '2023-10-18 08:42:11.489355', '2023-10-18 08:42:11.489355', NULL);
-INSERT INTO `account_role` VALUES (2, 3, 11, '2023-10-18 08:42:11.499908', '2023-10-18 08:42:11.499908', NULL);
-INSERT INTO `account_role` VALUES (3, 3, 10, '2023-10-18 08:47:47.186861', '2023-10-18 08:47:47.186861', NULL);
-INSERT INTO `account_role` VALUES (4, 6, 2, '2023-10-18 09:09:43.733208', '2023-10-18 09:09:43.733208', NULL);
+INSERT INTO `account_role` VALUES (1, 2, 2, '2023-10-20 08:06:02.854663', '2023-10-20 08:06:02.854663', NULL);
+INSERT INTO `account_role` VALUES (2, 3, 13, '2023-10-20 08:23:50.155323', '2023-10-20 08:23:50.155323', NULL);
 
 -- ----------------------------
 -- Table structure for area
@@ -3873,6 +3870,35 @@ INSERT INTO `area` VALUES (3748, 3747, '圣方济各堂区', '圣方济各堂区
 INSERT INTO `area` VALUES (3749, 0, '钓鱼岛', '钓鱼岛', '中国,钓鱼岛', 1, 'diaoyudao', '', '', 'D', '123.478088', '25.742385');
 
 -- ----------------------------
+-- Table structure for department
+-- ----------------------------
+DROP TABLE IF EXISTS `department`;
+CREATE TABLE `department`  (
+  `id` int NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `title` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '部门名称',
+  `account_id` int NULL DEFAULT NULL COMMENT '部门负责人,关联到account表主键id',
+  `mobile` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '联系手机号码',
+  `email` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '电邮地址',
+  `description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '描述',
+  `status` tinyint NULL DEFAULT 0 COMMENT '状态0是正常,1是禁用',
+  `sort` int NULL DEFAULT 1 COMMENT '排序',
+  `tenant_id` int NULL DEFAULT -1 COMMENT '关联到tenant表主键id',
+  `parent_id` int NULL DEFAULT -1 COMMENT '自己关联主键id',
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `deleted_at` timestamp NULL DEFAULT NULL COMMENT '软删除时间',
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE INDEX `UK_title_parent_id_deleted_at`(`title` ASC, `parent_id` ASC, `deleted_at` ASC) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '部门表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of department
+-- ----------------------------
+INSERT INTO `department` VALUES (1, '深圳分公司', 1, NULL, NULL, NULL, 0, 1, 1, -1, '2023-10-18 21:49:47', '2023-10-18 21:51:09', NULL);
+INSERT INTO `department` VALUES (2, '北京分公司', NULL, NULL, NULL, NULL, 0, 1, 1, -1, '2023-10-18 21:51:51', '2023-10-18 21:51:51', NULL);
+INSERT INTO `department` VALUES (3, '上海分公司', 1, NULL, NULL, NULL, 0, 1, 1, -1, '2023-10-18 21:52:29', '2023-10-18 21:52:29', NULL);
+
+-- ----------------------------
 -- Table structure for resources
 -- ----------------------------
 DROP TABLE IF EXISTS `resources`;
@@ -3883,7 +3909,6 @@ CREATE TABLE `resources`  (
   `method` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '接口的请求方式',
   `icon` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '菜单小图标',
   `resources_type` tinyint NULL DEFAULT 0 COMMENT '0目录,1菜单,2接口',
-  `type` tinyint NULL DEFAULT 0 COMMENT '是否为模块:0,菜单:1,按钮(接口):2',
   `parent_id` int NOT NULL DEFAULT -1 COMMENT '上一级id',
   `sort` int NULL DEFAULT 1 COMMENT '菜单,或按钮排序',
   `status` tinyint NULL DEFAULT 0 COMMENT '状态0是正常,1是禁用',
@@ -3892,17 +3917,25 @@ CREATE TABLE `resources`  (
   `updated_at` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6) COMMENT '更新时间',
   `deleted_at` timestamp(6) NULL DEFAULT NULL COMMENT '软删除时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 10 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '资源表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 18 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '资源表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of resources
 -- ----------------------------
-INSERT INTO `resources` VALUES (1, '系统管理', '/system', NULL, NULL, 0, 0, -1, 1, 0, NULL, '2023-10-11 10:23:49.238179', '2023-10-11 10:23:49.238179', NULL);
-INSERT INTO `resources` VALUES (2, '商户管理', '/system/tenant', NULL, NULL, 1, 0, 1, 1, 0, NULL, '2023-10-11 10:24:23.290119', '2023-10-11 10:24:23.290119', NULL);
-INSERT INTO `resources` VALUES (3, '账号管理', '/system/account', NULL, NULL, 1, 0, 1, 1, 0, NULL, '2023-10-11 11:16:41.015264', '2023-10-11 11:17:25.000000', NULL);
-INSERT INTO `resources` VALUES (4, '角色管理', '/system/role', NULL, NULL, 1, 0, 1, 3, 0, NULL, '2023-10-11 11:27:17.517958', '2023-10-11 11:35:46.462218', NULL);
-INSERT INTO `resources` VALUES (5, '资源管理', '/system/resources', NULL, NULL, 1, 0, 1, 4, 0, NULL, '2023-10-11 11:34:05.916426', '2023-10-11 11:35:48.270230', NULL);
-INSERT INTO `resources` VALUES (9, '新增', '/admin/account', 'POST', NULL, 2, 0, 3, 1, 0, '新增方法', '2023-10-11 12:54:59.534184', '2023-10-11 12:56:41.000000', NULL);
+INSERT INTO `resources` VALUES (1, '系统管理', '/system', NULL, NULL, 0, -1, 1, 0, NULL, '2023-10-11 10:23:49.238179', '2023-10-11 10:23:49.238179', NULL);
+INSERT INTO `resources` VALUES (2, '商户管理', '/system/tenant', NULL, NULL, 1, 1, 1, 0, NULL, '2023-10-11 10:24:23.290119', '2023-10-11 10:24:23.290119', NULL);
+INSERT INTO `resources` VALUES (3, '账号管理', '/system/account', NULL, NULL, 1, 1, 1, 0, NULL, '2023-10-11 11:16:41.015264', '2023-10-11 11:17:25.000000', NULL);
+INSERT INTO `resources` VALUES (4, '角色管理', '/system/role', NULL, NULL, 1, 1, 3, 0, NULL, '2023-10-11 11:27:17.517958', '2023-10-11 11:35:46.462218', NULL);
+INSERT INTO `resources` VALUES (5, '资源管理', '/system/resources', NULL, NULL, 1, 1, 4, 0, NULL, '2023-10-11 11:34:05.916426', '2023-10-11 11:35:48.270230', NULL);
+INSERT INTO `resources` VALUES (9, '新增', '/account', 'POST', NULL, 2, 3, 1, 0, '新增方法', '2023-10-11 12:54:59.534184', '2023-10-19 17:01:19.000000', NULL);
+INSERT INTO `resources` VALUES (10, '部门管理', '/system/department', NULL, NULL, 1, 1, 2, 0, NULL, '2023-10-18 16:41:54.829849', '2023-10-18 16:45:19.000000', NULL);
+INSERT INTO `resources` VALUES (11, '删除', '/account/*', 'DELETE', NULL, 2, 3, 2, 0, '根据id删除', '2023-10-19 16:46:38.321946', '2023-10-19 17:01:28.000000', NULL);
+INSERT INTO `resources` VALUES (12, '批量删除', '/account/delete', 'POST', NULL, 2, 3, 3, 0, '根据id列表批量删除', '2023-10-19 16:55:35.740424', '2023-10-19 19:04:06.307682', NULL);
+INSERT INTO `resources` VALUES (13, '状态', '/account/status/*', 'PUT', NULL, 2, 3, 4, 0, '根据id修改状态', '2023-10-19 16:56:56.095582', '2023-10-19 16:56:56.095582', NULL);
+INSERT INTO `resources` VALUES (14, '批量状态', '/account/batchStatus', 'POST', NULL, 2, 3, 5, 0, '根据id列表批量修改状态', '2023-10-19 16:57:43.587617', '2023-10-19 19:04:15.934864', NULL);
+INSERT INTO `resources` VALUES (15, '编辑', '/account/*', 'PUT', NULL, 2, 3, 6, 0, '根据id修改账号数据', '2023-10-19 17:01:07.698134', '2023-10-19 17:01:07.698134', NULL);
+INSERT INTO `resources` VALUES (16, '分配角色', '/roleResources', 'POST', NULL, 2, 3, 4, 0, NULL, '2023-10-19 22:03:05.928242', '2023-10-19 22:03:05.928242', NULL);
+INSERT INTO `resources` VALUES (17, '角色列表', '/role', 'GET', NULL, 2, 4, 1, 0, NULL, '2023-10-22 11:23:32.134988', '2023-10-22 11:23:32.134988', NULL);
 
 -- ----------------------------
 -- Table structure for role
@@ -3921,23 +3954,14 @@ CREATE TABLE `role`  (
   `deleted_at` timestamp NULL DEFAULT NULL COMMENT '软删除时间',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `UK_name_account_id_deleted_at`(`name` ASC, `account_id` ASC, `deleted_at` ASC) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 13 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '角色表(也可以当部门表)' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 14 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '角色表(也可以当部门表)' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of role
 -- ----------------------------
-INSERT INTO `role` VALUES (1, '哈哈哈', '44', 0, 23, 3, 5, '2023-10-10 20:34:33', '2023-10-10 20:42:41', '2023-10-10 20:42:41');
-INSERT INTO `role` VALUES (2, '测试角色', '333', 0, 123, 3, 5, '2023-10-10 20:36:20', '2023-10-10 20:42:37', NULL);
-INSERT INTO `role` VALUES (3, '角色1', NULL, 0, 1, 3, 5, '2023-10-10 20:48:03', '2023-10-10 20:48:03', NULL);
-INSERT INTO `role` VALUES (4, '角色2', NULL, 0, 1, 3, 5, '2023-10-10 20:48:08', '2023-10-10 20:48:08', NULL);
-INSERT INTO `role` VALUES (5, '角色3', NULL, 0, 12, 3, 5, '2023-10-10 20:48:19', '2023-10-10 20:48:19', NULL);
-INSERT INTO `role` VALUES (6, '角色4', NULL, 0, 33, 3, 5, '2023-10-10 20:48:29', '2023-10-10 20:48:29', NULL);
-INSERT INTO `role` VALUES (7, '角色5', NULL, 0, 4, 3, 5, '2023-10-10 20:48:36', '2023-10-10 20:48:36', NULL);
-INSERT INTO `role` VALUES (8, '角色6', NULL, 0, 1, 3, 5, '2023-10-10 20:49:26', '2023-10-10 20:49:26', NULL);
-INSERT INTO `role` VALUES (9, '角色7', NULL, 0, 1, 3, 5, '2023-10-10 20:49:30', '2023-10-10 20:49:30', NULL);
-INSERT INTO `role` VALUES (10, '角色8', NULL, 0, 1, 3, 5, '2023-10-10 20:49:34', '2023-10-10 20:49:34', NULL);
-INSERT INTO `role` VALUES (11, '角色9', NULL, 0, 1, 3, 5, '2023-10-10 20:49:40', '2023-10-10 20:49:40', NULL);
-INSERT INTO `role` VALUES (12, '角色10', NULL, 0, 1, 3, 5, '2023-10-10 20:49:46', '2023-10-10 20:49:46', NULL);
+INSERT INTO `role` VALUES (1, '哈哈哈', '44', 0, 23, 3, 1, '2023-10-10 20:34:33', '2023-10-19 22:17:50', '2023-10-10 20:42:41');
+INSERT INTO `role` VALUES (2, '测试角色1', '333', 0, 123, 3, 1, '2023-10-10 20:36:20', '2023-10-20 08:05:52', NULL);
+INSERT INTO `role` VALUES (13, '测试角色', '测试角色1', 0, 1, 1, 2, '2023-10-19 22:17:02', '2023-10-19 22:17:36', NULL);
 
 -- ----------------------------
 -- Table structure for role_resources
@@ -3947,19 +3971,32 @@ CREATE TABLE `role_resources`  (
   `id` int NOT NULL AUTO_INCREMENT COMMENT '主键id',
   `resources_id` int NOT NULL COMMENT '关联到resources表主键id',
   `role_id` int NOT NULL COMMENT '关联到role表主键id',
+  `type` tinyint NOT NULL DEFAULT 0 COMMENT '类型,0表示菜单1表示按钮',
   `created_at` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) COMMENT '创建时间',
   `updated_at` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6) COMMENT '更新时间',
   `deleted_at` timestamp(6) NULL DEFAULT NULL COMMENT '软删除时间',
   PRIMARY KEY (`id`) USING BTREE,
-  UNIQUE INDEX `UK_resources_role`(`resources_id` ASC, `role_id` ASC) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '角色和资源中间表' ROW_FORMAT = Dynamic;
+  UNIQUE INDEX `UK_resources_role_type`(`resources_id` ASC, `role_id` ASC, `type` ASC) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 18 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '角色和资源中间表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of role_resources
 -- ----------------------------
-INSERT INTO `role_resources` VALUES (4, 1, 2, '2023-10-18 09:09:59.887003', '2023-10-18 09:09:59.887003', NULL);
-INSERT INTO `role_resources` VALUES (5, 4, 2, '2023-10-18 09:09:59.893893', '2023-10-18 09:09:59.893893', NULL);
-INSERT INTO `role_resources` VALUES (6, 5, 2, '2023-10-18 09:09:59.898457', '2023-10-18 09:09:59.898457', NULL);
+INSERT INTO `role_resources` VALUES (1, 1, 13, 0, '2023-10-20 08:05:16.490902', '2023-10-20 08:05:16.490902', NULL);
+INSERT INTO `role_resources` VALUES (3, 3, 13, 0, '2023-10-20 08:05:16.517152', '2023-10-20 08:05:16.517152', NULL);
+INSERT INTO `role_resources` VALUES (4, 1, 13, 1, '2023-10-20 08:05:26.963698', '2023-10-20 08:05:26.963698', NULL);
+INSERT INTO `role_resources` VALUES (5, 3, 13, 1, '2023-10-20 08:05:26.969821', '2023-10-20 08:05:26.969821', NULL);
+INSERT INTO `role_resources` VALUES (6, 9, 13, 1, '2023-10-20 08:05:26.977080', '2023-10-20 08:05:26.977080', NULL);
+INSERT INTO `role_resources` VALUES (8, 1, 2, 0, '2023-10-20 08:20:43.238278', '2023-10-20 08:20:43.238278', NULL);
+INSERT INTO `role_resources` VALUES (9, 2, 2, 0, '2023-10-20 08:20:43.243252', '2023-10-20 08:20:43.243252', NULL);
+INSERT INTO `role_resources` VALUES (10, 3, 2, 0, '2023-10-20 08:20:43.248230', '2023-10-20 08:20:43.248230', NULL);
+INSERT INTO `role_resources` VALUES (11, 1, 2, 1, '2023-10-20 08:20:57.916899', '2023-10-20 08:20:57.916899', NULL);
+INSERT INTO `role_resources` VALUES (12, 3, 2, 1, '2023-10-20 08:20:57.921852', '2023-10-20 08:20:57.921852', NULL);
+INSERT INTO `role_resources` VALUES (13, 9, 2, 1, '2023-10-20 08:20:57.928345', '2023-10-20 08:20:57.928345', NULL);
+INSERT INTO `role_resources` VALUES (14, 11, 2, 1, '2023-10-20 08:20:57.934715', '2023-10-20 08:20:57.934715', NULL);
+INSERT INTO `role_resources` VALUES (15, 16, 2, 1, '2023-10-20 08:22:13.202708', '2023-10-20 08:22:13.202708', NULL);
+INSERT INTO `role_resources` VALUES (16, 4, 2, 0, '2023-10-20 08:22:58.944590', '2023-10-20 08:22:58.944590', NULL);
+INSERT INTO `role_resources` VALUES (17, 17, 2, 1, '2023-10-22 11:24:29.726727', '2023-10-22 11:24:29.726727', NULL);
 
 -- ----------------------------
 -- Table structure for tenant
@@ -3978,20 +4015,18 @@ CREATE TABLE `tenant`  (
   `area_id` int NULL DEFAULT NULL COMMENT '地区id',
   `address` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '具体地址',
   `sort` int NULL DEFAULT 1 COMMENT '排序',
-  `description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '描素',
+  `description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '描述',
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   `deleted_at` timestamp NULL DEFAULT NULL COMMENT '软删除时间',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `UK_name_deleted_at`(`name` ASC, `deleted_at` ASC) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '商户表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '商户表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of tenant
 -- ----------------------------
-INSERT INTO `tenant` VALUES (3, '总集团', '张三', '1111', 0.00, '2119-12-30 21:53:04', 0, NULL, NULL, NULL, NULL, 1, '总集团', '2023-10-09 21:53:04', '2023-10-09 22:00:51', NULL);
-INSERT INTO `tenant` VALUES (5, 'ffdf', 'fggffg', '13412345678', 100.00, '2023-10-10 15:35:18', 1, 1, 2, 3, '133', 3, 'ff', '2023-10-09 22:19:41', '2023-10-10 15:35:18', NULL);
-INSERT INTO `tenant` VALUES (6, 'gggf', 'ggg', '13412345678', 110.00, '2023-10-09 22:28:29', 0, 585, 597, 598, '24545', 1, 'gg', '2023-10-09 22:20:10', '2023-10-09 22:47:54', NULL);
+INSERT INTO `tenant` VALUES (1, '总集团', '张三', '13412345678', 0.00, '2023-10-22 10:58:57', 0, 19, 20, 22, '12', 2, '总集团', '2023-10-18 14:27:38', '2023-10-22 10:58:58', NULL);
 
 -- ----------------------------
 -- Table structure for tenant_balance_record
