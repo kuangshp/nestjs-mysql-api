@@ -1,3 +1,5 @@
+import { ResourcesEntity } from '@src/api/resources/entities/resources.entity';
+
 export class LoginVo {
   readonly id!: number; // 账号id
   readonly username?: string; // 用户名
@@ -20,4 +22,5 @@ export class LoginAccountVo {
 export class LoginTokenDataVo {
   readonly userInfo!: LoginAccountVo; // 用户基本信息
   readonly sign!: string; // 签名key
+  readonly authApi!: Pick<ResourcesEntity, 'id' | 'title' | 'method' | 'resourcesType' | 'url'>[];
 }

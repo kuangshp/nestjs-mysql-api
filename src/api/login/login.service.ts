@@ -1,11 +1,15 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
+import { ResourcesTypeEnum } from '@src/enums/resources.type.enum';
 import { LoggerService } from '@src/plugin/logger/logger.service';
 import { RedisService } from '@src/plugin/redis/redis.service';
 import { ToolsService } from '@src/plugin/tools/tools.service';
-import { Repository, SelectQueryBuilder } from 'typeorm';
+import { In, Repository, SelectQueryBuilder } from 'typeorm';
 import { AccountEntity } from '../account/entities/account.entity';
+import { AccountRoleEntity } from '../accountRole/entities/account.role.entity';
+import { ResourcesEntity } from '../resources/entities/resources.entity';
+import { RoleResourcesEntity } from '../roleResources/entities/role.resources.entity';
 import { LoginDto } from './dto/login.dto';
 import { LoginAccountVo, LoginTokenDataVo, LoginVo } from './vo/login.vo';
 
@@ -14,6 +18,12 @@ export class LoginService {
   constructor(
     @InjectRepository(AccountEntity)
     private readonly accountRepository: Repository<AccountEntity>,
+    @InjectRepository(AccountRoleEntity)
+    private readonly accountRoleRepository: Repository<AccountRoleEntity>,
+    @InjectRepository(RoleResourcesEntity)
+    private readonly roleResourcesRepository: Repository<RoleResourcesEntity>,
+    @InjectRepository(ResourcesEntity)
+    private readonly resourcesRepository: Repository<ResourcesEntity>,
     private readonly toolsService: ToolsService,
     private readonly loggerService: LoggerService,
     private readonly redisService: RedisService,
@@ -106,9 +116,39 @@ export class LoginService {
     const token = this.toolsService.uuidToken;
     const refreshToken = this.toolsService.uuidToken;
     const sign = this.toolsService.uuidToken;
+    // 根据当前用户获取授权的按钮权限
+    const accountRoleEntityList: Pick<AccountRoleEntity, 'roleId'>[] =
+      await this.accountRoleRepository.find({
+        where: {
+          accountId: accountEntity.id,
+        },
+        select: ['roleId'],
+      });
+    const roleIdList = accountRoleEntityList.map((item) => item.roleId);
+    const roleResourcesList: Pick<RoleResourcesEntity, 'resourcesId'>[] =
+      await this.roleResourcesRepository.find({
+        where: {
+          type: 1,
+          roleId: In(roleIdList),
+        },
+        select: ['resourcesId'],
+      });
+    const resourcesIdList = roleResourcesList.map((item) => item.resourcesId);
+    // 查询全部的资源
+    const resourcesEntity = await this.resourcesRepository.find({
+      where: {
+        id: In(resourcesIdList),
+      },
+      select: ['url', 'method', 'title', 'resourcesType'],
+    });
+    console.log(resourcesEntity, '1111');
+    const resources = resourcesEntity.filter((item) => item.resourcesType == ResourcesTypeEnum.API);
+    console.log(resources, '全部的资源');
+    // 根据角色idList去查询授权的按钮
     // 根据资源id获取资源信息
     const redisData: LoginTokenDataVo = {
       userInfo: accountEntity, // 用户信息
+      authApi: resources, // 授权的api接口
       sign,
     };
     // 正常token

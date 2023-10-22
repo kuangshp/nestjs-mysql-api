@@ -3,7 +3,12 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_FILTER, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { HttpExceptionFilter } from './filters/http-exception.filter';
-import { LoggerInterceptor, RedisCacheInterceptor, RedisLimitInterceptor } from './interceptors';
+import {
+  LoggerInterceptor,
+  RedisCacheInterceptor,
+  RedisLimitInterceptor,
+  ApiInterceptor,
+} from './interceptors';
 import { TransformInterceptor } from './interceptors/transform.interceptor';
 import { ValidationPipe } from './pipe/validation.pipe';
 import { getConfig } from './utils';
@@ -69,6 +74,10 @@ import { PluginModule } from './plugin/plugin.module';
     {
       provide: APP_INTERCEPTOR,
       useClass: TransformInterceptor,
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: ApiInterceptor,
     },
     // 全局使用管道(数据校验)
     {

@@ -48,15 +48,6 @@ export class ResourcesEntity extends SharedEntity {
   resourcesType!: number;
 
   @Column({
-    type: 'tinyint',
-    name: 'type',
-    nullable: true,
-    default: '0',
-    comment: '是否为模块:0,菜单:1,按钮(接口):2',
-  })
-  type!: number;
-
-  @Column({
     type: 'int',
     name: 'parent_id',
     default: '-1',
