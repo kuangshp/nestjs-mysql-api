@@ -149,7 +149,12 @@ export class AccountService {
     if (accountEntity && accountEntity.id != id) {
       throw new HttpException(`[${req.username}]可能已经存在`, HttpStatus.OK);
     }
-    const { affected } = await this.accountRepository.update(id, req);
+    const { affected } = await this.accountRepository.update(id, {
+      username: req.username,
+      sort: req.sort,
+      parentId: req.parentId,
+      departmentId: req.departmentId,
+    });
     if (affected) {
       return '修改成功';
     } else {
